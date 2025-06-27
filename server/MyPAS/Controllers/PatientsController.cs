@@ -10,7 +10,7 @@ namespace MyPAS.Controllers
     [ApiController]
     public class PatientsController : ControllerBase
     {
-        // Dependenccy Injection - We inject our database into the controller so that it is able to perform the database accctions as needed.
+        // Dependency Injection - We inject our database into the controller so that it is able to perform the database actions as needed.
         private readonly MyPASContext _context;
 
         // Constructor to assign context.
@@ -20,6 +20,8 @@ namespace MyPAS.Controllers
         }
 
         // HTTP Methods
+
+        // Get list of patients.
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
         {
@@ -27,6 +29,7 @@ namespace MyPAS.Controllers
             return Ok(patients);
         }
 
+        // Get specific patient by ID.
         [HttpGet("{id}")]
         public ActionResult<Patient> GetPatient(int id)
         {
@@ -38,8 +41,7 @@ namespace MyPAS.Controllers
             return Ok(patient);
         }
 
-
-
+        // Create patient
         [HttpPost]
         public async Task<IActionResult> AddPatient([FromBody] Patient patient)
         {
@@ -54,14 +56,14 @@ namespace MyPAS.Controllers
             return CreatedAtAction(nameof(GetPatients), new { id = patient.Id}, patient);
         }
 
-
+        // Update patient
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePatient(int id, [FromBody] Patient updatedPatient)
+        public async Task<IActionResult> UpdatePatient(int id, [FromBody] Patient patientToUpdate)
         {
-            Console.WriteLine($"Received ID: {updatedPatient.Id}, Name: {updatedPatient.FirstName}");
+            // Output updated patient
+            Console.WriteLine($"Received ID: {patientToUpdate.Id}, Name: {patientToUpdate.FirstName}");
 
-
-            if (id != updatedPatient.Id)
+            if (id != patientToUpdate.Id)
             {
                 return BadRequest("ID mismatch");
             }
@@ -74,15 +76,15 @@ namespace MyPAS.Controllers
             }
 
             // Update fields manually (this protects against over-posting)
-            existingPatient.FirstName = updatedPatient.FirstName;
-            existingPatient.LastName = updatedPatient.LastName;
-            existingPatient.Address = updatedPatient.Address;
-            existingPatient.City = updatedPatient.City;
-            existingPatient.State = updatedPatient.State;
-            existingPatient.Zip = updatedPatient.Zip;
-            existingPatient.Age = updatedPatient.Age;
-            existingPatient.Phone = updatedPatient.Phone;
-            existingPatient.Email = updatedPatient.Email;
+            existingPatient.FirstName = patientToUpdate.FirstName;
+            existingPatient.LastName = patientToUpdate.LastName;
+            existingPatient.Address = patientToUpdate.Address;
+            existingPatient.City = patientToUpdate.City;
+            existingPatient.State = patientToUpdate.State;
+            existingPatient.Zip = patientToUpdate.Zip;
+            existingPatient.Age = patientToUpdate.Age;
+            existingPatient.Phone = patientToUpdate.Phone;
+            existingPatient.Email = patientToUpdate.Email;
 
             try
             {
