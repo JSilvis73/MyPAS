@@ -3,28 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\Jason\\Jason\u0027s Projects 2025\\MyPAS\\server\\MyPAS\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0A4B6469-1BCA-F550-33B4-D201B2864D5C}|MyPAS.csproj|c:\\users\\jason\\jason\u0027s projects 2025\\mypas\\server\\mypas\\controllers\\paymentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0A4B6469-1BCA-F550-33B4-D201B2864D5C}|MyPAS.csproj|solutionrelative:controllers\\paymentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Jason\\Jason\u0027s Projects 2025\\MyPAS\\server\\MyPAS\\Controllers\\PaymentsController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\PaymentsController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0A4B6469-1BCA-F550-33B4-D201B2864D5C}|MyPAS.csproj|c:\\users\\jason\\jason\u0027s projects 2025\\mypas\\server\\mypas\\models\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0A4B6469-1BCA-F550-33B4-D201B2864D5C}|MyPAS.csproj|solutionrelative:models\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Jason\\Jason\u0027s Projects 2025\\MyPAS\\server\\MyPAS\\Models\\Service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\Service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0A4B6469-1BCA-F550-33B4-D201B2864D5C}|MyPAS.csproj|c:\\users\\jason\\jason\u0027s projects 2025\\mypas\\server\\mypas\\models\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0A4B6469-1BCA-F550-33B4-D201B2864D5C}|MyPAS.csproj|solutionrelative:models\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Jason\\Jason\u0027s Projects 2025\\MyPAS\\server\\MyPAS\\Models\\Payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\Payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0A4B6469-1BCA-F550-33B4-D201B2864D5C}|MyPAS.csproj|c:\\users\\jason\\jason\u0027s projects 2025\\mypas\\server\\mypas\\models\\patient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0A4B6469-1BCA-F550-33B4-D201B2864D5C}|MyPAS.csproj|solutionrelative:models\\patient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Jason\\Jason\u0027s Projects 2025\\MyPAS\\server\\MyPAS\\Models\\Patient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\Patient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0A4B6469-1BCA-F550-33B4-D201B2864D5C}|MyPAS.csproj|c:\\users\\jason\\jason\u0027s projects 2025\\mypas\\server\\mypas\\data\\mypascontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0A4B6469-1BCA-F550-33B4-D201B2864D5C}|MyPAS.csproj|solutionrelative:data\\mypascontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Jason\\Jason\u0027s Projects 2025\\MyPAS\\server\\MyPAS\\Data\\MyPASContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Data\\MyPASContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0A4B6469-1BCA-F550-33B4-D201B2864D5C}|MyPAS.csproj|c:\\users\\jason\\jason\u0027s projects 2025\\mypas\\server\\mypas\\data\\mypascontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0A4B6469-1BCA-F550-33B4-D201B2864D5C}|MyPAS.csproj|solutionrelative:data\\mypascontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Jason\\Jason\u0027s Projects 2025\\MyPAS\\server\\MyPAS\\Data\\MyPASContextFactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Data\\MyPASContextFactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -44,7 +44,7 @@
               "RelativeDocumentMoniker": "Controllers\\PaymentsController.cs",
               "ToolTip": "C:\\Users\\Jason\\Jason\u0027s Projects 2025\\MyPAS\\server\\MyPAS\\Controllers\\PaymentsController.cs",
               "RelativeToolTip": "Controllers\\PaymentsController.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAywFkAAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAABUAAAAAAAAAAADwv1kAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-18T19:27:44.351Z",
               "EditorCaption": ""

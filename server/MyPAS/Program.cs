@@ -1,8 +1,10 @@
 using MyPAS.Data;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 // Begin app builder
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add CORS service
 builder.Services.AddCors(options =>
@@ -22,6 +24,7 @@ builder.Services.AddControllers();
 // Establishes connection to DB.
 builder.Services.AddDbContext<MyPASContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 var app = builder.Build();
 
