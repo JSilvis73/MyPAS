@@ -31,9 +31,23 @@ namespace MyPAS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
         {
-            _logger.LogInformation("Fetching all patients.");
-            var patients = await _context.Patients.ToListAsync();
-            return Ok(patients);
+            _logger.LogInformation("Attempting to fetching all patients...");
+
+            try
+            {
+                var patients = await _context.Patients.ToListAsync();
+                if (patients == null || patients.Count == 0)
+                {
+                    _logger.LogWarning("Patients not found in the database.");
+                    return NotFound("No patients found.");
+                }
+                return Ok(patients);
+            }
+            catch (Exception ex) 
+            {
+                _logger.LogError(ex, "An error occurred while fetching patients.");
+                return StatusCode(500, "An internal server error occurred.");
+            }   
         }
 
         // Get specific patient by ID.
