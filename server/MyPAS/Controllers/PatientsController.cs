@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyPAS.Data;
 using MyPAS.Models;
+using Serilog;
 
 namespace MyPAS.Controllers
 {
@@ -12,12 +13,17 @@ namespace MyPAS.Controllers
     {
         // Dependency Injection - We inject our database into the controller so that it is able to perform the database actions as needed.
         private readonly MyPASContext _context;
+        private readonly ILogger<PatientsController> _logger;
+
 
         // Constructor to assign context.
-        public PatientsController(MyPASContext context)
+        public PatientsController(ILogger<PatientsController> logger, MyPASContext context)
         {
+            _logger = logger;
             _context = context;
         }
+
+     
 
         // HTTP Methods
 
@@ -25,6 +31,7 @@ namespace MyPAS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
         {
+            _logger.LogInformation("Fetching all patients.");
             var patients = await _context.Patients.ToListAsync();
             return Ok(patients);
         }
@@ -33,6 +40,7 @@ namespace MyPAS.Controllers
         [HttpGet("{id}")]
         public ActionResult<Patient> GetPatient(int id)
         {
+            _logger.LogInformation($"Fetching patient with ID: {id}");
             var patient = _context.Patients.Find(id);
             if (patient == null)
             {
