@@ -82,15 +82,29 @@ namespace MyPAS.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPatient([FromBody] Patient patient)
         {
-            if (patient == null)
+            _logger.LogInformation("Attempting to add patient to database...");
+
+            try
             {
-                return BadRequest(); // Sends a 400 Bad Request.
+                if (patient == null)
+                {
+                    _logger.LogWarning("Patient could not be added.");
+                    return BadRequest("Patient could not be added.");
+                }
+
+               
+                _context.Patients.Add(patient);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Patient with ID: {id} has been added.", patient.Id);
+                return CreatedAtAction(nameof(GetPatient), new { id = patient.Id }, patient);
+
             }
-
-            _context.Patients.Add(patient);     // Prepares the new patient to be saved.
-            await _context.SaveChangesAsync();   // Atually saves the changes to db.
-
-            return CreatedAtAction(nameof(GetPatients), new { id = patient.Id}, patient);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while adding patient.");
+                return StatusCode(500, "An internal server error occurred.");
+            }
         }
 
         // Update patient
