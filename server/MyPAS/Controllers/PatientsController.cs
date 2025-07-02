@@ -41,6 +41,8 @@ namespace MyPAS.Controllers
                     _logger.LogWarning("Patients not found in the database.");
                     return NotFound("No patients found.");
                 }
+
+                _logger.LogInformation("Successfully fetched {Count} patients.", patients.Count);
                 return Ok(patients);
             }
             catch (Exception ex) 
