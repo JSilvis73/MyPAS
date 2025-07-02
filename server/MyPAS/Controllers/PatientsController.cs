@@ -54,15 +54,28 @@ namespace MyPAS.Controllers
 
         // Get specific patient by ID.
         [HttpGet("{id}")]
-        public ActionResult<Patient> GetPatient(int id)
+        public async Task<ActionResult<Patient>> GetPatient(int id)
         {
-            _logger.LogInformation($"Fetching patient with ID: {id}");
-            var patient = _context.Patients.Find(id);
-            if (patient == null)
+            _logger.LogInformation("Attempting to fetch patient with ID: {id}", id);
+
+            try
             {
-                return NotFound();
+                var patient = await _context.Patients.FindAsync(id);
+
+                if (patient == null)
+                {
+                    _logger.LogWarning("Patient with ID: {id}, not found in the database.", id);
+                    return NotFound($"No patient with ID: {id} found.");
+                }
+
+                _logger.LogInformation("Patient with ID:{id} found.", id);
+                return Ok(patient);
             }
-            return Ok(patient);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while fetching patient with ID: {id}", id);
+                return StatusCode(500, " An internal server error occurred.");
+            }
         }
 
         // Create patient
