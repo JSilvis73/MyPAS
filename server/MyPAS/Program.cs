@@ -2,9 +2,18 @@ using MyPAS.Data;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
-// Begin app builder
+// Begin app builder.
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Serilog Logger.
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/mypas-log.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+//Plug Serilog into .NET Core.
+builder.Host.UseSerilog(); 
 
 // Add CORS service
 builder.Services.AddCors(options =>
@@ -34,6 +43,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage(); // Shows full error trace
 }
+
+// Start Logger
+Log.Information("MyPAS is starting up...");
 
 // Configure the HTTP request pipeline.
 //app.UseHttpsRedirection();
