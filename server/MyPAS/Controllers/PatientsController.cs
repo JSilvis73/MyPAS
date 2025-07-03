@@ -41,7 +41,6 @@ namespace MyPAS.Controllers
                     _logger.LogWarning("Patients not found in the database.");
                     return NotFound("No patients found.");
                 }
-
                 _logger.LogInformation("Successfully fetched {Count} patients.", patients.Count);
                 return Ok(patients);
             }
@@ -67,7 +66,6 @@ namespace MyPAS.Controllers
                     _logger.LogWarning("Patient with ID: {id}, not found in the database.", id);
                     return NotFound($"No patient with ID: {id} found.");
                 }
-
                 _logger.LogInformation("Patient with ID:{id} found.", id);
                 return Ok(patient);
             }
@@ -91,14 +89,11 @@ namespace MyPAS.Controllers
                     _logger.LogWarning("Patient could not be added.");
                     return BadRequest("Patient could not be added.");
                 }
-
-               
                 _context.Patients.Add(patient);
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Patient with ID: {id} has been added.", patient.Id);
                 return CreatedAtAction(nameof(GetPatient), new { id = patient.Id }, patient);
-
             }
             catch (Exception ex)
             {
@@ -111,11 +106,12 @@ namespace MyPAS.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePatient(int id, [FromBody] Patient patientToUpdate)
         {
-            // Output updated patient
-            Console.WriteLine($"Received ID: {patientToUpdate.Id}, Name: {patientToUpdate.FirstName}");
+            _logger.LogInformation("Attempting to update patient: {LastName}, {FirstName}.",
+                patientToUpdate.LastName, patientToUpdate.FirstName);
 
             if (id != patientToUpdate.Id)
             {
+                _logger.LogWarning("Patient ID mismatch. URL ID: {id}, Body ID: {bodyId}", id, patientToUpdate.Id);
                 return BadRequest("ID mismatch");
             }
 
@@ -123,10 +119,11 @@ namespace MyPAS.Controllers
 
             if (existingPatient == null)
             {
+                _logger.LogWarning("Patient with ID: {patientID} not found.", id);
                 return NotFound($"Patient with ID {id} not found.");
             }
 
-            // Update fields manually (this protects against over-posting)
+            // Update fields
             existingPatient.FirstName = patientToUpdate.FirstName;
             existingPatient.LastName = patientToUpdate.LastName;
             existingPatient.Address = patientToUpdate.Address;
@@ -140,16 +137,23 @@ namespace MyPAS.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-                return Ok(existingPatient); // Return updated patient
+                _logger.LogInformation("Patient with ID: {id} successfully updated.", id);
+                return Ok(existingPatient);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
+                _logger.LogError(ex, "Concurrency error while updating patient ID: {id}", id);
                 if (!_context.Patients.Any(p => p.Id == id))
                 {
                     return NotFound();
                 }
 
-                throw; // Let the pipeline handle it (for dev purposes)
+                throw; // optional: rethrow if you're in dev and want to crash upward
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error occurred while updating patient ID: {id}", id);
+                return StatusCode(500, "An internal server error occurred.");
             }
         }
 
