@@ -161,16 +161,30 @@ namespace MyPAS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePatient(int id)
         {
-            var patient = await _context.Patients.FindAsync(id);
-            if (patient == null)
+            _logger.LogInformation("Attempting to delete patient with ID: {id}.", id);
+
+            try
             {
-                return NotFound();
+                var patient = await _context.Patients.FindAsync(id);
+
+                if (patient == null)
+                {
+                    _logger.LogWarning("Patient with ID: {id} not found in the database.", id);
+                    return NotFound($"Patient with ID:{id} was not found.");
+                }
+
+                _context.Patients.Remove(patient);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Patient with ID:{id} deleted successfully.",id);
+                return NoContent();
+            }
+            catch (Exception ex) 
+            {
+                _logger.LogError(ex, "Unexpected error occurred while deleting patient ID: {id}", id);
+                return StatusCode(500, "An internal server error occurred.");
             }
 
-            _context.Patients.Remove(patient);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
     }
