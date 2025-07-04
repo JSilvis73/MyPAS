@@ -1,17 +1,19 @@
 using MyPAS.Data;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Serilog.Events;
 
 // Begin app builder.
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Serilog Logger.
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-   .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // Only warn or error for Microsoft logs
+    .ReadFrom.Configuration(builder.Configuration) // Reading from appsettings.
+    .MinimumLevel.Information() // Makes the minimum logging level information or highty (error, warning, etc.)
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // Only warn or error for Microsoft logs
     .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning) // Hide SQL commands
-    .WriteTo.Console()
-    .WriteTo.File("Logs/mypas-log.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.Console() 
+    .WriteTo.File("Logs/mypas-log.txt", rollingInterval: RollingInterval.Day)   // Outputs to text file with the interval of one per day.
     .CreateLogger();
 
 //Plug Serilog into .NET Core.
