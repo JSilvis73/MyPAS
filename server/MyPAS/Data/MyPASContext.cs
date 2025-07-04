@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MyPAS.Models;
 
 namespace MyPAS.Data
 {
-    public class MyPASContext : DbContext
+    // Establish a "Identity" database.
+    public class MyPASContext : IdentityDbContext<MyPASUser>
     {
         public MyPASContext(DbContextOptions<MyPASContext> options) : base(options) { }
 
@@ -13,6 +15,9 @@ namespace MyPAS.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Authentication/Authorization Tables
+            base.OnModelCreating(modelBuilder);
+
             // Dates (DateOnly conversions)
             modelBuilder.Entity<Service>()
                 .Property(s => s.ServiceDate)
