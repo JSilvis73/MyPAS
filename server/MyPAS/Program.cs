@@ -7,7 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure Serilog Logger.
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
+    .MinimumLevel.Information()
+   .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // Only warn or error for Microsoft logs
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning) // Hide SQL commands
     .WriteTo.Console()
     .WriteTo.File("Logs/mypas-log.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
