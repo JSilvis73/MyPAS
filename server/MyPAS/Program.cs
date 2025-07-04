@@ -6,6 +6,11 @@ using Serilog.Events;
 // Begin app builder.
 var builder = WebApplication.CreateBuilder(args);
 
+// Authentication
+builder.Services.AddIdentity<MyPASUser, IdentityRole>()
+    .AddEntityFrameworkStores<MyPASContext>()
+    .AddDefaultTokenProviders();
+
 // Configure Serilog Logger.
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration) // Reading from appsettings.
