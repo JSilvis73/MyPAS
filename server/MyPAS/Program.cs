@@ -1,4 +1,6 @@
 using MyPAS.Data;
+using MyPAS.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -55,6 +57,10 @@ if (app.Environment.IsDevelopment())
 
 // Start Logger
 Log.Information("MyPAS is starting up...");
+
+// Authentication and Authorization middleware.
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 //app.UseHttpsRedirection();
