@@ -5,7 +5,7 @@ namespace MyPAS.Models.Auth
     public class RegisterRequest
     {
         [Required]
-        [Email]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required]
