@@ -9,6 +9,7 @@ namespace MyPAS.Data
     {
         public MyPASContext CreateDbContext(string[] args)
         {
+            // Load from configuration.
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
