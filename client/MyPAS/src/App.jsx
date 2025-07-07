@@ -14,9 +14,9 @@ import AuthorizationPage from "./pages/AuthorizationPage";
 
 
 function App() {
- const user = "TestUser";
+ const user = null;
 
- if (user==null) {
+ if (!user) {
   return (
     <div>
       <AuthorizationPage />

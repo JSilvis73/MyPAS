@@ -1,52 +1,27 @@
 import React, { useState } from "react";
+import AuthSignIn from "../components/AuthSignIn";
+import AuthRegister from "../components/AuthRegister";
 
 export default function AuthorizationPage() {
-  // State for authorization
-  const [userCredentials, setUSerCredentials] = useState({
-    userEmail: "",
-    userPassword: "",
-  });
+  const [toggleRegisterComponent, setToggleRegisterComponent] = useState(false);
 
-  // Handle changes to form.
-  const handleFormChanges = () => {};
-
-  // Handle submition of form.
-  const handleSubmit = (e) => {
-    prompt("Form submit not set up.");
+  const handleToggleRegister = () => {
+    setToggleRegisterComponent((prev) => !prev);
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col items-center text-white bg-gray-800 gap-4 border rounded-lg p-4 mt-6"
-      >
-        <h1 className="text-2xl mb-4">
-          <strong>Authorization</strong>
-        </h1>
-        <p>Please sign in.</p>
-        <input
-          className="border rounded-md p-1 "
-          type="email"
-          name="userEmail"
-          // value={userEmail}
-          placeholder="Example@email.com"
-          //onChange={handleFormChanges}
-        />
+    <div>
+      <div className="size-lg bg-gray-800 text-white text-center border-4 rounded-lg p-4">
+        <h2 className="text-2xl mb-4">
+          <strong>MyMed</strong>
+        </h2>
+        <h2>Authorization</h2>
 
-        <input
-          className="border rounded-md p-1"
-          type="password"
-          name="userPassword"
-          // value={userPassword}
-          placeholder="Password"
-          // onChange={handleFormChanges}
-        />
-
-        <button 
-        className="p-1 mt-4 border rounded-lg hover:bg-white hover:text-black"
-        type="submit">Sign In</button>
-      </form>
+        <div>{toggleRegisterComponent ? <AuthRegister /> : <AuthSignIn />}</div>
+        <button className=" border rounded-xl p-2" onClick={handleToggleRegister}>
+          {!toggleRegisterComponent ? "Register" : "Sign in"}
+        </button>
+      </div>
     </div>
   );
 }
