@@ -17,7 +17,7 @@ export default function AuthorizationPage() {
         </h2>
         <h2>Authorization</h2>
 
-        <div>{toggleRegisterComponent ? <AuthRegister /> : <AuthSignIn />}</div>
+        <div className="flex flex-col items-center">{toggleRegisterComponent ? <AuthRegister /> : <AuthSignIn />}</div>
         <button className=" border rounded-xl p-2" onClick={handleToggleRegister}>
           {!toggleRegisterComponent ? "Register" : "Sign in"}
         </button>

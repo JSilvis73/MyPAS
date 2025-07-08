@@ -35,7 +35,7 @@ const MainLayout = ({ children, user }) => {
       </header>
 
       {/* Main Content */}
-      <main className=" flex-grow mt-2 max-w-6xl mx-auto p-4">
+      <main className="flex-grow  max-w-6xl mx-auto p-4">
         
         {children}
       </main>
