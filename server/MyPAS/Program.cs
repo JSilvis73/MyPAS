@@ -48,6 +48,24 @@ builder.Services.AddDbContext<MyPASContext>(options =>
 
 var app = builder.Build();
 
+async Task SeedRolesAsync(IServiceProvider serviceProvider)
+{
+    // Instantiate a serviceProvider.
+    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    // Create standard list of roles.
+    string[] roles = ["Admin", "User"];
+
+    // Loop over the roles and see if they exist in the database. If it doesn't add it.
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+}
+
 // Middleware
 
 if (app.Environment.IsDevelopment())
@@ -76,3 +94,10 @@ app.MapControllers();
 
 // Start.
 app.Run();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    
+    await SeedRolesAsync(services);
+}
