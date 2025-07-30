@@ -93,6 +93,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Start.
+Log.Information("MyPAS has started successfully.");
 app.Run();
 
 using (var scope = app.Services.CreateScope())
