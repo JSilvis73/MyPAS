@@ -9,6 +9,7 @@ namespace MyPAS.Data
     {
         public MyPASContext(DbContextOptions<MyPASContext> options) : base(options) { }
 
+        // Models for the application.
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<Payment> Payments { get; set; }
