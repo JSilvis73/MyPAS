@@ -16,7 +16,7 @@ builder.Services.AddIdentity<MyPASUser, IdentityRole>()
 // Configure Serilog Logger.
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration) // Reading from appsettings.
-    .MinimumLevel.Information() // Makes the minimum logging level information or highty (error, warning, etc.)
+    .MinimumLevel.Information() // Makes the minimum logging level information or higher (error, warning, etc.)
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // Only warn or error for Microsoft logs
     .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning) // Hide SQL commands
     .WriteTo.Console() 
