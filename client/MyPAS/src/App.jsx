@@ -14,7 +14,7 @@ import AuthorizationPage from "./pages/AuthorizationPage";
 
 
 function App() {
- const user = null;
+ const user = null; // Replace with actual user authentication logic
 
  if (!user) {
   return (
