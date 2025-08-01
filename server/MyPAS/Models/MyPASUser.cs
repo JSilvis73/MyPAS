@@ -14,8 +14,6 @@ namespace MyPAS.Models
         [MaxLength(100)]
         public string LastName { get; set; }
 
-        // Optional: Role or custom claims (can also use IdentityRole system)
-        public string Role { get; set; }
 
         // Optional: Timestamp of registration
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

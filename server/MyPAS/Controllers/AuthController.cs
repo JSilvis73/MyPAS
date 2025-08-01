@@ -37,8 +37,12 @@ namespace MyPAS.Controllers
 
             if (!ModelState.IsValid)
             {
+                
                 return BadRequest(ModelState);
             }
+
+            Log.Information("Registering user {email} with first name {firstName} and last name {lastName}.",
+                request.Email, request.FirstName, request.LastName);
 
             // Build new user in memory.
             var user = new MyPASUser
@@ -62,7 +66,7 @@ namespace MyPAS.Controllers
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(error.Code, error.Description);
-                _logger.LogWarning("Registration error for {email}: {error}", request.Email, error.Description);
+               // _logger.LogWarning("Registration error for {email}: {error}", request.Email, error.Description);
             }
 
             return BadRequest(ModelState);
