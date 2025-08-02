@@ -28,6 +28,27 @@ namespace MyPAS.Controllers
         }
 
         // Register, Login, etc. will go here
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        {
+            _logger.LogInformation("Attempting to login user: {email}.", loginDto.Email);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User {email} logged in successfully.", loginDto.Email);
+                return Ok(new { message = "Login successful" });
+            }
+
+            _logger.LogWarning("Login failed for user: {email}.", loginDto.Email);
+            return Unauthorized(new { message = "Invalid login attempt" });
+        }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
@@ -37,7 +58,7 @@ namespace MyPAS.Controllers
 
             if (!ModelState.IsValid)
             {
-                
+
                 return BadRequest(ModelState);
             }
 
@@ -51,7 +72,7 @@ namespace MyPAS.Controllers
                 Email = request.Email,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
-                EmailConfirmed = false,
+
             };
 
             // Attempt to create user.
@@ -66,11 +87,15 @@ namespace MyPAS.Controllers
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(error.Code, error.Description);
-               // _logger.LogWarning("Registration error for {email}: {error}", request.Email, error.Description);
+                // _logger.LogWarning("Registration error for {email}: {error}", request.Email, error.Description);
             }
 
             return BadRequest(ModelState);
 
         }
+
+
     }
+
 }
+
