@@ -14,10 +14,10 @@ public class JwtService
 
     public JwtService(IConfiguration config)
     {
-        _secretKey = config["JwtSettings:Key"];
+        _secretKey = config["JwtSettings:SecretKey"];
         _issuer = config["JwtSettings:Issuer"];
         _audience = config["JwtSettings:Audience"];
-        _expiryMinutes = int.Parse(config["JwtSettings:ExpiresInMinutes"]);
+        _expiryMinutes = int.Parse(config["JwtSettings:ExpirationMinutes"]);
     }
 
     public string GenerateToken(string userId, string email)

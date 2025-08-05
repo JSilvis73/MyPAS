@@ -6,6 +6,8 @@ using MyPAS.Data;
 using MyPAS.Models;
 using MyPAS.Models.Auth;
 using Serilog;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace MyPAS.Controllers
 {
@@ -17,14 +19,18 @@ namespace MyPAS.Controllers
         private readonly SignInManager<MyPASUser> _signInManager;
         private readonly ILogger<AuthController> _logger;
 
+        private readonly JwtService _jwtService;
+
         public AuthController(
             UserManager<MyPASUser> userManager,
             SignInManager<MyPASUser> signInManager,
-            ILogger<AuthController> logger)
+            ILogger<AuthController> logger,
+            JwtService jwtService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _jwtService = jwtService;
         }
 
         // Register, Login, etc. will go here
@@ -38,15 +44,34 @@ namespace MyPAS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
+            // Model is valid, proceed with login.
+            var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
-            if (result.Succeeded)
+            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
             {
-                _logger.LogInformation("User {email} logged in successfully.", loginDto.Email);
-                return Ok(new { message = "Login successful" });
+                _logger.LogWarning("Login failed for user: {email}.", loginDto.Email);
+                return Unauthorized(new { message = "Invalid email or password" });
             }
 
-            _logger.LogWarning("Login failed for user: {email}.", loginDto.Email);
+            var result = await _signInManager.PasswordSignInAsync(user, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
+
+            // Create claims and sign in the user.
+            if (!result.Succeeded)
+            {
+                _logger.LogWarning("Login failed for user: {email}.", loginDto.Email);
+                return Unauthorized(new { message = "Invalid login attempt" });
+            }
+
+            var token = _jwtService.GenerateToken(user.Id, user.Email);
+
+            if (token != null)
+            {
+                _logger.LogInformation("User {email} logged in successfully.", loginDto.Email);
+                return Ok(new { token });
+            }
+               
+            // If we got here, login was unsuccessful.
+                _logger.LogWarning("Login failed for user: {email}.", loginDto.Email);
             return Unauthorized(new { message = "Invalid login attempt" });
         }
 
@@ -62,6 +87,7 @@ namespace MyPAS.Controllers
                 return BadRequest(ModelState);
             }
 
+            // Model is valid, proceed with registration.
             Log.Information("Registering user {email} with first name {firstName} and last name {lastName}.",
                 request.Email, request.FirstName, request.LastName);
 
@@ -72,7 +98,6 @@ namespace MyPAS.Controllers
                 Email = request.Email,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
-
             };
 
             // Attempt to create user.
@@ -85,12 +110,14 @@ namespace MyPAS.Controllers
             }
 
             // If we got here, something failed.
-            _logger.LogWarning("Registration failed for user: {email}. Errors: {errors}", request.Email, result.Errors);
+            
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(error.Code, error.Description);
                 // _logger.LogWarning("Registration error for {email}: {error}", request.Email, error.Description);
             }
+
+            _logger.LogWarning("Registration failed for user: {email}. Errors: {errors}", request.Email, result.Errors);
 
             return BadRequest(ModelState);
 

@@ -13,6 +13,9 @@ builder.Services.AddIdentity<MyPASUser, IdentityRole>()
     .AddEntityFrameworkStores<MyPASContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddScoped<JwtService>();
+
+
 // Configure Serilog Logger.
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration) // Reading from appsettings.
