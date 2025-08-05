@@ -58,7 +58,7 @@ namespace MyPAS.Controllers
 
             if (!ModelState.IsValid)
             {
-
+                _logger.LogWarning("Invalid registration attempt for user: {email}.", request.Email);
                 return BadRequest(ModelState);
             }
 
@@ -84,6 +84,8 @@ namespace MyPAS.Controllers
                 return Ok(new { message = "User registered successfully" });
             }
 
+            // If we got here, something failed.
+            _logger.LogWarning("Registration failed for user: {email}. Errors: {errors}", request.Email, result.Errors);
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(error.Code, error.Description);
