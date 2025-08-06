@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AuthSignIn from "../components/AuthSignIn";
+import AuthLogIn from "../components/AuthLogIn";
 import AuthRegister from "../components/AuthRegister";
 
 export default function AuthorizationPage() {
@@ -17,9 +17,9 @@ export default function AuthorizationPage() {
         </h2>
         <h2>Authorization</h2>
 
-        <div className="flex flex-col items-center">{toggleRegisterComponent ? <AuthRegister /> : <AuthSignIn />}</div>
+        <div className="flex flex-col items-center">{toggleRegisterComponent ? <AuthRegister /> : <AuthLogIn />}</div>
         <button className=" border rounded-xl p-2" onClick={handleToggleRegister}>
-          {!toggleRegisterComponent ? "Register" : "Sign in"}
+          {!toggleRegisterComponent ? "Register" : "Log in"}
         </button>
       </div>
     </div>

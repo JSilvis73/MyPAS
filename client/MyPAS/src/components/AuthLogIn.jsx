@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import FormInput from "./FormInput";
 
-export default function AuthSignIn() {
+export default function AuthLogIn() {
   const [authOptions, setAuthOptions] = useState({
     email: "",
     password: "",
@@ -19,7 +19,7 @@ export default function AuthSignIn() {
   return (
     <div className="border flex flex-col items-center p-2">
       <h2 className="text-2xl mb-4">
-        <strong>Sign In</strong>
+        <strong>Log In</strong>
       </h2>
       <form>
         <FormInput
