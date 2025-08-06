@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FormInput from "./FormInput";
 
 export default function AuthRegister() {
+  // State to hold the authentication options.
   const [newUserFormData, setNewUserFormData] = useState({
     email: "",
     password: "",
@@ -10,6 +11,7 @@ export default function AuthRegister() {
     lastName: "",
   });
 
+  // Handle input changes.
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setNewUserFormData((prevData) => ({
