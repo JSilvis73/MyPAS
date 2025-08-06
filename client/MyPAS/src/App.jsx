@@ -19,7 +19,7 @@ function App() {
  if (!user) {
   return (
     <div>
-      <AuthorizationPage />
+      <AuthorizationPage user={user} />
     </div>
   );
  }

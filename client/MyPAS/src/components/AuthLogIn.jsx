@@ -52,7 +52,7 @@ export default function AuthLogIn() {
       .then((data) => {
         alert("Login successful");
         // Handle successful login (e.g., redirect or update state)
-        alert("Login successful");
+       
 
       })
       .catch((error) => {
