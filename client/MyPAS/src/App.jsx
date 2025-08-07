@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainLayout from "./components/MainLayout";
 import HomePage from "./pages/HomePage";
@@ -14,22 +14,30 @@ import AuthorizationPage from "./pages/AuthorizationPage";
 
 
 function App() {
- const user = null; // Replace with actual user authentication logic
+  var storedUser = null;
+  const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
 
- if (!user) {
-  return (
-    <div>
-      <AuthorizationPage user={user} />
-    </div>
-  );
- }
- else
- {
-  
+  // On component mount, check for existing user session
+   useEffect(() => {
+    // Try to load token from localStorage
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+
+    // If token and user data exist, set the user state
+    if (token && userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+  if (!user) {
+    return (
+      <AuthorizationPage setUser={setUser} />
+    );
+  }
+
   return (
     <Router>
       <MainLayout user={user}>
-        
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
@@ -46,7 +54,5 @@ function App() {
   );
  }
 
-
-}
 
 export default App;

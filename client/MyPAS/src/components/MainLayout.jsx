@@ -29,7 +29,7 @@ const MainLayout = ({ children, user }) => {
           {/* Right: User Icon */}
           <div className="flex flex-col items-center text-2xl ">
             <FaUserCircle className='hover:animate-spin'/>
-            <p className='text-sm text-center'>{user}</p>
+            <p className='text-sm text-center'>{user.firstName}</p>
           </div>
         </div>
       </header>

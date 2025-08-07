@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import FormInput from "./FormInput";
 
-export default function AuthLogIn() {
+export default function AuthLogIn({setUser}) {
   // State to hold the authentication options.
   const [authOptions, setAuthOptions] = useState({
     email: "",
@@ -52,7 +52,11 @@ export default function AuthLogIn() {
       .then((data) => {
         alert("Login successful");
         // Handle successful login (e.g., redirect or update state)
-       
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        setUser(data.user); // Update the user state in the parent component
+        console.log("User data:", data.user);
+        //window.location.reload(); // Reload to reflect the logged-in state
 
       })
       .catch((error) => {

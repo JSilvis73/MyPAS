@@ -67,7 +67,7 @@ namespace MyPAS.Controllers
             if (token != null)
             {
                 _logger.LogInformation("User {email} logged in successfully.", loginDto.Email);
-                return Ok(new { token });
+                return Ok(new { token, user = new { user.Id, user.Email, user.FirstName, user.LastName } });
             }
                
             // If we got here, login was unsuccessful.
