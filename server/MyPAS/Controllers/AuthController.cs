@@ -46,8 +46,10 @@ namespace MyPAS.Controllers
 
             // Model is valid, proceed with login.
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
+            var userEmail = user?.Email;
 
-            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
+
+            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password) || userEmail == null)
             {
                 _logger.LogWarning("Login failed for user: {email}.", loginDto.Email);
                 return Unauthorized(new { message = "Invalid email or password" });
@@ -62,7 +64,7 @@ namespace MyPAS.Controllers
                 return Unauthorized(new { message = "Invalid login attempt" });
             }
 
-            var token = _jwtService.GenerateToken(user.Id, user.Email);
+            var token = _jwtService.GenerateToken(user.Id, userEmail);
 
             if (token != null)
             {

@@ -1,23 +1,28 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 public class JwtService
 {
-    private readonly string _secretKey;
-    private readonly string _issuer;
-    private readonly string _audience;
-    private readonly int _expiryMinutes;
+    
+    private readonly string _secretKey = string.Empty;
+    
+    private readonly string _issuer = string.Empty;
+   
+    private readonly string _audience = string.Empty;
+ 
+    private readonly int _expiryMinutes = 60;
 
     public JwtService(IConfiguration config)
     {
-        _secretKey = config["JwtSettings:SecretKey"];
-        _issuer = config["JwtSettings:Issuer"];
-        _audience = config["JwtSettings:Audience"];
-        _expiryMinutes = int.Parse(config["JwtSettings:ExpirationMinutes"]);
+        _secretKey = config["JwtSettings:SecretKey"] ?? throw new ArgumentNullException("JwtSettings:SecretKey", "SecretKey cannot be null.");
+        _issuer = config["JwtSettings:Issuer"] ?? throw new ArgumentNullException("JwtSettings:Issuer", "Issuer cannot be null.");
+        _audience = config["JwtSettings:Audience"] ?? throw new ArgumentNullException("JwtSettings:Audience", "Audience cannot be null.");
+        _expiryMinutes = int.TryParse(config["JwtSettings:ExpirationMinutes"], out var expiryMinutes) ? expiryMinutes : throw new ArgumentNullException("JwtSettings:ExpirationMinutes", "ExpirationMinutes must be a valid integer.");
     }
 
     public string GenerateToken(string userId, string email)

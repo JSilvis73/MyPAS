@@ -1,5 +1,5 @@
 ﻿using MyPAS.Models;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyPAS.Models
 {
@@ -9,19 +9,21 @@ namespace MyPAS.Models
 
         public decimal Amount { get; set; }
 
-        public string Method { get; set; }
+        [Required]
+        public string? Method { get; set; }
 
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
 
         public DateOnly PaymentDate { get; set; }
 
         public int PatientId { get; set; }
 
-        public Patient Patient { get; set; }
+        [Required]
+        public Patient? Patient { get; set; }
 
         public int ServiceId { get; set; }
 
-        public Service Service { get; set; }
+        public Service? Service { get; set; }
     }
 
 }
