@@ -123,11 +123,43 @@ app.MapControllers();
 
 // Start.
 Log.Information("MyPAS has started successfully.");
-app.Run();
 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    
+
+    // Seed roles
     await SeedRolesAsync(services);
+
+    // Seed default admin
+    await SeedAdminAsync(services);
 }
+
+// Method to create one admin user upon startup
+async Task SeedAdminAsync(IServiceProvider serviceProvider)
+{
+    var userManager = serviceProvider.GetRequiredService<UserManager<MyPASUser>>();
+
+    string adminEmail = "support@mypas.com";
+    string adminPassword = "SuperSecure123!"; // change before production
+
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    if (adminUser == null)
+    {
+        var newAdmin = new MyPASUser
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            EmailConfirmed = true
+        };
+
+        var result = await userManager.CreateAsync(newAdmin, adminPassword);
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(newAdmin, "Admin");
+        }
+    }
+}
+
+app.Run();
+
