@@ -18,7 +18,7 @@ namespace MyPAS.Controllers
         private readonly UserManager<MyPASUser> _userManager;
         private readonly SignInManager<MyPASUser> _signInManager;
         private readonly ILogger<AuthController> _logger;
-
+       
         private readonly JwtService _jwtService;
 
         public AuthController(

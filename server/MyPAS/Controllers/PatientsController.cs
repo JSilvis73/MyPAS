@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using MyPAS.Data;
 using MyPAS.Models;
@@ -9,6 +10,7 @@ using Serilog;
 namespace MyPAS.Controllers
 {
     [Route("api/[controller]")]
+    
     [ApiController]
     public class PatientsController : ControllerBase
     {
@@ -24,11 +26,12 @@ namespace MyPAS.Controllers
             _context = context;
         }
 
-     
+
 
         // HTTP Methods
 
         // Get list of patients.
+       
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
         {
