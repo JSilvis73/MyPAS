@@ -1,4 +1,3 @@
-
 public interface IPatientServices
 {
     Patient GetPatientById(int id);

@@ -29,7 +29,24 @@ public class PatientServices: IPatientServices
     // Update Patient
     public Patient UpdatePatient(Patient patient)
     {
-        Patient
+        Patient patientToUpdate = _context.Patients.Find(patient.Id);
+        if (patientToUpdate == null) { return patient; }
+
+        patientToUpdate.FirstName = patient.FirstName;
+        patientToUpdate.LastName = patient.LastName;
+        //patientToUpdate.DateOfBirth = patient.DateOfBirth;
+        patientToUpdate.Address = patient.Address;
+        patientToUpdate.City = patient.City;
+        patientToUpdate.State = patient.State;
+        patientToUpdate.Zip = patient.Zip;
+        patientToUpdate.Age = patient.Age;
+        patientToUpdate.Phone = patient.Phone;
+        patientToUpdate.Email = patient.Email;
+
+        _context.Patients.Update(patientToUpdate);
+        _context.SaveChanges();
+
+        return patientToUpdate;
     }
 
     // Delete Patient 
