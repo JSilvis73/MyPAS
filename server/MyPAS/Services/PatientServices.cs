@@ -1,6 +1,6 @@
 using MyPAS.Models;
 
-public class PatientServices: IPatientServices
+public class PatientServices : IPatientServices
 {
     MyPASContext _context;
 
@@ -14,7 +14,7 @@ public class PatientServices: IPatientServices
 
     // Find Patient by Id
     public Patient GetPatientById(int id)
-    { 
+    {
         var patient = _context.Patients.Find(id);
         if (patient == null) { return null; }
         return patient;
@@ -50,4 +50,19 @@ public class PatientServices: IPatientServices
     }
 
     // Delete Patient 
+    public void DeletePatient(int id)
+    {
+        Patient patientToDelete = _context.Patients.Find(id);
+        if (patientToDelete == null) { return; }
+
+        // Logic to handle related Services and Payments if necessary
+        var relatedServices = _context.Services.Where(s => s.PatientId == id);
+        _context.Services.RemoveRange(relatedServices);
+
+        var relatedPayments = _context.Payments.Where(p => p.PatientId == id);
+        _context.Payments.RemoveRange(relatedPayments);
+
+        _context.Patients.Remove(patientToDelete);
+        _context.SaveChanges();
+    }
 }
