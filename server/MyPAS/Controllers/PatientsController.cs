@@ -59,7 +59,7 @@ namespace MyPAS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Patient>> GetPatient(int id)
         {
-            _logger.LogInformation("Attempting to fetch patient with ID: {id}", id);
+            _logger.LogInformation($"Attempting to fetch patient with ID: {id}");
 
             try
             {
@@ -67,15 +67,15 @@ namespace MyPAS.Controllers
 
                 if (patient == null)
                 {
-                    _logger.LogWarning("Patient with ID: {id}, not found in the database.", id);
+                    _logger.LogWarning($"Patient with ID: {id}, not found in the database.");
                     return NotFound($"No patient with ID: {id} found.");
                 }
-                _logger.LogInformation("Patient with ID:{id} found.", id);
+                _logger.LogInformation($"Patient with ID:{id} found.");
                 return Ok(patient);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured while fetching patient with ID: {id}", id);
+                _logger.LogError(ex, $"An error occured while fetching patient with ID: {id}");
                 return StatusCode(500, " An internal server error occurred.");
             }
         }
@@ -123,7 +123,7 @@ namespace MyPAS.Controllers
 
             if (existingPatient == null)
             {
-                _logger.LogWarning("Patient with ID: {patientID} not found.", id);
+                _logger.LogWarning($"Patient with ID: {id} not found.");
                 return NotFound($"Patient with ID {id} not found.");
             }
 
@@ -141,12 +141,12 @@ namespace MyPAS.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Patient with ID: {id} successfully updated.", id);
+                _logger.LogInformation($"Patient with ID: {id} successfully updated.");
                 return Ok(existingPatient);
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                _logger.LogError(ex, "Concurrency error while updating patient ID: {id}", id);
+                _logger.LogError(ex, $"Concurrency error while updating patient ID: {id}");
                 if (!_context.Patients.Any(p => p.Id == id))
                 {
                     return NotFound();
@@ -165,7 +165,7 @@ namespace MyPAS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePatient(int id)
         {
-            _logger.LogInformation("Attempting to delete patient with ID: {id}.", id);
+            _logger.LogInformation($"Attempting to delete patient with ID: {id}.");
 
             try
             {
@@ -173,19 +173,19 @@ namespace MyPAS.Controllers
 
                 if (patient == null)
                 {
-                    _logger.LogWarning("Patient with ID: {id} not found in the database.", id);
+                    _logger.LogWarning($"Patient with ID: {id} not found in the database.");
                     return NotFound($"Patient with ID:{id} was not found.");
                 }
 
                 _context.Patients.Remove(patient);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Patient with ID:{id} deleted successfully.",id);
+                _logger.LogInformation($"Patient with ID:{id} deleted successfully.");
                 return NoContent();
             }
             catch (Exception ex) 
             {
-                _logger.LogError(ex, "Unexpected error occurred while deleting patient ID: {id}", id);
+                _logger.LogError(ex, $"Unexpected error occurred while deleting patient ID: {id}");
                 return StatusCode(500, "An internal server error occurred.");
             }
 
