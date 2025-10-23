@@ -1,3 +1,4 @@
+using server.MyPAS.Models;
 public interface IPatientServices
 {
     Patient GetPatientById(int id);
@@ -7,5 +8,5 @@ public interface IPatientServices
     void UpdatePatientById(Patient updatedPatient);
     void DeletePatientById(int id);
 
-    
+
 }
