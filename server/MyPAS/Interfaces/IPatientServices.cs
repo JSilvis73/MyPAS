@@ -1,12 +1,9 @@
-//using server.MyPAS.Models;
-//public interface IPatientServices
-//{
-//    Patient GetPatientById(int id);
-//    IEnumerable<Patient> GetAllPatients();
-
-//    Patient CreatePatient(Patient patient);
-//    void UpdatePatientById(Patient updatedPatient);
-//    void DeletePatientById(int id);
 
 
-//}
+public interface IPatientService
+{
+    IEnumerable<Patient> GetAll();
+    Patient GetById(int id);
+    Patient CreatePatient(IPatientService patient);
+    void DeletePatient(int id);
+}
