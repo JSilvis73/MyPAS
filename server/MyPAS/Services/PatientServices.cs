@@ -1,4 +1,5 @@
 using MyPAS.Models;
+using MyPAS.Data;
 
 public class PatientService : IPatientService
     {
@@ -23,13 +24,21 @@ public class PatientService : IPatientService
         
     }
 
-    public Patient CreatePatient(Patient patient)
+    public Patient CreatePatient(string firstName, string lastName)
     {
+        var patient = new Patient { FirstName = firstName, LastName = lastName };
+
+        _context.Patients.Add(patient);
+        _context.SaveChanges();
+        return patient;
 
     }
 
     public void DeletePatient(int id)
     {
+        var patient = GetById(id);
+        _context.Patients.Remove(patient);
+        _context.SaveChanges();
 
     }
 
