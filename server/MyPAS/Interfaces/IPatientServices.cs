@@ -1,4 +1,4 @@
-
+using MyPAS.Models;
 
 public interface IPatientService
 {
