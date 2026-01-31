@@ -57,10 +57,10 @@ namespace MyPAS.Controllers
 
         // Get specific patient by ID.
         [HttpGet("{id}")]
-        public async Task<ActionResult<Patient>> GetPatient(int id)
+        public async Task<ActionResult<Patient>> GetPatientById(int id)
         {
             _logger.LogInformation($"Attempting to fetch patient with ID: {id}");
-
+            
             try
             {
                 var patient = await _context.Patients.FindAsync(id);
