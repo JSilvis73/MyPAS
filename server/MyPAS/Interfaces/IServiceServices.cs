@@ -1,11 +1,14 @@
+using MyPAS.Models;
 
-//public interface IServiceService
-//{
-//    IEnumerable<Service> GetAllServicesForPatient();
-//    Service GetServiceById(int id);
-//    Service CreateService(Service service);
-//    Service UpdateService(Service service);
-//    void DeleteServiceById(int id);
-//    void DeleteServiceByPatient(Patient patient);
 
-//}
+public interface IServiceService
+{
+    // CRUD
+    Service GetServiceById(int id);
+    //Service GetServiceByPatientName(string patientLastName, string patientFirstName);
+    Service GetServiceByPatientId(int id);
+    Service CreateServiceForPatientByPatientId(int patientId, string serviceName, decimal chargeAmt);
+    void DeleteServiceById(int id);
+    //Service UpdateServiceById(int id);
+
+}

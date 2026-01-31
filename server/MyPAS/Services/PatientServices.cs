@@ -10,7 +10,7 @@ public class PatientService : IPatientService
           _context = context;
         }
 
-    public IEnumerable<Patient> GetAll() 
+    public IEnumerable<Patient> GetAllPatients() 
     {
         return _context.Patients.ToList();
     }
