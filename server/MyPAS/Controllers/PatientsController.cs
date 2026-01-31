@@ -97,7 +97,7 @@ namespace MyPAS.Controllers
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Patient with ID: {id} has been added.", patient.Id);
-                return CreatedAtAction(nameof(GetPatient), new { id = patient.Id }, patient);
+                return CreatedAtAction(nameof(GetPatientById), new { id = patient.Id }, patient);
             }
             catch (Exception ex)
             {

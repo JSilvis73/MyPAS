@@ -44,4 +44,6 @@ public class ServiceService : IServiceService
         return _context.Services.FirstOrDefault(s => s.Id == id)
             ?? throw new Exception("Service does not exist.");
     }
+
+   
 }
