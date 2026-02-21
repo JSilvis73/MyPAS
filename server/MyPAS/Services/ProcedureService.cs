@@ -27,7 +27,7 @@ namespace MyPAS.Services
 
             return procedure;
         }
-        public IEnumerable<Procedure> GetAllproceduresForPatientById(int patientId)
+        public IEnumerable<Procedure> GetAllProceduresForPatientById(int patientId)
         {
             var services = _context.Procedures.Where(p => p.PatientId == patientId).ToList();
             if (!services.Any()) { throw new InvalidOperationException("No procedures for this patient."); }
