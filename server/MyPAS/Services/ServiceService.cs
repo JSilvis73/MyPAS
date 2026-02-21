@@ -3,72 +3,72 @@ using MyPAS.Data;
 
 namespace MyPAS.Services
 {
-    public class ServiceService : IServiceService
+    public class ProcedureService : IProcedureService
     {
         private readonly MyPASContext _context;
 
-        public ServiceService(MyPASContext context)
+        public ProcedureService(MyPASContext context)
         {
             _context = context;
         }
 
-        public Service CreateServiceForPatientByPatientId(int patientId, string serviceName, decimal chargeAmt)
+        public Procedure CreateProcedureForPatientByPatientId(int patientId, string procedureName, decimal chargeAmt)
         {
-            var service = new Service
+            var procedure = new Procedure
             {
                 PatientId = patientId,
-                ServiceName = serviceName,
-                ServiceDate = DateOnly.FromDateTime(DateTime.Now), // This will need changed to accept input.
+                ProcedureName = procedureName,
+                ProcedureDate = DateOnly.FromDateTime(DateTime.Now), // This will need changed to accept input.
                 PatientChargedAmount = chargeAmt
             };
 
-            _context.Services.Add(service);
+            _context.Procedures.Add(procedure);
             _context.SaveChanges();
 
-            return service;
+            return procedure;
         }
-        public IEnumerable<Service> GetAllServicesForPatientById(int patientId)
+        public IEnumerable<Procedure> GetAllproceduresForPatientById(int patientId)
         {
-            var services = _context.Services.Where(s => s.PatientId == patientId).ToList();
-            if (!services.Any()) { throw new InvalidOperationException("No services for this patient."); }
+            var services = _context.Procedures.Where(p => p.PatientId == patientId).ToList();
+            if (!services.Any()) { throw new InvalidOperationException("No procedures for this patient."); }
             return services;
         }
 
-        public Service GetServiceById(int id)
+        public Procedure GetProcedureById(int id)
         {
-            return _context.Services.FirstOrDefault(s => s.Id == id)
-                ?? throw new Exception("Service does not exist.");
+            return _context.Procedures.FirstOrDefault(s => s.Id == id)
+                ?? throw new Exception("Procedure does not exist.");
         }
 
-        public Service UpdateServiceById(int id, Service service)
+        public Procedure UpdateProcedureById(int id, Procedure procedure)
         {
             // Find service
-            var serviceToUpdate = _context.Services.FirstOrDefault(s => s.Id == id)
-            ?? throw new InvalidOperationException("Service does not exist with that id.");
+            var procedureToUpdate = _context.Procedures.FirstOrDefault(s => s.Id == id)
+            ?? throw new InvalidOperationException("Procedure does not exist with that id.");
 
             // Update service
-            serviceToUpdate.PatientId = service.PatientId;
-            serviceToUpdate.ServiceName = service.ServiceName;
-            serviceToUpdate.ServiceDate = service.ServiceDate;
-            serviceToUpdate.PatientChargedAmount = service.PatientChargedAmount;
-            serviceToUpdate.CptCode = service.CptCode;
-            serviceToUpdate.CptAmount = service.CptAmount;
+            procedureToUpdate.PatientId = procedure.PatientId;
+            procedureToUpdate.ProcedureName = procedure.ProcedureName;
+            procedureToUpdate.ProcedureDate = procedure.ProcedureDate;
+            procedureToUpdate.PatientChargedAmount = procedure.PatientChargedAmount;
+            procedureToUpdate.CptCode = procedure.CptCode;
+            procedureToUpdate.CptAmount = procedure.CptAmount;
 
             // Save changes to DB
             _context.SaveChanges();
 
-            return serviceToUpdate;
+            return procedureToUpdate;
         }
 
-        public void DeleteServiceById(int id)
+        public void DeleteProcedureById(int id)
         {
-            var serviceToRemove = _context.Services.FirstOrDefault(s => s.Id == id);
-            if (serviceToRemove == null)
+            var procedureToRemove = _context.Procedures.FirstOrDefault(p => p.Id == id);
+            if (procedureToRemove == null)
             {
-                throw new Exception("Service not found.");
+                throw new Exception("Procedure not found.");
             }
 
-            _context.Services.Remove(serviceToRemove);
+            _context.Procedures.Remove(procedureToRemove);
             _context.SaveChanges();
 
         }
