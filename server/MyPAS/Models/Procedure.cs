@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyPAS.Models
 {
-    public class Service
+    public class Procedure
     {
         public int Id { get; set; }
 
         [Required]
-        public string ServiceName { get; set; } = string.Empty;
+        public string ProcedureName { get; set; } = string.Empty;
 
         [Required]
-        public DateOnly ServiceDate { get; set; }
+        public DateOnly ProcedureDate { get; set; }
 
         public string CptCode { get; set; } = string.Empty;
 
