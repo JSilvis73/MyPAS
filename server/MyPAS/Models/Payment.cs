@@ -21,9 +21,9 @@ namespace MyPAS.Models
         [Required]
         public Patient? Patient { get; set; }
 
-        public int ServiceId { get; set; }
+        public int ProcedureId { get; set; }
 
-        public Service? Service { get; set; }
+        public Procedure? Procedure { get; set; }
     }
 
 }
