@@ -35,7 +35,7 @@ namespace MyPAS.Services
 
         public IEnumerable<Payment> GetAllPaymentsByServiceId(int serviceId)
         {
-            var payments = _context.Payments.Where(p => p.ServiceId == serviceId).ToList();
+            var payments = _context.Payments.Where(p => p.ProcedureId == serviceId).ToList();
             if (!payments.Any()) { throw new InvalidOperationException("No payments found for this service"); }
             return payments;
         
@@ -55,7 +55,7 @@ namespace MyPAS.Services
             if (paymentToUpdate == null) { throw new InvalidOperationException("Payment does not exist."); }
 
             paymentToUpdate.PatientId = payment.PatientId;
-            paymentToUpdate.ServiceId = payment.ServiceId;
+            paymentToUpdate.ProcedureId = payment.ProcedureId;
             paymentToUpdate.Method = payment.Method;
             paymentToUpdate.Notes = payment.Notes;
             paymentToUpdate.PaymentDate = payment.PaymentDate;

@@ -21,14 +21,14 @@ namespace MyPAS.Controllers
         public async Task<ActionResult<IEnumerable<Payment>>> GetPayments()
         {
 
-            return await _context.Payments.Include(p => p.Service).ToListAsync();
+            return await _context.Payments.Include(p => p.Procedure).ToListAsync();
         }
 
         [HttpGet("{paymentId}")]
         public async Task<ActionResult<Payment>> GetPayment(int paymentId)
         {
             var payment = await _context.Payments
-                .Include(p => p.Service)
+                .Include(p => p.Procedure)
                 .FirstOrDefaultAsync(p => p.Id == paymentId);
 
             if (payment == null)
@@ -69,8 +69,8 @@ namespace MyPAS.Controllers
             
             var payments = await _context.Payments
                 
-                .Where(p => p.ServiceId == serviceId)
-                .Include(p => p.Service).ToListAsync();
+                .Where(p => p.ProcedureId == serviceId)
+                .Include(p => p.Procedure).ToListAsync();
 
             if (payments == null || payments.Count == 0)
             {
