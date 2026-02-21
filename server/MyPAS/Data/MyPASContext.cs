@@ -11,7 +11,7 @@ namespace MyPAS.Data
 
         // Models for the application.
         public DbSet<Patient> Patients { get; set; }
-        public DbSet<Service> Services { get; set; }
+        public DbSet<Procedure> Procedures { get; set; }
         public DbSet<Payment> Payments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -20,8 +20,8 @@ namespace MyPAS.Data
             base.OnModelCreating(modelBuilder);
 
             // Dates (DateOnly conversions)
-            modelBuilder.Entity<Service>()
-                .Property(s => s.ServiceDate)
+            modelBuilder.Entity<Procedure>()
+                .Property(p => p.ProcedureDate)
                 .HasConversion(
                     v => v.ToDateTime(TimeOnly.MinValue),
                     v => DateOnly.FromDateTime(v))
@@ -43,9 +43,9 @@ namespace MyPAS.Data
 
             // Payment -> Service (many-to-one)
             modelBuilder.Entity<Payment>()
-                .HasOne(p => p.Service)
+                .HasOne(p => p.Procedure)
                 .WithMany()
-                .HasForeignKey(p => p.ServiceId)
+                .HasForeignKey(p => p.ProcedureId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Set decimal precision
@@ -53,12 +53,12 @@ namespace MyPAS.Data
                 .Property(p => p.Amount)
                 .HasPrecision(18, 2);
 
-            modelBuilder.Entity<Service>()
-                .Property(s => s.CptAmount)
+            modelBuilder.Entity<Procedure>()
+                .Property(p => p.CptAmount)
                 .HasPrecision(18, 2);
 
-            modelBuilder.Entity<Service>()
-                .Property(s => s.PatientChargedAmount)
+            modelBuilder.Entity<Procedure>()
+                .Property(p => p.PatientChargedAmount)
                 .HasPrecision(18, 2);
         }
     }

@@ -1,15 +1,15 @@
 using MyPAS.Models;
 
 
-public interface IServiceService
+public interface IProcedureService
 {
     // CRUD
-    Service CreateServiceForPatientByPatientId(int patientId, string serviceName, decimal chargeAmt);
-    IEnumerable<Service> GetAllServicesForPatientById(int patientId);
-    Service GetServiceById(int id);
+    Procedure CreateProcedureForPatientByPatientId(int patientId, string procedureName, decimal chargeAmt);
+    IEnumerable<Procedure> GetAllProceduresForPatientById(int patientId);
+    Procedure GetProcedureById(int id);
     //Service GetServicesByPatientName(string patientLastName, string patientFirstName);
-    Service UpdateServiceById(int serviceId, Service service);
-    void DeleteServiceById(int id);
+    Procedure UpdateProcedureById(int ProcedureId, Procedure procedure);
+    void DeleteProcedureById(int id);
     
 
 }

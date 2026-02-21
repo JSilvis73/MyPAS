@@ -7,58 +7,58 @@ namespace MyPAS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ServicesController : Controller
+    public class ProcedureController : Controller
     {
         // Dependency Injection
         private readonly MyPASContext _context;
 
-        public ServicesController(MyPASContext context)
+        public ProcedureController(MyPASContext context)
         {
             _context = context;
         }
 
         // Begin Http Methods
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Service>>> GetServices()
+        public async Task<ActionResult<IEnumerable<Procedure>>> GetProceduress()
         {
-            return await _context.Services.Include(s => s.Patient).ToListAsync();
+            return await _context.Procedures.Include(p => p.Patient).ToListAsync();
         }
 
         [HttpGet]
-        public async Task<ActionResult<Service>> GetServiceById(int id)
+        public async Task<ActionResult<Procedure>> GetProcedureById(int id)
         {
-            var service = await _context.Services.Include(s => s.Patient).FirstOrDefaultAsync(s => s.Id == id);
-            if (service == null)
+            var procedure = await _context.Procedures.Include(s => s.Patient).FirstOrDefaultAsync(s => s.Id == id);
+            if (procedure == null)
                 return NotFound();
 
-            return service;
+            return procedure;
         }
 
 
         [HttpGet("patient/{patientId}")]
-        public async Task<ActionResult<IEnumerable<Service>>> GetServicesByPatient(int patientId)
+        public async Task<ActionResult<IEnumerable<Procedure>>> GetServicesByPatient(int patientId)
         {
-            var services = await _context.Services
-                .Where(s => s.PatientId == patientId)
-                .Include(s => s.Patient)
+            var services = await _context.Procedures
+                .Where(p => p.PatientId == patientId)
+                .Include(p => p.Patient)
                 .ToListAsync();
 
             return services;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateService([FromBody] Service service)
+        public async Task<IActionResult> CreateService([FromBody] Procedure procedure)
         {
             // check if the patient exists
-            var patientExists = await _context.Patients.AnyAsync(p => p.Id == service.PatientId);
+            var patientExists = await _context.Patients.AnyAsync(p => p.Id == procedure.PatientId);
             if (!patientExists)
             {
                 return BadRequest("Patient not found.");
             }
 
-            _context.Services.Add(service);
+            _context.Procedures.Add(procedure);
             await _context.SaveChangesAsync();
-            return Ok(service);
+            return Ok(procedure);
         }
         //[HttpPost]
         //public async Task<ActionResult<Service>> CreateService([FromBody] Service service)
@@ -75,14 +75,14 @@ namespace MyPAS.Controllers
 
         // PUT: api/service/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateService(int id, Service service)
+        public async Task<IActionResult> UpdateService(int id, Procedure procedure)
         {
-            if (id != service.Id)
+            if (id != procedure.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(service).State = EntityState.Modified;
+            _context.Entry(procedure).State = EntityState.Modified;
 
             try
             {
@@ -90,7 +90,7 @@ namespace MyPAS.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Services.Any(e => e.Id == id))
+                if (!_context.Procedures.Any(e => e.Id == id))
                 {
                     return NotFound();
                 }
@@ -104,13 +104,13 @@ namespace MyPAS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteService(int id)
         {
-            var service = await _context.Services.FindAsync(id);
+            var service = await _context.Procedures.FindAsync(id);
             if (service == null)
             {
                 return NotFound();
             }
 
-            _context.Services.Remove(service);
+            _context.Procedures.Remove(service);
             await _context.SaveChangesAsync();
 
             return NoContent();

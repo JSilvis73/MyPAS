@@ -23,7 +23,7 @@ namespace MyPAS.Models
 
         // Navigation property to Services
         [JsonIgnore]
-        public List<Service> Services { get; set; } = new List<Service>();
+        public List<Procedure> Procedures { get; set; } = new List<Procedure>();
         [JsonIgnore]
         public List<Payment> Payments { get; set; } = new List<Payment>();
 
