@@ -38,6 +38,8 @@ namespace MyPAS.Services
         {
             var patientToFind = _context.Patients.FirstOrDefault(p => p.Id == id);
 
+        
+
             return patientToFind
                 ?? throw new InvalidOperationException("Patient Not Found");
         }

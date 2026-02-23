@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MyPAS.Data;
 using MyPAS.Models;
 using Serilog;
+using MyPAS.Services;
 
 namespace MyPAS.Controllers
 {
@@ -17,6 +18,7 @@ namespace MyPAS.Controllers
         // Dependency Injection - We inject our database into the controller so that it is able to perform the database actions as needed.
         private readonly MyPASContext _context;
         private readonly ILogger<PatientsController> _logger;
+     
 
 
         // Constructor to assign context.
@@ -24,6 +26,7 @@ namespace MyPAS.Controllers
         {
             _logger = logger;
             _context = context;
+           
         }
 
 
