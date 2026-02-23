@@ -15,20 +15,19 @@ namespace MyPAS.Controllers
     [ApiController]
     public class PatientsController : ControllerBase
     {
-        // Dependency Injection - We inject our database into the controller so that it is able to perform the database actions as needed.
-        private readonly MyPASContext _context;
+        // Dependency Injection - 
         private readonly ILogger<PatientsController> _logger;
+        private IPatientService _patientService;
      
 
 
         // Constructor to assign context.
-        public PatientsController(ILogger<PatientsController> logger, MyPASContext context)
+        public PatientsController(ILogger<PatientsController> logger, IPatientService patientService)
         {
             _logger = logger;
-            _context = context;
+            _patientService = patientService;
            
         }
-
 
 
         // HTTP Methods
@@ -42,14 +41,7 @@ namespace MyPAS.Controllers
 
             try
             {
-                var patients = await _context.Patients.ToListAsync();
-                if (patients == null || patients.Count == 0)
-                {
-                    _logger.LogWarning("Patients not found in the database.");
-                    return NotFound("No patients found.");
-                }
-                _logger.LogInformation("Successfully fetched {Count} patients.", patients.Count);
-                return Ok(patients);
+                return Ok(_patientService.GetAllPatients().ToList());
             }
             catch (Exception ex) 
             {
@@ -66,15 +58,12 @@ namespace MyPAS.Controllers
             
             try
             {
-                var patient = await _context.Patients.FindAsync(id);
+                var patient =  _patientService.GetPatientById(id);
+                if (patient == null) { return NotFound(); }
 
-                if (patient == null)
-                {
-                    _logger.LogWarning($"Patient with ID: {id}, not found in the database.");
-                    return NotFound($"No patient with ID: {id} found.");
-                }
                 _logger.LogInformation($"Patient with ID:{id} found.");
-                return Ok(patient);
+                return Ok(_patientService.GetPatientById(id));
+   
             }
             catch (Exception ex)
             {
