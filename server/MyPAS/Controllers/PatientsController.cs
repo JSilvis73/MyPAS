@@ -74,7 +74,7 @@ namespace MyPAS.Controllers
 
         // Create patient
         [HttpPost]
-        public async Task<IActionResult> AddPatient([FromBody] Patient patient)
+        public async Task<ActionResult> AddPatient([FromBody] Patient patient)
         {
             _logger.LogInformation("Attempting to add patient to database...");
 
@@ -85,8 +85,7 @@ namespace MyPAS.Controllers
                     _logger.LogWarning("Patient could not be added.");
                     return BadRequest("Patient could not be added.");
                 }
-                _context.Patients.Add(patient);
-                await _context.SaveChangesAsync();
+                await _patientService.CreatePatient(patient.FirstName, patient.LastName);
 
                 _logger.LogInformation("Patient with ID: {id} has been added.", patient.Id);
                 return CreatedAtAction(nameof(GetPatientById), new { id = patient.Id }, patient);
@@ -100,7 +99,7 @@ namespace MyPAS.Controllers
 
         // Update patient
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePatient(int id, [FromBody] Patient patientToUpdate)
+        public async Task<ActionResult> UpdatePatient(int id, [FromBody] Patient patientToUpdate)
         {
             _logger.LogInformation("Attempting to update patient: {LastName}, {FirstName}.",
                 patientToUpdate.LastName, patientToUpdate.FirstName);
@@ -155,22 +154,13 @@ namespace MyPAS.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePatient(int id)
+        public async Task<ActionResult> DeletePatient(int id)
         {
             _logger.LogInformation($"Attempting to delete patient with ID: {id}.");
 
             try
             {
-                var patient = await _context.Patients.FindAsync(id);
-
-                if (patient == null)
-                {
-                    _logger.LogWarning($"Patient with ID: {id} not found in the database.");
-                    return NotFound($"Patient with ID:{id} was not found.");
-                }
-
-                _context.Patients.Remove(patient);
-                await _context.SaveChangesAsync();
+                await _patientService.DeletePatient(id);
 
                 _logger.LogInformation($"Patient with ID:{id} deleted successfully.");
                 return NoContent();
