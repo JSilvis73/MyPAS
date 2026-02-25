@@ -1,6 +1,8 @@
 using MyPAS.Models;
 using MyPAS.Data;
 using System.Diagnostics.Eventing.Reader;
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace MyPAS.Services
 {
@@ -29,24 +31,22 @@ namespace MyPAS.Services
             return patient;
         }
 
-        public IEnumerable<Patient> GetAllPatients()
+        public async Task<List<Patient>> GetAllPatients()
         {
-            return _context.Patients.ToList();
+            return await _context.Patients.ToListAsync();
         }
 
-        public Patient GetPatientById(int id)
+        public async Task<Patient> GetPatientById(int id)
         {
-            var patientToFind = _context.Patients.FirstOrDefault(p => p.Id == id);
-
-        
+            var patientToFind =  await _context.Patients.FirstOrDefaultAsync(p => p.Id == id);
 
             return patientToFind
                 ?? throw new InvalidOperationException("Patient Not Found");
         }
 
-        public Patient UpdatePatient(Patient patient)
+        public async Task<Patient> UpdatePatient(Patient patient)
         {
-            var patientToUpdate = _context.Patients.FirstOrDefault(p => p.Id == patient.Id);
+            var patientToUpdate = await _context.Patients.FirstOrDefaultAsync(p => p.Id == patient.Id);
             if (patientToUpdate == null) { throw new InvalidOperationException("Patient does not exist in memory."); }
 
             _context.Entry(patientToUpdate).CurrentValues.SetValues(patient);
@@ -60,15 +60,17 @@ namespace MyPAS.Services
             //patientToUpdate.State = patient.State;
             //patientToUpdate.Zip = patient.Zip;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return patientToUpdate;
         }
 
-        public void DeletePatient(int id)
+        public async Task DeletePatient(int id)
         {
-            var patient = GetPatientById(id);
+            var patient = await GetPatientById(id);
             _context.Patients.Remove(patient);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
+
+   
     }
 }

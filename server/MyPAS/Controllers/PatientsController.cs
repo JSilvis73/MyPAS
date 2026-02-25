@@ -41,7 +41,7 @@ namespace MyPAS.Controllers
 
             try
             {
-                return Ok(_patientService.GetAllPatients().ToList());
+                return Ok(_patientService.GetAllPatients());
             }
             catch (Exception ex) 
             {
@@ -58,7 +58,7 @@ namespace MyPAS.Controllers
             
             try
             {
-                var patient =  _patientService.GetPatientById(id);
+                var patient =  await _patientService.GetPatientById(id);
                 if (patient == null) { return NotFound(); }
 
                 _logger.LogInformation($"Patient with ID:{id} found.");

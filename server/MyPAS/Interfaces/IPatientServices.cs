@@ -3,10 +3,10 @@ using MyPAS.Models;
 
 public interface IPatientService
 {
-    Patient CreatePatient(string firstName, string lastName);
-    IEnumerable<Patient> GetAllPatients();
-    Patient GetPatientById(int id);
-    Patient UpdatePatient(Patient patient);
-    void DeletePatient(int id);
+    Task<Patient> CreatePatient(string firstName, string lastName);
+    Task<List<Patient>> GetAllPatients();
+    Task<Patient> GetPatientById(int id);
+    Task<Patient> UpdatePatient(Patient patient);
+    Task DeletePatient(int id);
     
 }
