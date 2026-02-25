@@ -20,12 +20,12 @@ namespace MyPAS.Services
         }
 
         // CRUD
-        public Patient CreatePatient(string firstName, string lastName)
+        public async Task<Patient> CreatePatient(string firstName, string lastName)
         {
             var patient = new Patient { FirstName = firstName, LastName = lastName };
 
             _context.Patients.Add(patient);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return patient;
         }
 
