@@ -104,47 +104,24 @@ namespace MyPAS.Controllers
             _logger.LogInformation("Attempting to update patient: {LastName}, {FirstName}.",
                 patientToUpdate.LastName, patientToUpdate.FirstName);
 
-            if (id != patientToUpdate.Id)
-            {
-                _logger.LogWarning("Patient ID mismatch. URL ID: {id}, Body ID: {bodyId}", id, patientToUpdate.Id);
-                return BadRequest("ID mismatch");
-            }
-
-            var existingPatient = await _context.Patients.FindAsync(id);
-
-            if (existingPatient == null)
-            {
-                _logger.LogWarning($"Patient with ID: {id} not found.");
-                return NotFound($"Patient with ID {id} not found.");
-            }
-
-            // Update fields
-            existingPatient.FirstName = patientToUpdate.FirstName;
-            existingPatient.LastName = patientToUpdate.LastName;
-            existingPatient.Address = patientToUpdate.Address;
-            existingPatient.City = patientToUpdate.City;
-            existingPatient.State = patientToUpdate.State;
-            existingPatient.Zip = patientToUpdate.Zip;
-            existingPatient.Age = patientToUpdate.Age;
-            existingPatient.Phone = patientToUpdate.Phone;
-            existingPatient.Email = patientToUpdate.Email;
-
             try
             {
-                await _context.SaveChangesAsync();
+                if (patientToUpdate == null) return BadRequest();
+                await _patientService.UpdatePatient(patientToUpdate);
+                
                 _logger.LogInformation($"Patient with ID: {id} successfully updated.");
-                return Ok(existingPatient);
+                return Ok(patientToUpdate);
             }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                _logger.LogError(ex, $"Concurrency error while updating patient ID: {id}");
-                if (!_context.Patients.Any(p => p.Id == id))
-                {
-                    return NotFound();
-                }
+            //catch (DbUpdateConcurrencyException ex)
+            //{
+            //    _logger.LogError(ex, $"Concurrency error while updating patient ID: {id}");
+            //    if (!_context.Patients.Any(p => p.Id == id))
+            //    {
+            //        return NotFound();
+            //    }
 
-                throw; // optional: rethrow if you're in dev and want to crash upward
-            }
+            //    throw; // optional: rethrow if you're in dev and want to crash upward
+            //}
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unexpected error occurred while updating patient ID: {id}", id);
