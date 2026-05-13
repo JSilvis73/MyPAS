@@ -29,12 +29,14 @@ function App() {
     }
   }, []);
 
+  // If no user is logged in, show the authorization page
   if (!user) {
     return (
       <AuthorizationPage setUser={setUser} />
     );
   }
 
+  // If user is logged in, show the main application
   return (
     <Router>
       <MainLayout user={user}>
