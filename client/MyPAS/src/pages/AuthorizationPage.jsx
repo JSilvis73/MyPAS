@@ -15,7 +15,6 @@ export default function AuthorizationPage({ setUser }) {
         <h2 className="text-2xl mb-4">
           <strong>MyMed</strong>
         </h2>
-        <h2>Authorization</h2>
 
         <div className="flex flex-col items-center">{toggleRegisterComponent ? <AuthRegister setUser={setUser} /> : <AuthLogIn setUser={setUser} />}</div>
         <button className=" border rounded-xl p-2" onClick={handleToggleRegister}>
