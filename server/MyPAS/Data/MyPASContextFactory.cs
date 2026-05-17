@@ -15,7 +15,9 @@ namespace MyPAS.Data
                 .AddJsonFile("appsettings.json")
                 .Build();
 
+            // Instantiate a database build.
             var optionsBuilder = new DbContextOptionsBuilder<MyPASContext>();
+            // Using this connection string.
             optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
 
             return new MyPASContext(optionsBuilder.Options);
