@@ -41,7 +41,8 @@ namespace MyPAS.Controllers
 
             try
             {
-                return Ok(_patientService.GetAllPatients());
+                var patients = await _patientService.GetAllPatients();
+                return Ok(patients);
             }
             catch (Exception ex) 
             {
