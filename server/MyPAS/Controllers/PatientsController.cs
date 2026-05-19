@@ -63,7 +63,7 @@ namespace MyPAS.Controllers
                 if (patient == null) { return NotFound(); }
 
                 _logger.LogInformation($"Patient with ID:{id} found.");
-                return Ok(_patientService.GetPatientById(id));
+                return Ok(patient);
    
             }
             catch (Exception ex)
