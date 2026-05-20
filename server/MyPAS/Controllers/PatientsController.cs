@@ -10,9 +10,9 @@ using MyPAS.Services;
 
 namespace MyPAS.Controllers
 {
-    [Route("api/[controller]")]
-    
+   
     [ApiController]
+    [Route("api/[controller]")]
     public class PatientsController : ControllerBase
     {
         // Dependency Injection - 
