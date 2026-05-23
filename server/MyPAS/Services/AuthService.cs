@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using MyPAS.Interfaces;
 using MyPAS.Models;
@@ -21,9 +24,28 @@ namespace MyPAS.Services
         }
 
         // Endpoints.
-        public void Register(string username, string password)
+        public async Task<IActionResult> Register(RegisterRequest registerRequest)
         {
-            _logger.LogInformation("Attempting to register.");
+            // Start log.
+            _logger.LogInformation($"Attempting to register {registerRequest.Email}.");
+
+            // Build user and gather needed credentials.
+            var user = await _userManager.FindByEmailAsync(registerRequest.Email);
+            var userEmail = user?.Email;
+
+            // Check user and credentials.
+            if (user == null || !await _userManager.CheckPasswordAsync(user, registerRequest.Password) || userEmail == null) 
+            {
+                // Log error.
+                _logger.LogWarning($"Login failed for user: {registerRequest.Email}.");
+                // Return unauthorized.
+                
+            }
+            
+
+
+
+
             throw new NotImplementedException();
         }
         public void LogIn(string username, string password)
