@@ -117,8 +117,6 @@ app.UseAuthorization();
 // Allow Cross-Origin Resource Sharing.
 app.UseCors("AllowReactApp");
 
-
-
 // Establishes endpoints for controllers.
 app.MapControllers();
 

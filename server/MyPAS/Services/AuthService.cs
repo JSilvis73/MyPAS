@@ -4,12 +4,15 @@ namespace MyPAS.Services
 {
     public class AuthService : IAuthService
     {
-        public void Login(string username, string password)
+        public void Register(string username, string password)
         {
             throw new NotImplementedException();
         }
-
-        public void Register(string username, string password)
+        public void LogIn(string username, string password)
+        {
+            throw new NotImplementedException();
+        }
+        public void LogOut(string username, string password) 
         {
             throw new NotImplementedException();
         }
