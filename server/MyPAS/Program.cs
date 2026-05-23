@@ -17,7 +17,9 @@ builder.Services.AddIdentity<MyPASUser, IdentityRole>()
     .AddEntityFrameworkStores<MyPASContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddScoped<JwtService>();
+// Establishes connection to DB.
+builder.Services.AddDbContext<MyPASContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var jwtKey = builder.Configuration["JwtSettings:SecretKey"];
 if (string.IsNullOrEmpty(jwtKey))
@@ -69,11 +71,9 @@ builder.Services.AddCors(options =>
 });
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddScoped<JwtService>();
 
-// Establishes connection to DB.
-builder.Services.AddDbContext<MyPASContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddControllers();
 
 builder.Services.AddScoped<IPatientService, PatientService>();
 
