@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using MyPAS.Interfaces;
 using MyPAS.Models;
+using MyPAS.Models.Auth;
 
 namespace MyPAS.Services
 {
@@ -24,7 +25,7 @@ namespace MyPAS.Services
         }
 
         // Endpoints.
-        public async Task<IActionResult> Register(RegisterRequest registerRequest)
+        public async Task<AuthResult> Register(AuthRegisterRequest registerRequest)
         {
             // Start log.
             _logger.LogInformation($"Attempting to register {registerRequest.Email}.");
@@ -39,6 +40,7 @@ namespace MyPAS.Services
                 // Log error.
                 _logger.LogWarning($"Login failed for user: {registerRequest.Email}.");
                 // Return unauthorized.
+                return new AuthResult { Success = false, Error = "Username and password do not match.", Token = null };
                 
             }
             

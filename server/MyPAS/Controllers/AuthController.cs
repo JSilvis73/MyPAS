@@ -81,7 +81,7 @@ namespace MyPAS.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody] AuthRegisterRequest request)
         {
             // Log information to file.
             _logger.LogInformation("Attempting to register user: {email}.", request.Email);
