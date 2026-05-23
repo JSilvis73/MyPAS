@@ -18,7 +18,6 @@ namespace MyPAS.Controllers
         private readonly UserManager<MyPASUser> _userManager;
         private readonly SignInManager<MyPASUser> _signInManager;
         private readonly ILogger<AuthController> _logger;
-       
         private readonly JwtService _jwtService;
 
         public AuthController(
@@ -39,6 +38,7 @@ namespace MyPAS.Controllers
         {
             _logger.LogInformation("Attempting to login user: {email}.", loginDto.Email);
 
+            // Check if login model is valid.
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -48,24 +48,27 @@ namespace MyPAS.Controllers
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
             var userEmail = user?.Email;
 
-
+            // Check: user is valid, ensure password matches, and user email is populated.
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password) || userEmail == null)
             {
                 _logger.LogWarning("Login failed for user: {email}.", loginDto.Email);
-                return Unauthorized(new { message = "Invalid email or password" });
+                return Unauthorized(new { message = "Invalid email or password." });
             }
 
+            // Assemble the user.
             var result = await _signInManager.PasswordSignInAsync(user, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
 
             // Create claims and sign in the user.
             if (!result.Succeeded)
             {
                 _logger.LogWarning("Login failed for user: {email}.", loginDto.Email);
-                return Unauthorized(new { message = "Invalid login attempt" });
+                return Unauthorized(new { message = "Invalid login attempt." });
             }
 
+            // Upon login in generate JWT.
             var token = _jwtService.GenerateToken(user.Id, userEmail);
 
+            // If token is valid, issue token.
             if (token != null)
             {
                 _logger.LogInformation("User {email} logged in successfully.", loginDto.Email);
