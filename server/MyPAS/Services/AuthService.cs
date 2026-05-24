@@ -96,13 +96,13 @@ namespace MyPAS.Services
             // If the user does not exist, return error.
             if (userToSignIn == null)
             {
-                _logger.LogWarning("Failure: Error - {Email} does not exist.", signInDTO.Email);
-                return new AuthResult 
+                _logger.LogWarning("Invalid email or passord.");
+                return new AuthResult ()
                 {
                     Success=false,
-                    Errors = new List<string>
+                    Errors = new List<string>()
                     {
-                       $"Failure: Error - {signInDTO.Email} does not exist."
+                       $"Invalid email or password."
                     }
                 };
             }
@@ -113,13 +113,13 @@ namespace MyPAS.Services
             // If sign in fails return an error.
             if (!signInResult.Succeeded) 
             { 
-                _logger.LogInformation("Failure: Error - {Email} has failed to sign in.", userToSignIn.Email);
-                return new AuthResult 
+                _logger.LogWarning("{Email} has failed to sign in.", userToSignIn.Email);
+                return new AuthResult() 
                 { 
                     Success = false, 
-                    Errors = new List<string>
+                    Errors = new List<string>()
                     {
-                        $"Failure: Error - {userToSignIn.Email} failed to sign in."
+                        $"{userToSignIn.Email} failed to sign in."
                     }
                 };
             }
@@ -130,19 +130,24 @@ namespace MyPAS.Services
             // Check if token is valid. If so sign in.
             if (token != null)
             {
-                _logger.LogInformation("Success: {Email} was signed in.", userToSignIn.Email);
-                return new AuthResult { Success = true };
+                _logger.LogInformation("{Email} was signed in.", userToSignIn.Email);
+                return new AuthResult() 
+                { 
+                    Success = true,
+                    Token = token
+                };
             }
 
             // If here something went wrong. Send an error.
-
-            _logger.LogError("Failure: Error - ");
-
-
-
-
-            // Catch errors.
-            throw new NotImplementedException();
+            _logger.LogError("Unhandled error signing in {email}.",userToSignIn.Email);
+            return new AuthResult() 
+            { 
+                Success = false,
+                Errors = new List<string>()
+                {
+                    $"Unhandled error signing in {userToSignIn.Email}."
+            }
+            };
         }
 
 
