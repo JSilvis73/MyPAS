@@ -62,13 +62,11 @@ namespace MyPAS.Services
                 return new AuthResult { Success = true };
             }
 
-            // If we are here something failed.
-            foreach (var error in result.Errors)
-            {
-                
-            }
+            // Catch errors.
+            var errors = result.Errors.Select(e => e.Description).ToList();
+    
 
-            _logger.LogWarning("Registration failed for user: {Email}. Errors: {result.Errors}.", userToCreate.Email, result.Errors);
+            _logger.LogWarning("Registration failed for user: {Email}. Errors: {Errors}.", userToCreate.Email, String.Join(",",errors));
 
             return new AuthResult { Success = false, Error = $"Registration failed for user: {userToCreate.Email}. Errors: {result.Errors}." };
 
