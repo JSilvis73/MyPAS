@@ -19,10 +19,11 @@ namespace MyPAS.Services
         private readonly ILogger _logger;
         private readonly SignInManager<MyPASUser> _signInManager;
         private readonly UserManager<MyPASUser> _userManager;
+        private readonly JwtService _jwtService;
         private readonly MyPASContext _context;
-        
+
         // Constructor.
-        public AuthService(ILogger logger,SignInManager<MyPASUser> signInManager, UserManager<MyPASUser> userManager, MyPASContext context ) 
+        public AuthService(ILogger logger, SignInManager<MyPASUser> signInManager, UserManager<MyPASUser> userManager, MyPASContext context)
         {
             _logger = logger;
             _signInManager = signInManager;
@@ -39,15 +40,18 @@ namespace MyPAS.Services
 
             // Check user and gather needed credentials.
             var existingUser = await _userManager.FindByEmailAsync(registerRequest.Email);
-           
+
             // Check if user exists.
             if (existingUser != null)
             {
                 _logger.LogWarning("User with email: {Email} already exists.", registerRequest.Email);
-                return new AuthResult { Success = false, Errors = new List<string>
-    {
-        $"User with email: {registerRequest.Email} already exists."
-    }
+                return new AuthResult
+                {
+                    Success = false,
+                    Errors = new List<string>
+                    {
+                       $"User with email: {registerRequest.Email} already exists."
+                    }
                 };
             }
 
@@ -62,7 +66,7 @@ namespace MyPAS.Services
 
             // Attempt to create.
             _logger.LogInformation("Attempting to create user:{Email}.", userToCreate.Email);
-            var result = await _userManager.CreateAsync(userToCreate,registerRequest.Password);
+            var result = await _userManager.CreateAsync(userToCreate, registerRequest.Password);
 
             // Check result and return response.
             if (result.Succeeded)
@@ -73,31 +77,74 @@ namespace MyPAS.Services
 
             // Catch errors.
             var errors = result.Errors.Select(e => e.Description).ToList();
-    
 
-            _logger.LogWarning("Registration failed for user: {Email}. Errors: {Errors}.", userToCreate.Email, String.Join(",",errors));
+
+            _logger.LogWarning("Registration failed for user: {Email}. Errors: {Errors}.", userToCreate.Email, String.Join(",", errors));
 
             return new AuthResult { Success = false, Errors = errors };
 
         }
 
         // Sign In.
-        public void SignIn(string username, string password)
+        public async Task<AuthResult> SignIn(SignInDTO signInDTO)
         {
-            _logger.LogInformation("Attempting to log in using {username}.", username);
+            _logger.LogInformation("Attempting to log in using {username}.", signInDTO.Email);
 
-            // Check if user is signed in.
-            bool authSignInResult = _signInManager.IsSignedIn(username);
-            
-            if (_signInManager.IsSignedIn)
+            // Check if user exists.
+            var userToSignIn = await _userManager.FindByEmailAsync(signInDTO.Email);
+
+            // If the user does not exist, return error.
+            if (userToSignIn == null)
             {
-
+                _logger.LogWarning("Failure: Error - {Email} does not exist.", signInDTO.Email);
+                return new AuthResult 
+                {
+                    Success=false,
+                    Errors = new List<string>
+                    {
+                       $"Failure: Error - {signInDTO.Email} does not exist."
+                    }
+                };
             }
 
+            // Build user and sign in.
+            var signInResult = await _signInManager.PasswordSignInAsync(userToSignIn ,signInDTO.Password,isPersistent:false,lockoutOnFailure:false);
 
+            // If sign in fails return an error.
+            if (!signInResult.Succeeded) 
+            { 
+                _logger.LogInformation("Failure: Error - {Email} has failed to sign in.", userToSignIn.Email);
+                return new AuthResult 
+                { 
+                    Success = false, 
+                    Errors = new List<string>
+                    {
+                        $"Failure: Error - {userToSignIn.Email} failed to sign in."
+                    }
+                };
+            }
+
+            // Sign in succeeded. Issue JWT.
+            var token = _jwtService.GenerateToken(userToSignIn.Id, userToSignIn.Email);
+
+            // Check if token is valid. If so sign in.
+            if (token != null)
+            {
+                _logger.LogInformation("Success: {Email} was signed in.", userToSignIn.Email);
+                return new AuthResult { Success = true };
+            }
+
+            // If here something went wrong. Send an error.
+
+            _logger.LogError("Failure: Error - ");
+
+
+
+
+            // Catch errors.
             throw new NotImplementedException();
         }
- 
+
 
         // Sign Out.
         public void SignOut(string username, string password)
