@@ -5,7 +5,7 @@ namespace MyPAS.Interfaces
     public interface IAuthService
     {
         Task<AuthResult> Register(AuthRegisterRequest authRegisterRequest);
-        void LogIn(string username, string password);
-        void LogOut(string username, string password);
+        void SignIn(string username, string password);
+        void SignOut(string username, string password);
     }
 }

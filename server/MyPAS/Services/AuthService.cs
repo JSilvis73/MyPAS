@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -25,32 +26,68 @@ namespace MyPAS.Services
         }
 
         // Endpoints.
+        // Register
         public async Task<AuthResult> Register(AuthRegisterRequest registerRequest)
         {
             // Start log.
             _logger.LogInformation($"Attempting to register {registerRequest.Email}.");
 
-            // Build user and gather needed credentials.
-            var user = await _userManager.FindByEmailAsync(registerRequest.Email);
-            var userEmail = user?.Email;
-
-            // Check user and credentials.
-            if (user == null || !await _userManager.CheckPasswordAsync(user, registerRequest.Password) || userEmail == null) 
+            // Check user and gather needed credentials.
+            var existingUser = await _userManager.FindByEmailAsync(registerRequest.Email);
+           
+            // Check if user exists.
+            if (existingUser != null)
             {
-                // Log error.
-                _logger.LogWarning($"Login failed for user: {registerRequest.Email}.");
-                // Return unauthorized.
-                return new AuthResult { Success = false, Error = "Username and password do not match.", Token = null };
-                
+                _logger.LogError($"User with email: {registerRequest.Email} already exists.");
+                return new AuthResult { Success = false, Error = $"User with email: {registerRequest.Email} already exists." };
             }
-            
+
+            // Validate password.
+            if (registerRequest.Password == null || registerRequest.Password.Length < 6) 
+            {
+                _logger.LogError("Password does not meet criteria.");
+                return new AuthResult { Success = false, Error = "Password does not meet criteria." };
+            }
+
+            // Passed validation.
+            // Create user.
+            var userToCreate = new MyPASUser
+            {
+                UserName = registerRequest.Email,
+                Email = registerRequest.Email,
+                FirstName = registerRequest.FirstName,
+                LastName = registerRequest.LastName
+            };
+
+            // Attempt to create.
+            _logger.LogInformation($"Attempting to create user:{userToCreate.Email}.");
+            var result = await _userManager.CreateAsync(userToCreate,registerRequest.Password);
+
+            // Check result and return response.
+            if (result.Succeeded)
+            {
+                _logger.LogInformation($"User: {userToCreate.Email} has been created.");
+                return new AuthResult { Success = true };
+            }
+
+            // If we are here something failed.
+            foreach (var error in result.Errors)
+            {
+            }
+
+            _logger.LogWarning($"Registration failed for user: {userToCreate.Email}. Errors: {result.Errors}.");
+
+            return new AuthResult { Success = false, Error = $"Registration failed for user: {userToCreate.Email}. Errors: {result.Errors}." };
+
 
 
 
 
             throw new NotImplementedException();
         }
-        public void LogIn(string username, string password)
+
+        // Sign In.
+        public void SignIn(string username, string password)
         {
             _logger.LogInformation($"Attempting to log in using {username}.");
             throw new NotImplementedException();
@@ -58,6 +95,12 @@ namespace MyPAS.Services
         public void LogOut(string username, string password) 
         {
             _logger.LogInformation($"Attempting to log out {username}.");
+            throw new NotImplementedException();
+        }
+
+        // Sign Out.
+        public void SignOut(string username, string password)
+        {
             throw new NotImplementedException();
         }
     }
