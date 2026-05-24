@@ -122,9 +122,7 @@ namespace MyPAS.Controllers
                 // _logger.LogWarning("Registration error for {email}: {error}", request.Email, error.Description);
             }
 
-            _logger.LogWarning("Registration failed for user: {email}. Errors: {errors}", request.Email, result.Errors);
-
-            return BadRequest(ModelState);
+            
 
         }
 
