@@ -34,7 +34,7 @@ namespace MyPAS.Controllers
 
         // Register, Login, etc. will go here
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        public async Task<IActionResult> Login([FromBody] SignInDTO loginDto)
         {
             _logger.LogInformation("Attempting to login user: {email}.", loginDto.Email);
 

@@ -3,10 +3,13 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
+using MyPAS.Data;
 using MyPAS.Interfaces;
 using MyPAS.Models;
 using MyPAS.Models.Auth;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyPAS.Services
 {
@@ -16,13 +19,15 @@ namespace MyPAS.Services
         private readonly ILogger _logger;
         private readonly SignInManager<MyPASUser> _signInManager;
         private readonly UserManager<MyPASUser> _userManager;
+        private readonly MyPASContext _context;
         
         // Constructor.
-        public AuthService(ILogger logger,SignInManager<MyPASUser> signInManager, UserManager<MyPASUser> userManager ) 
+        public AuthService(ILogger logger,SignInManager<MyPASUser> signInManager, UserManager<MyPASUser> userManager, MyPASContext context ) 
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
+            _context = context;
         }
 
         // Endpoints.
@@ -38,8 +43,12 @@ namespace MyPAS.Services
             // Check if user exists.
             if (existingUser != null)
             {
-                _logger.LogError("User with email: {Email} already exists.", registerRequest.Email);
-                return new AuthResult { Success = false, Error = $"User with email: {registerRequest.Email} already exists." };
+                _logger.LogWarning("User with email: {Email} already exists.", registerRequest.Email);
+                return new AuthResult { Success = false, Errors = new List<string>
+    {
+        $"User with email: {registerRequest.Email} already exists."
+    }
+                };
             }
 
             // Create user.
@@ -68,14 +77,24 @@ namespace MyPAS.Services
 
             _logger.LogWarning("Registration failed for user: {Email}. Errors: {Errors}.", userToCreate.Email, String.Join(",",errors));
 
-            return new AuthResult { Success = false, Error = $"Registration failed for user: {userToCreate.Email}. Errors: {result.Errors}." };
+            return new AuthResult { Success = false, Errors = errors };
 
         }
 
         // Sign In.
         public void SignIn(string username, string password)
         {
-            _logger.LogInformation($"Attempting to log in using {username}.");
+            _logger.LogInformation("Attempting to log in using {username}.", username);
+
+            // Check if user is signed in.
+            bool authSignInResult = _signInManager.IsSignedIn(username);
+            
+            if (_signInManager.IsSignedIn)
+            {
+
+            }
+
+
             throw new NotImplementedException();
         }
  
