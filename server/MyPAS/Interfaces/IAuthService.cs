@@ -6,6 +6,6 @@ namespace MyPAS.Interfaces
     {
         Task<AuthResult> Register(AuthRegisterRequest authRegisterRequest);
         Task<AuthResult> SignIn(SignInDTO signInDTO);
-        void SignOut(string username, string password);
+        Task<AuthResult> SignOut(SignInDTO signInDTO);
     }
 }

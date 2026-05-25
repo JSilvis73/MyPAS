@@ -139,8 +139,25 @@ namespace MyPAS.Services
 
 
         // Sign Out.
-        public void SignOut(string username, string password)
+        public async Task<AuthResult> SignOut(SignInDTO signInDTO)
         {
+            // Check if user exists.
+            var userToSignOut = await _userManager.FindByEmailAsync(signInDTO.Email);
+
+            // Check if they are signed in.
+            if (_signInManager.IsSignedIn(userToSignOut))
+            {
+
+            }
+
+            // If so Sign out and return success.
+
+            // Else something went wrong.
+
+
+
+            
+
             throw new NotImplementedException();
         }
     }
