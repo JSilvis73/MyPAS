@@ -20,15 +20,13 @@ namespace MyPAS.Services
         private readonly SignInManager<MyPASUser> _signInManager;
         private readonly UserManager<MyPASUser> _userManager;
         private readonly JwtService _jwtService;
-        private readonly MyPASContext _context;
 
         // Constructor.
-        public AuthService(ILogger logger, SignInManager<MyPASUser> signInManager, UserManager<MyPASUser> userManager, MyPASContext context)
+        public AuthService(ILogger logger, SignInManager<MyPASUser> signInManager, UserManager<MyPASUser> userManager)
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
-            _context = context;
         }
 
         // Endpoints.
@@ -127,27 +125,16 @@ namespace MyPAS.Services
             // Sign in succeeded. Issue JWT.
             var token = _jwtService.GenerateToken(userToSignIn.Id, userToSignIn.Email);
 
-            // Check if token is valid. If so sign in.
-            if (token != null)
-            {
+            // Sign in.
+
                 _logger.LogInformation("{Email} was signed in.", userToSignIn.Email);
                 return new AuthResult() 
                 { 
                     Success = true,
                     Token = token
                 };
-            }
+            
 
-            // If here something went wrong. Send an error.
-            _logger.LogError("Unhandled error signing in {email}.",userToSignIn.Email);
-            return new AuthResult() 
-            { 
-                Success = false,
-                Errors = new List<string>()
-                {
-                    $"Unhandled error signing in {userToSignIn.Email}."
-            }
-            };
         }
 
 
