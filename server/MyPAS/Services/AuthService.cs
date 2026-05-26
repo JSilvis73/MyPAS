@@ -133,32 +133,14 @@ namespace MyPAS.Services
                     Success = true,
                     Token = token
                 };
-            
 
         }
 
+        // Refresh JWT Endpoint.
 
-        // Sign Out.
-        public async Task<AuthResult> SignOut(SignInDTO signInDTO)
-        {
-            // Check if user exists.
-            var userToSignOut = await _userManager.FindByEmailAsync(signInDTO.Email);
+        // Change Password Endpoint.
 
-            // Check if they are signed in.
-            if (_signInManager.IsSignedIn(userToSignOut))
-            {
+        // Assign Roles Endpoint.
 
-            }
-
-            // If so Sign out and return success.
-
-            // Else something went wrong.
-
-
-
-            
-
-            throw new NotImplementedException();
-        }
     }
 }
