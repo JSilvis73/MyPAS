@@ -22,11 +22,12 @@ namespace MyPAS.Services
         private readonly JwtService _jwtService;
 
         // Constructor.
-        public AuthService(ILogger logger, SignInManager<MyPASUser> signInManager, UserManager<MyPASUser> userManager)
+        public AuthService(ILogger logger, SignInManager<MyPASUser> signInManager, UserManager<MyPASUser> userManager, JwtService jwtService)
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
+            _jwtService = jwtService;
         }
 
         // Endpoints.
