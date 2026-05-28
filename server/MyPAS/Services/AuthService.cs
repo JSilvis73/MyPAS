@@ -16,13 +16,13 @@ namespace MyPAS.Services
     public class AuthService : IAuthService
     {
         // Services.
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthService> _logger;
         private readonly SignInManager<MyPASUser> _signInManager;
         private readonly UserManager<MyPASUser> _userManager;
-        private readonly JwtService _jwtService;
+        private readonly IJwtService _jwtService;
 
         // Constructor.
-        public AuthService(ILogger logger, SignInManager<MyPASUser> signInManager, UserManager<MyPASUser> userManager, JwtService jwtService)
+        public AuthService(ILogger<AuthService> logger, SignInManager<MyPASUser> signInManager, UserManager<MyPASUser> userManager, IJwtService jwtService)
         {
             _logger = logger;
             _signInManager = signInManager;
@@ -78,7 +78,7 @@ namespace MyPAS.Services
             var errors = result.Errors.Select(e => e.Description).ToList();
 
 
-            _logger.LogWarning("Registration failed for user: {Email}. Errors: {Errors}.", userToCreate.Email, String.Join(",", errors));
+            _logger.LogWarning("Registration failed for user: {Email}. Errors: {Errors}.", userToCreate.Email, string.Join(",", errors));
 
             return new AuthResult { Success = false, Errors = errors };
 
@@ -93,7 +93,7 @@ namespace MyPAS.Services
             var userToSignIn = await _userManager.FindByEmailAsync(signInDTO.Email);
 
             // If the user does not exist, return error.
-            if (userToSignIn == null)
+            if (userToSignIn== null)
             {
                 _logger.LogWarning("Invalid email or passord.");
                 return new AuthResult ()

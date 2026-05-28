@@ -93,7 +93,7 @@ namespace MyPAS.Controllers
             }
 
             // Model is valid, proceed with registration.
-            Log.Information("Registering user {email} with first name {firstName} and last name {lastName}.",
+            _logger.LogInformation("Registering user {email} with first name {firstName} and last name {lastName}.",
                 request.Email, request.FirstName, request.LastName);
 
             // Build new user in memory.
@@ -115,14 +115,16 @@ namespace MyPAS.Controllers
             }
 
             // If we got here, something failed.
-            
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(error.Code, error.Description);
-                // _logger.LogWarning("Registration error for {email}: {error}", request.Email, error.Description);
             }
 
-            
+            _logger.LogWarning("Registration failed for user: {email}.", request.Email);
+
+            return BadRequest(ModelState);
+
+
 
         }
 
