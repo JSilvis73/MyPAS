@@ -8,6 +8,7 @@ using MyPAS.Models.Auth;
 using Serilog;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using MyPAS.Interfaces;
 
 namespace MyPAS.Controllers
 {
@@ -19,65 +20,67 @@ namespace MyPAS.Controllers
         private readonly SignInManager<MyPASUser> _signInManager;
         private readonly ILogger<AuthController> _logger;
         private readonly JwtService _jwtService;
+        private readonly IAuthService _authService;
 
         public AuthController(
             UserManager<MyPASUser> userManager,
             SignInManager<MyPASUser> signInManager,
             ILogger<AuthController> logger,
-            JwtService jwtService)
+            JwtService jwtService,
+            IAuthService authService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _jwtService = jwtService;
+            _authService = authService;
         }
 
         // Register, Login, etc. will go here
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] SignInDTO loginDto)
         {
-            _logger.LogInformation("Attempting to login user: {email}.", loginDto.Email);
+            // Sign in user
+            var result = await _authService.SignIn(loginDto);
 
-            // Check if login model is valid.
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            return (result.Success)?
+                Ok(result):
+                Unauthorized(result.Errors);
 
-            // Model is valid, proceed with login.
-            var user = await _userManager.FindByEmailAsync(loginDto.Email);
-            var userEmail = user?.Email;
+            //// Model is valid, proceed with login.
+            //var user = await _userManager.FindByEmailAsync(loginDto.Email);
+            //var userEmail = user?.Email;
 
-            // Check: user is valid, ensure password matches, and user email is populated.
-            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password) || userEmail == null)
-            {
-                _logger.LogWarning("Login failed for user: {email}.", loginDto.Email);
-                return Unauthorized(new { message = "Invalid email or password." });
-            }
+            //// Check: user is valid, ensure password matches, and user email is populated.
+            //if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password) || userEmail == null)
+            //{
+            //    _logger.LogWarning("Login failed for user: {email}.", loginDto.Email);
+            //    return Unauthorized(new { message = "Invalid email or password." });
+            //}
 
-            // Assemble the user.
-            var result = await _signInManager.PasswordSignInAsync(user, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
+            //// Assemble the user.
+            //var result = await _signInManager.PasswordSignInAsync(user, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
 
-            // Create claims and sign in the user.
-            if (!result.Succeeded)
-            {
-                _logger.LogWarning("Login failed for user: {email}.", loginDto.Email);
-                return Unauthorized(new { message = "Invalid login attempt." });
-            }
+            //// Create claims and sign in the user.
+            //if (!result.Succeeded)
+            //{
+            //    _logger.LogWarning("Login failed for user: {email}.", loginDto.Email);
+            //    return Unauthorized(new { message = "Invalid login attempt." });
+            //}
 
-            // Upon login in generate JWT.
-            var token = _jwtService.GenerateToken(user.Id, userEmail);
+            //// Upon login in generate JWT.
+            //var token = _jwtService.GenerateToken(user.Id, userEmail);
 
-            // If token is valid, issue token.
-            if (token != null)
-            {
-                _logger.LogInformation("User {email} logged in successfully.", loginDto.Email);
-                return Ok(new { token, user = new { user.Id, user.Email, user.FirstName, user.LastName } });
-            }
+            //// If token is valid, issue token.
+            //if (token != null)
+            //{
+            //    _logger.LogInformation("User {email} logged in successfully.", loginDto.Email);
+            //    return Ok(new { token, user = new { user.Id, user.Email, user.FirstName, user.LastName } });
+            //}
                
-            // If we got here, login was unsuccessful.
-                _logger.LogWarning("Login failed for user: {email}.", loginDto.Email);
-            return Unauthorized(new { message = "Invalid login attempt" });
+            //// If we got here, login was unsuccessful.
+            //    _logger.LogWarning("Login failed for user: {email}.", loginDto.Email);
+            //return Unauthorized(new { message = "Invalid login attempt" });
         }
 
         [HttpPost("register")]
