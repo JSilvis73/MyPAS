@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MyPAS.Services;
+using MyPAS.Interfaces;
 
 // Begin app builder.
 var builder = WebApplication.CreateBuilder(args);
@@ -71,10 +72,12 @@ builder.Services.AddCors(options =>
 });
 
 // Add services to the container.
-builder.Services.AddScoped<JwtService>();
+
 
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 
 var app = builder.Build();
