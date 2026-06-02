@@ -92,6 +92,8 @@ export default function AuthRegister() {
           email: "",
           password: "",
           confirmPassword: "",
+          firstName: "",
+          lastName: "",
         });
       })
       .catch((error) => {
@@ -156,13 +158,14 @@ export default function AuthRegister() {
             value: newUserFormData.lastName,
           }}
         />
-      </form>
-      <button
+              <button
         className="bg-blue-600 text-white p-2 rounded mt-4"
         onClick={handleSubmit}
       >
         Register
       </button>
+      </form>
+
     </div>
   );
 }
