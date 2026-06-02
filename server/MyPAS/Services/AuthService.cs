@@ -71,7 +71,11 @@ namespace MyPAS.Services
             if (result.Succeeded)
             {
                 _logger.LogInformation("User: {Email} has been created.", userToCreate.Email);
-                return new AuthResult { Success = true };
+                
+                return new AuthResult 
+                { 
+                    Success = true
+                };
             }
 
             // Catch errors.
