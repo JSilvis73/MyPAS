@@ -4,15 +4,16 @@ import { FaUserCircle } from "react-icons/fa";
 import { IoCreateOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import { FaTasks } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 
-const MainLayout = ({ children, user }) => {
+const MainLayout = ({ children }) => {
+  const { user, signOut } = useAuth();
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const handleLogout = () => {
     try {
-      localStorage.removeItem("token");
+      signOut(); // Clear auth state and local storage
       alert("You have been logged out.");
-      window.location.reload();
     } catch (error) {
       console.error("Error during logout:", error);
     }
@@ -65,7 +66,7 @@ const MainLayout = ({ children, user }) => {
           {/* Right: User Icon */}
           <div className="flex flex-col items-center text-2xl ">
             <FaUserCircle className="hover:animate-spin" />
-            <p className="text-sm text-center">{user.firstName}</p>
+            <p className="text-sm text-center">{user?.email}</p>
             <button
               className="text-sm text-red-500 hover:underline"
               onClick={handleLogout}

@@ -1,13 +1,23 @@
 import React, { useState } from "react";
 import AuthLogIn from "../components/AuthLogIn";
 import AuthRegister from "../components/AuthRegister";
+import { useAuth } from "../context/AuthContext";
 
-export default function AuthorizationPage({ setUser }) {
+export default function AuthorizationPage() {
+  const { signIn } = useAuth();
   const [toggleRegisterComponent, setToggleRegisterComponent] = useState(false);
 
   const handleToggleRegister = () => {
     setToggleRegisterComponent((prev) => !prev);
-  };
+  }
+
+
+  const handleSignIn = (authResult) => {
+    signIn(authResult);
+  }
+
+     
+  
 
   return (
     <div>
@@ -16,11 +26,11 @@ export default function AuthorizationPage({ setUser }) {
           <strong>MyMed</strong>
         </h2>
 
-        <div className="flex flex-col items-center rounded-xl">{toggleRegisterComponent ? <AuthRegister setUser={setUser} /> : <AuthLogIn setUser={setUser} />}</div>
+        <div className="flex flex-col items-center">{toggleRegisterComponent ? <AuthRegister /> : <AuthLogIn />}</div>
         <button className=" border rounded-xl p-2" onClick={handleToggleRegister}>
           {!toggleRegisterComponent ? "Register" : "Log in"}
         </button>
       </div>
     </div>
   );
-}
+};

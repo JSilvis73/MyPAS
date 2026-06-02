@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import FormInput from "./FormInput";
+import { useAuth } from "../context/AuthContext";
 
-export default function AuthLogIn({setUser}) {
+export default function AuthLogIn() {
+  const {signIn } = useAuth();
+
   // State to hold the authentication options.
   const [authOptions, setAuthOptions] = useState({
     email: "",
@@ -18,8 +21,9 @@ export default function AuthLogIn({setUser}) {
   };
 
   const handleSubmit = (e) => {
+    // Prevent the default form submission behavior
     e.preventDefault();
-    // Form Validation
+    // Form Validation 
     if (!authOptions.email || !authOptions.password) {
       alert("Please fill in all fields");
       throw new Error("All fields are required");
@@ -52,9 +56,7 @@ export default function AuthLogIn({setUser}) {
       .then((data) => {
         alert("Login successful");
         // Handle successful login (e.g., redirect or update state)
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        setUser(data.user); // Update the user state in the parent component
+        signIn(data); // Update auth context with the authentication result
         console.log("User data:", data.user);
         //window.location.reload(); // Reload to reflect the logged-in state
 
@@ -67,11 +69,11 @@ export default function AuthLogIn({setUser}) {
   };
 
   return (
-    <div className="border flex flex-col items-center p-2">
+    <div className="border flex flex-col items-center p-2" >
       <h2 className="text-2xl mb-4">
         <strong>Log In</strong>
       </h2>
-      <form>
+      <form onSubmit={handleSubmit}>
         <FormInput
           props={{
             inputName: "Email",
@@ -92,13 +94,14 @@ export default function AuthLogIn({setUser}) {
             value: authOptions.password,
           }}
         />
-      </form>
-      <button
+              <button
         className="border rounded-xl p-2 mt-4 bg-blue-500 text-white hover:bg-blue-700"
-        onClick={handleSubmit}
+
       >
         Log In
       </button> 
+      </form>
+
     </div>
   );
 }

@@ -11,35 +11,22 @@ import OperationsPage from "./pages/OperationsPage";
 import DisplayListDetails from "./pages/DisplayListDetails";
 import ContactPage from "./pages/ContactPage";
 import AuthorizationPage from "./pages/AuthorizationPage";
+import  AuthProvider  from "./context/AuthContext";
+import { useAuth } from "./context/AuthContext";
 
 
-function App() {
-  var storedUser = null;
-  const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
+function AppRoutes() {
+const {user} = useAuth();
 
-  // On component mount, check for existing user session
-   useEffect(() => {
-    // Try to load token from localStorage
-    const token = localStorage.getItem("token");
-    const userData = localStorage.getItem("user");
-
-    // If token and user data exist, set the user state
-    if (token && userData) {
-      setUser(JSON.parse(userData));
-    }
-  }, []);
-
-  // If no user is logged in, show the authorization page
-  if (!user) {
-    return (
-      <AuthorizationPage setUser={setUser} />
-    );
-  }
-
-  // If user is logged in, show the main application
+if (!user) {
+  return <AuthorizationPage />;
+}
+  
   return (
-    <Router>
-      <MainLayout user={user}>
+   
+    
+    
+      <MainLayout>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
@@ -52,9 +39,19 @@ function App() {
          <Route path="/services/:id" element={<DisplayListDetails />} />
          </Routes>
       </MainLayout>
-    </Router>
+    
   );
  }
 
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+      <AppRoutes />
+      </Router>
+    </AuthProvider>
+    
+  );
+}
 
 export default App;
