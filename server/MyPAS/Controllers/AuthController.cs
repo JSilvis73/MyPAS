@@ -36,12 +36,12 @@ namespace MyPAS.Controllers
             _authService = authService;
         }
 
-        // Register, Login, etc. will go here
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] SignInDTO loginDto)
+        // Register, Signin, etc. will go here
+        [HttpPost("signIn")]
+        public async Task<IActionResult> Signin([FromBody] SignInDTO signInDto)
         {
             // Sign in user
-            var result = await _authService.SignIn(loginDto);
+            var result = await _authService.SignIn(signInDto);
 
             return (result.Success)?
                 Ok(result):

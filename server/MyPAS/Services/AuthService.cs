@@ -136,7 +136,13 @@ namespace MyPAS.Services
                 return new AuthResult() 
                 { 
                     Success = true,
-                    Token = token
+                    Token = token,
+                    User = new UserDTO
+                    {
+                        Email = userToSignIn.Email,
+                        FirstName = userToSignIn.FirstName,
+                        LastName = userToSignIn.LastName,
+                    }
                 };
 
         }
