@@ -44,34 +44,34 @@ export default function AuthLogIn() {
 
     // Submit the form data
     const baseUrl = import.meta.env.VITE_API_BASE_URL;
-    fetch(`${baseUrl}/api/auth/login`, {
+    fetch(`${baseUrl}/api/auth/signIn`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(authOptions),
     })
       .then((response) => {
-        if (!response.ok) throw new Error("Login failed");
+        if (!response.ok) throw new Error("Sign-in failed");
         return response.json();
       })
       .then((data) => {
-        alert("Login successful");
-        // Handle successful login (e.g., redirect or update state)
+        alert("Sign-in successful");
+        // Handle successful sign-in (e.g., redirect or update state)
         signIn(data); // Update auth context with the authentication result
         console.log("User data:", data.user);
         //window.location.reload(); // Reload to reflect the logged-in state
 
       })
       .catch((error) => {
-        console.error("Error during login:", error);
-        alert("Login failed. Please try again.");
+        console.error("Error during sign-in:", error);
+        alert("Sign-in failed. Please try again.");
       });
       
   };
 
   return (
-    <div className="border flex flex-col items-center p-2" >
+    <div className="border rounded-lg flex flex-col items-center p-2 m-4" >
       <h2 className="text-2xl mb-4">
-        <strong>Log In</strong>
+        <strong>Sign In</strong>
       </h2>
       <form onSubmit={handleSubmit}>
         <FormInput
@@ -98,10 +98,9 @@ export default function AuthLogIn() {
         className="border rounded-xl p-2 mt-4 bg-blue-500 text-white hover:bg-blue-700"
 
       >
-        Log In
+        Sign In
       </button> 
       </form>
-
     </div>
   );
 }

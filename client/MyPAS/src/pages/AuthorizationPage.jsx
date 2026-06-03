@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AuthLogIn from "../components/AuthLogIn";
+import AuthSignIn from "../components/AuthSignIn";
 import AuthRegister from "../components/AuthRegister";
 import { useAuth } from "../context/AuthContext";
 
@@ -26,7 +26,7 @@ export default function AuthorizationPage() {
           <strong>MyMed</strong>
         </h2>
 
-        <div className="flex flex-col items-center">{toggleRegisterComponent ? <AuthRegister /> : <AuthLogIn />}</div>
+        <div className="flex flex-col items-center">{toggleRegisterComponent ? <AuthRegister /> : <AuthSignIn />}</div>
         <button className=" border rounded-xl p-2" onClick={handleToggleRegister}>
           {!toggleRegisterComponent ? "Register" : "Log in"}
         </button>
