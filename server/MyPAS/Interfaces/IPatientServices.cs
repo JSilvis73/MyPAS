@@ -1,9 +1,10 @@
 using MyPAS.Models;
+using MyPAS.Models.DTO;
 
 
 public interface IPatientService
 {
-    Task<Patient> CreatePatient(string firstName, string lastName);
+    Task<PatientDTO> CreatePatient(CreatePatientDTO createPatientDTO);
     Task<List<Patient>> GetAllPatients();
     Task<Patient> GetPatientById(int id);
     Task<Patient> UpdatePatient(Patient patient);

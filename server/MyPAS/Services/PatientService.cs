@@ -3,32 +3,48 @@ using MyPAS.Data;
 using System.Diagnostics.Eventing.Reader;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
+using MyPAS.Models.DTO;
 
 namespace MyPAS.Services
 {
     public class PatientService : IPatientService
     {
-
-        // This service is used to:
-        // Retrieve all patients, retrive a single patient by id, create a patient, update a patient and delete a patient.
-
-        // Service for interacting with DB.
         private readonly MyPASContext _context;
+        private ILogger _logger;
 
         // Constructor
-        public PatientService(MyPASContext context)
+        public PatientService(MyPASContext context, ILogger logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // CRUD
-        public async Task<Patient> CreatePatient(string firstName, string lastName)
+        public async Task<PatientDTO?> CreatePatient(CreatePatientDTO createPatientDTO)
         {
-            var patient = new Patient { FirstName = firstName, LastName = lastName };
+            _logger.LogInformation("Attempting to create patient: {LastName}, {FirstName}.",createPatientDTO.LastName, createPatientDTO.FirstName);
 
-            _context.Patients.Add(patient);
-            await _context.SaveChangesAsync();
-            return patient;
+            var patient = new Patient { FirstName = createPatientDTO.FirstName, LastName = createPatientDTO.LastName };
+
+            _logger.LogInformation("Attempting to add patient: {LastName}, {FirstName} to database.", createPatientDTO.LastName, createPatientDTO.FirstName);
+            try
+            {
+                _context.Patients.Add(patient);
+                await _context.SaveChangesAsync();
+
+                return new PatientDTO 
+                { 
+                    Id = patient.Id,
+                    FirstName = patient.FirstName, 
+                    LastName = patient.LastName 
+                };
+               
+            }
+            catch (Exception ex) 
+            {
+                _logger.LogError(ex, "Failed to create patient {LastName}, {FirstName}", createPatientDTO.LastName, createPatientDTO.FirstName);
+                throw;
+            }
         }
 
         public async Task<List<Patient>> GetAllPatients()

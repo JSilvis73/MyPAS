@@ -1,10 +1,9 @@
-﻿namespace MyPAS.Models.Auth
+﻿namespace MyPAS.Models.DTO
 {
-    public class UserDTO
+    public class PatientDTO
     {
-        public string Email { get; set; }
+        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-
     }
 }
