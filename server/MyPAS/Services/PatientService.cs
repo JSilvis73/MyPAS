@@ -47,17 +47,29 @@ namespace MyPAS.Services
             }
         }
 
-        public async Task<List<Patient>> GetAllPatients()
+        public async Task<List<PatientDTO>> GetAllPatients()
         {
-            return await _context.Patients.ToListAsync();
+            return await _context.Patients.Select(p => new PatientDTO
+            {
+                Id = p.Id,
+                FirstName = p.FirstName,
+                LastName = p.LastName
+            }
+            ).ToListAsync();
         }
 
-        public async Task<Patient> GetPatientById(int id)
+        public async Task<PatientDTO> GetPatientById(int id)
         {
-            var patientToFind =  await _context.Patients.FirstOrDefaultAsync(p => p.Id == id);
+            var patientToFind =  await _context.Patients.FindAsync(id);
+            if (patientToFind == null) return null;
 
-            return patientToFind
-                ?? throw new InvalidOperationException("Patient Not Found");
+            return new PatientDTO
+            {
+                Id = patientToFind.Id,
+                FirstName = patientToFind.FirstName,
+                LastName = patientToFind.LastName
+            };
+        
         }
 
         public async Task<Patient> UpdatePatient(Patient patient)
@@ -80,11 +92,15 @@ namespace MyPAS.Services
             return patientToUpdate;
         }
 
-        public async Task DeletePatient(int id)
+        public async Task<bool> DeletePatient(int id)
         {
-            var patient = await GetPatientById(id);
-            _context.Patients.Remove(patient);
-            await _context.SaveChangesAsync();
+            var patient = await _context.Patients.FindAsync(id);
+            if (patient == null) return false;
+            
+                _context.Patients.Remove(patient);
+                await _context.SaveChangesAsync();
+            return true;
+           
         }
 
    

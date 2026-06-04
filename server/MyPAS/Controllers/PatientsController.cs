@@ -7,6 +7,7 @@ using MyPAS.Data;
 using MyPAS.Models;
 using Serilog;
 using MyPAS.Services;
+using MyPAS.Models.DTO;
 
 namespace MyPAS.Controllers
 {
@@ -19,20 +20,13 @@ namespace MyPAS.Controllers
         public PatientsController(IPatientService patientService) { _patientService = patientService; }
        
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
-        {
-            var patient = await _patientService.GetAllPatients();
+        public async Task<ActionResult<IEnumerable<PatientDTO>>> GetPatients()
+        {  
+            var result = await _patientService.GetAllPatients();
 
-            return patient;
-            //try
-            //{
-            //    var patients = await _patientService.GetAllPatients();
-            //    return Ok(patients);
-            //}
-            //catch (Exception ex) 
-            //{
-            //    return StatusCode(500, "An internal server error occurred.");
-            //}   
+            if (result == null) return NotFound();
+
+            return Ok(result); 
         }
 
         // Get specific patient by ID.
