@@ -72,24 +72,30 @@ namespace MyPAS.Services
         
         }
 
-        public async Task<Patient> UpdatePatient(Patient patient)
+        public async Task<PatientDTO> UpdatePatient(int id, UpdatePatientDTO updatePatientDTO)
         {
-            var patientToUpdate = await _context.Patients.FirstOrDefaultAsync(p => p.Id == patient.Id);
-            if (patientToUpdate == null) { throw new InvalidOperationException("Patient does not exist in memory."); }
+            var patientToUpdate = await _context.Patients.FindAsync(id);
 
-            _context.Entry(patientToUpdate).CurrentValues.SetValues(patient);
-            //patientToUpdate.FirstName = patient.FirstName;
-            //patientToUpdate.LastName = patient.LastName;
-            //patientToUpdate.Age = patient.Age;
-            //patientToUpdate.Email = patient.Email;
-            //patientToUpdate.Phone = patient.Phone;
-            //patientToUpdate.Address = patient.Address;
-            //patientToUpdate.City = patient.City;
-            //patientToUpdate.State = patient.State;
-            //patientToUpdate.Zip = patient.Zip;
+            if (patientToUpdate == null) return null;
 
+            patientToUpdate.FirstName = updatePatientDTO.FirstName;
+            patientToUpdate.LastName = updatePatientDTO.LastName;
+            patientToUpdate.Address = updatePatientDTO.Address;
+            patientToUpdate.City = updatePatientDTO.City;
+            patientToUpdate.State = updatePatientDTO.State;
+            patientToUpdate.Zip = updatePatientDTO.Zip;
+            patientToUpdate.Age = updatePatientDTO.Age;
+            patientToUpdate.Phone = updatePatientDTO.Phone;
+            patientToUpdate.Email = updatePatientDTO.Email;
+
+        
             await _context.SaveChangesAsync();
-            return patientToUpdate;
+
+            return new PatientDTO
+            {
+                FirstName = patientToUpdate.FirstName,
+                LastName = patientToUpdate.LastName,
+            };
         }
 
         public async Task<bool> DeletePatient(int id)
