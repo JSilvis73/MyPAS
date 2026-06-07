@@ -1,10 +1,11 @@
 using MyPAS.Models;
+using MyPAS.Models.DTO;
 
 
 public interface IProcedureService
 {
     // CRUD
-    Procedure CreateProcedureForPatientByPatientId(int patientId, string procedureName, decimal chargeAmt);
+    Task<ProcedureDTO> CreateProcedureForPatientByCreateProcedureDTO(CreateProcedureDTO createProcedureDTO);
     IEnumerable<Procedure> GetAllProceduresForPatientById(int patientId);
     Procedure GetProcedureById(int id);
     //Service GetServicesByPatientName(string patientLastName, string patientFirstName);

@@ -1,32 +1,54 @@
 using MyPAS.Models;
 using MyPAS.Data;
+using MyPAS.Models.DTO;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace MyPAS.Services
 {
     public class ProcedureService : IProcedureService
     {
         private readonly MyPASContext _context;
+        private readonly ILogger _logger;
 
-        public ProcedureService(MyPASContext context)
+        public ProcedureService(MyPASContext context, ILogger logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        public Procedure CreateProcedureForPatientByPatientId(int patientId, string procedureName, decimal chargeAmt)
+        public async Task<ProcedureDTO?> CreateProcedureForPatientByCreateProcedureDTO(CreateProcedureDTO createProedureDTO)
         {
-            var procedure = new Procedure
+            _logger.LogInformation("Attempting to create procedure: {ProcedureName}", createProedureDTO.ProcedureName);
+
+            var patient = await _context.Patients.FindAsync(createProedureDTO.PatientId);
+            if (patient == null) return null;
+
+            var procedureToCreate = new Procedure
             {
-                PatientId = patientId,
-                ProcedureName = procedureName,
-                ProcedureDate = DateOnly.FromDateTime(DateTime.Now), // This will need changed to accept input.
-                PatientChargedAmount = chargeAmt
+                PatientId = createProedureDTO.PatientId,
+                Patient = patient,
+                ProcedureName = createProedureDTO.ProcedureName,
+                ProcedureDate = createProedureDTO.ProcedureDate,
+                PatientChargedAmount = createProedureDTO.PatientChargedAmount,
+                CptAmount = createProedureDTO.CptAmount,
+                CptCode = createProedureDTO.CptCode,
             };
 
-            _context.Procedures.Add(procedure);
-            _context.SaveChanges();
+            await _context.Procedures.AddAsync(procedureToCreate);
+            await _context.SaveChangesAsync();
 
-            return procedure;
+            return new ProcedureDTO
+            {
+                PatientId = procedureToCreate.PatientId,
+                ProcedureName = procedureToCreate.ProcedureName,
+                PatientChargedAmount = procedureToCreate.PatientChargedAmount,
+                CptAmount= procedureToCreate.CptAmount,
+                CptCode= procedureToCreate.CptCode,
+                ProcedureDate= procedureToCreate.ProcedureDate,
+
+            };
         }
+
         public IEnumerable<Procedure> GetAllProceduresForPatientById(int patientId)
         {
             var services = _context.Procedures.Where(p => p.PatientId == patientId).ToList();
