@@ -68,10 +68,21 @@ namespace MyPAS.Services
                 .ToListAsync();
         }
 
-        public Procedure GetProcedureById(int id)
+        public async Task<ProcedureDTO?> GetProcedureByProcedureId(int id)
         {
-            return _context.Procedures.FirstOrDefault(s => s.Id == id)
-                ?? throw new Exception("Procedure does not exist.");
+            return await _context.Procedures
+             .Where(p => p.Id == id)
+             .Select(p => new ProcedureDTO
+             {
+                 Id = p.Id,
+                 ProcedureName = p.ProcedureName,
+                 ProcedureDate = p.ProcedureDate,
+                 PatientId = p.PatientId,
+                 PatientChargedAmount = p.PatientChargedAmount,
+                 CptAmount = p.CptAmount,
+                 CptCode = p.CptCode
+             })
+             .SingleOrDefaultAsync();
         }
 
         public Procedure UpdateProcedureById(int id, Procedure procedure)
