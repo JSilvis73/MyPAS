@@ -40,6 +40,7 @@ namespace MyPAS.Services
 
             return new ProcedureDTO
             {
+                Id = procedureToCreate.Id,
                 PatientId = procedureToCreate.PatientId,
                 ProcedureName = procedureToCreate.ProcedureName,
                 PatientChargedAmount = procedureToCreate.PatientChargedAmount,
@@ -105,17 +106,17 @@ namespace MyPAS.Services
             return procedureToUpdate;
         }
 
-        public void DeleteProcedureById(int id)
+        public async Task<bool> DeleteProcedureByProcedureId(int id)
         {
-            var procedureToRemove = _context.Procedures.FirstOrDefault(p => p.Id == id);
-            if (procedureToRemove == null)
-            {
-                throw new Exception("Procedure not found.");
-            }
+            var procedure = await _context.Procedures.FindAsync(id);
 
-            _context.Procedures.Remove(procedureToRemove);
-            _context.SaveChanges();
+            if (procedure is null)
+                return false;
 
+            _context.Procedures.Remove(procedure);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

@@ -10,7 +10,7 @@ public interface IProcedureService
     Task<ProcedureDTO> GetProcedureByProcedureId(int id);
     //Service GetServicesByPatientName(string patientLastName, string patientFirstName);
     Procedure UpdateProcedureById(int ProcedureId, Procedure procedure);
-    void DeleteProcedureById(int id);
+    Task<bool> DeleteProcedureByProcedureId(int id);
     
 
 }
