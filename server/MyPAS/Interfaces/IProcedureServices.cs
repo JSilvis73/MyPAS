@@ -6,7 +6,7 @@ public interface IProcedureService
 {
     // CRUD
     Task<ProcedureDTO> CreateProcedureForPatientByCreateProcedureDTO(CreateProcedureDTO createProcedureDTO);
-    IEnumerable<Procedure> GetAllProceduresForPatientById(int patientId);
+    Task<List<ProcedureDTO>> GetAllProceduresForPatientById(int patientId);
     Procedure GetProcedureById(int id);
     //Service GetServicesByPatientName(string patientLastName, string patientFirstName);
     Procedure UpdateProcedureById(int ProcedureId, Procedure procedure);

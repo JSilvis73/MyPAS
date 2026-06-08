@@ -2,6 +2,7 @@ using MyPAS.Models;
 using MyPAS.Data;
 using MyPAS.Models.DTO;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyPAS.Services
 {
@@ -49,11 +50,22 @@ namespace MyPAS.Services
             };
         }
 
-        public IEnumerable<Procedure> GetAllProceduresForPatientById(int patientId)
+        public async Task<List<ProcedureDTO>> GetAllProceduresForPatientById(int patientId)
         {
-            var services = _context.Procedures.Where(p => p.PatientId == patientId).ToList();
-            if (!services.Any()) { throw new InvalidOperationException("No procedures for this patient."); }
-            return services;
+            return await _context.Procedures.Where(
+                p => p.PatientId == patientId)
+                .Select(p => new ProcedureDTO
+                {
+                    Id = p.Id,
+                    PatientId= p.PatientId,
+                    ProcedureName= p.ProcedureName,
+                    ProcedureDate = p.ProcedureDate,
+                    PatientChargedAmount= p.PatientChargedAmount,
+                    CptAmount = p.CptAmount,
+                    CptCode= p.CptCode,
+
+                })
+                .ToListAsync();
         }
 
         public Procedure GetProcedureById(int id)
