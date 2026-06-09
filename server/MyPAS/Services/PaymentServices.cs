@@ -1,36 +1,60 @@
 ﻿using MyPAS.Data;
 using MyPAS.Interfaces;
 using MyPAS.Models;
+using MyPAS.Models.DTO;
 
 namespace MyPAS.Services
 {
     public class PaymentServices : IPaymentServices
     {
         private readonly MyPASContext _context;
+        private readonly ILogger _logger;
 
-        public PaymentServices(MyPASContext context)
+
+        public PaymentServices(MyPASContext context, ILogger logger)
         {
             _context = context;
+            _logger = logger;
+
         }
 
 
-        public Payment CreatePayment(int patientId, string payMethod, decimal payAmount)
+        public async Task<PaymentDTO?> CreatePaymentWithCreatePaymentDTO(CreatePaymentDTO createPaymentDTO)
         {
-            var patient = _context.Patients.FirstOrDefault(p => p.Id == patientId);
-            if (patient == null) { throw new InvalidOperationException($"Patient with id:{patientId} does not exist."); }
+            var patientToAddPayment = await _context.Patients.FindAsync(createPaymentDTO.PatientId);
+            var procedureToAddPayment = await _context.Procedures.FindAsync(createPaymentDTO.ProcedureId);
 
-            var payment = new Payment
-            { 
-                PatientId = patientId,
-                Method = payMethod,
-                Amount = payAmount,
-                PaymentDate = DateOnly.FromDateTime(DateTime.Now),
-                Patient = patient,
-            };
+            if (patientToAddPayment != null && procedureToAddPayment != null)
+            {
 
-            _context.Payments.Add(payment);
-            _context.SaveChanges();
-            return payment;
+                Payment payment = new Payment
+                {
+                    PatientId = patientToAddPayment.Id,
+                    Patient = createPaymentDTO.Patient,
+                    ProcedureId = createPaymentDTO.ProcedureId,
+                    Procedure = createPaymentDTO.Procedure,
+                    PaymentDate = createPaymentDTO.PaymentDate,
+                    Amount = createPaymentDTO.Amount,
+                    Method = createPaymentDTO.Method,
+                    Notes = createPaymentDTO.Notes,
+                };
+
+                await _context.Payments.AddAsync(payment);
+                await _context.SaveChangesAsync();
+
+                return new PaymentDTO
+                {
+                    Id = payment.Id,
+                    PatientId = payment.PatientId, 
+                    ProcedureId = payment.ProcedureId,
+                    PaymentDate = payment.PaymentDate,
+                    Amount = payment.Amount,
+                    Method = payment.Method,
+                    Notes = payment.Notes,
+                };
+            }
+            return null;
+
         }
 
         public IEnumerable<Payment> GetAllPaymentsByServiceId(int serviceId)

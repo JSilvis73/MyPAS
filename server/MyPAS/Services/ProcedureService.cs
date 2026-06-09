@@ -27,7 +27,6 @@ namespace MyPAS.Services
             var procedureToCreate = new Procedure
             {
                 PatientId = createProedureDTO.PatientId,
-                Patient = patient,
                 ProcedureName = createProedureDTO.ProcedureName,
                 ProcedureDate = createProedureDTO.ProcedureDate,
                 PatientChargedAmount = createProedureDTO.PatientChargedAmount,
@@ -86,7 +85,7 @@ namespace MyPAS.Services
              .SingleOrDefaultAsync();
         }
 
-        public async Task<ProcedureDTO> UpdateProcedureByUpdateProcedureDTO(UpdateProcedureDTO updateProcedureDTO)
+        public async Task<ProcedureDTO?> UpdateProcedureByUpdateProcedureDTO(UpdateProcedureDTO updateProcedureDTO)
         {
             // Locate procedure
             var procedureToUpdate = await _context.Procedures.FindAsync(updateProcedureDTO.Id);

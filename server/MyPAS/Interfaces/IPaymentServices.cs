@@ -1,10 +1,11 @@
 ﻿using MyPAS.Models;
+using MyPAS.Models.DTO;
 
 namespace MyPAS.Interfaces
 {
     public interface IPaymentServices
     {
-        Payment CreatePayment(int patientId, string payMethod, decimal payAmount);
+        Task<PaymentDTO?> CreatePaymentWithCreatePaymentDTO(CreatePaymentDTO createPaymentDTO);
         IEnumerable<Payment> GetAllPaymentsByServiceId(int serviceId);
         Payment GetPaymentByPaymentId(int paymentId);
         Payment UpdatePayment(Payment payment);
