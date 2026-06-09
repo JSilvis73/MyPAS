@@ -86,24 +86,34 @@ namespace MyPAS.Services
              .SingleOrDefaultAsync();
         }
 
-        public Procedure UpdateProcedureById(int id, Procedure procedure)
+        public async Task<ProcedureDTO> UpdateProcedureByUpdateProcedureDTO(UpdateProcedureDTO updateProcedureDTO)
         {
-            // Find service
-            var procedureToUpdate = _context.Procedures.FirstOrDefault(s => s.Id == id)
-            ?? throw new InvalidOperationException("Procedure does not exist with that id.");
+            // Locate procedure
+            var procedureToUpdate = await _context.Procedures.FindAsync(updateProcedureDTO.Id);
+            if (procedureToUpdate != null)
+            { 
+                // Update fields if procedure is found.
+                procedureToUpdate.ProcedureName = updateProcedureDTO.ProcedureName;
+                procedureToUpdate.ProcedureDate = updateProcedureDTO.ProcedureDate;
+                procedureToUpdate.PatientChargedAmount = updateProcedureDTO.PatientChargedAmount;
+                procedureToUpdate.CptCode = updateProcedureDTO.CptCode;
+                procedureToUpdate.CptAmount = updateProcedureDTO.CptAmount;
+          
+                await _context.SaveChangesAsync();
 
-            // Update service
-            procedureToUpdate.PatientId = procedure.PatientId;
-            procedureToUpdate.ProcedureName = procedure.ProcedureName;
-            procedureToUpdate.ProcedureDate = procedure.ProcedureDate;
-            procedureToUpdate.PatientChargedAmount = procedure.PatientChargedAmount;
-            procedureToUpdate.CptCode = procedure.CptCode;
-            procedureToUpdate.CptAmount = procedure.CptAmount;
+                return new ProcedureDTO
+                {
+                    PatientId = procedureToUpdate.PatientId,
+                    Id = procedureToUpdate.Id,
+                    ProcedureName = procedureToUpdate.ProcedureName,
+                    ProcedureDate = procedureToUpdate.ProcedureDate,
+                    PatientChargedAmount = procedureToUpdate.PatientChargedAmount,
+                    CptCode = procedureToUpdate.CptCode,
+                    CptAmount = procedureToUpdate.CptAmount,
+                };
+            }
 
-            // Save changes to DB
-            _context.SaveChanges();
-
-            return procedureToUpdate;
+            return null;
         }
 
         public async Task<bool> DeleteProcedureByProcedureId(int id)

@@ -9,7 +9,7 @@ public interface IProcedureService
     Task<List<ProcedureDTO>> GetAllProceduresForPatientById(int patientId);
     Task<ProcedureDTO> GetProcedureByProcedureId(int id);
     //Service GetServicesByPatientName(string patientLastName, string patientFirstName);
-    Procedure UpdateProcedureById(int ProcedureId, Procedure procedure);
+    Task<ProcedureDTO> UpdateProcedureByUpdateProcedureDTO(UpdateProcedureDTO updateProcedureDTO);
     Task<bool> DeleteProcedureByProcedureId(int id);
     
 
