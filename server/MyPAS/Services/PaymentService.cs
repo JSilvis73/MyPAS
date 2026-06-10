@@ -1,4 +1,5 @@
-﻿using MyPAS.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MyPAS.Data;
 using MyPAS.Interfaces;
 using MyPAS.Models;
 using MyPAS.Models.DTO;
@@ -77,12 +78,20 @@ namespace MyPAS.Services
             return null;
         }
 
-        public async Task<List<PaymentDTO>> GetAllPaymentsByServiceId(int serviceId)
+        public async Task<List<PaymentDTO>> GetAllPaymentsByProcedureId(int procedureId)
         {
-            
+            return await _context.Payments.Where(p => p.ProcedureId == procedureId)
+                .Select(p => new PaymentDTO
+                {
+                    Id = p.Id,
+                    PatientId = p.PatientId,
+                    ProcedureId = p.ProcedureId,
+                    PaymentDate = p.PaymentDate,
+                    Amount = p.Amount,
+                    Method = p.Method,
+                    Notes = p.Notes
 
-
-            return null;
+                }).ToListAsync();
         }
 
 
@@ -107,11 +116,6 @@ namespace MyPAS.Services
         public void DeletePaymentById(int paymentId)
         {
            
-        }
-
-        IEnumerable<Payment> IPaymentService.GetAllPaymentsByServiceId(int serviceId)
-        {
-            throw new NotImplementedException();
         }
     }
 }

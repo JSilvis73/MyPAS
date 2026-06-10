@@ -6,7 +6,7 @@ namespace MyPAS.Interfaces
     public interface IPaymentService
     {
         Task<PaymentDTO?> CreatePaymentWithCreatePaymentDTO(CreatePaymentDTO createPaymentDTO);
-        IEnumerable<Payment> GetAllPaymentsByServiceId(int serviceId);
+        Task<List<PaymentDTO>> GetAllPaymentsByProcedureId(int procedureId);
         Task<PaymentDTO> GetPaymentByPaymentId(int paymentId);
         Payment UpdatePayment(Payment payment);
         void DeletePaymentById(int paymentId);
