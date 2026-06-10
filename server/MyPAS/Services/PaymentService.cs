@@ -2,16 +2,17 @@
 using MyPAS.Interfaces;
 using MyPAS.Models;
 using MyPAS.Models.DTO;
+using System.Threading.Tasks;
 
 namespace MyPAS.Services
 {
-    public class PaymentServices : IPaymentServices
+    public class PaymentService : IPaymentService
     {
         private readonly MyPASContext _context;
         private readonly ILogger _logger;
 
 
-        public PaymentServices(MyPASContext context, ILogger logger)
+        public PaymentService(MyPASContext context, ILogger logger)
         {
             _context = context;
             _logger = logger;
@@ -57,20 +58,34 @@ namespace MyPAS.Services
 
         }
 
-        public IEnumerable<Payment> GetAllPaymentsByServiceId(int serviceId)
+        public async Task<PaymentDTO?> GetPaymentByPaymentId(int paymentId)
         {
-            var payments = _context.Payments.Where(p => p.ProcedureId == serviceId).ToList();
-            if (!payments.Any()) { throw new InvalidOperationException("No payments found for this service"); }
-            return payments;
-        
+            var paymentToFind = await _context.Payments.FindAsync(paymentId);
+            if (paymentToFind != null)
+            {
+                return new PaymentDTO
+                {
+                    Id = paymentToFind.Id,
+                    PatientId = paymentToFind.PatientId,
+                    ProcedureId = paymentToFind.ProcedureId,
+                    PaymentDate = paymentToFind.PaymentDate,
+                    Amount = paymentToFind.Amount,
+                    Method = paymentToFind.Method,
+                    Notes = paymentToFind.Notes
+                };
+            }
+            return null;
         }
 
-        public Payment GetPaymentByPaymentId(int paymentId)
+        public async Task<List<PaymentDTO>> GetAllPaymentsByServiceId(int serviceId)
         {
-            var paymentToGet = _context.Payments.FirstOrDefault(p => p.Id == paymentId);
-            if (paymentToGet == null) { throw new InvalidOperationException("Can not get payment."); }
-            return paymentToGet;
+            
+
+
+            return null;
         }
+
+
 
         public Payment UpdatePayment(Payment payment)
         {
@@ -91,11 +106,12 @@ namespace MyPAS.Services
 
         public void DeletePaymentById(int paymentId)
         {
-            var paymentToDelete = _context.Payments.FirstOrDefault(p => p.Id == paymentId);
-            if (paymentToDelete == null) { throw new InvalidOperationException("Payment does not exist."); }
+           
+        }
 
-            _context.Payments.Remove(paymentToDelete);
-            _context.SaveChanges();
+        IEnumerable<Payment> IPaymentService.GetAllPaymentsByServiceId(int serviceId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

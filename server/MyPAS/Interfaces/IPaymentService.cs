@@ -3,11 +3,11 @@ using MyPAS.Models.DTO;
 
 namespace MyPAS.Interfaces
 {
-    public interface IPaymentServices
+    public interface IPaymentService
     {
         Task<PaymentDTO?> CreatePaymentWithCreatePaymentDTO(CreatePaymentDTO createPaymentDTO);
         IEnumerable<Payment> GetAllPaymentsByServiceId(int serviceId);
-        Payment GetPaymentByPaymentId(int paymentId);
+        Task<PaymentDTO> GetPaymentByPaymentId(int paymentId);
         Payment UpdatePayment(Payment payment);
         void DeletePaymentById(int paymentId);
     }
