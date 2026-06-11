@@ -79,6 +79,9 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<IProcedureService, ProcedureService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+
 
 var app = builder.Build();
 

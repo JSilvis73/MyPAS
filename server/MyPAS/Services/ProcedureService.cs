@@ -9,9 +9,9 @@ namespace MyPAS.Services
     public class ProcedureService : IProcedureService
     {
         private readonly MyPASContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<ProcedureService> _logger;
 
-        public ProcedureService(MyPASContext context, ILogger logger)
+        public ProcedureService(MyPASContext context, ILogger<ProcedureService> logger)
         {
             _context = context;
             _logger = logger;

@@ -12,8 +12,6 @@ namespace MyPAS.Models
         [Required]
         public string? Method { get; set; }
 
-        public string? Notes { get; set; }
-
         public DateOnly PaymentDate { get; set; }
 
         public int PatientId { get; set; }

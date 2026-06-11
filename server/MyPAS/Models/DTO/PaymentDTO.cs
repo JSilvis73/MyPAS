@@ -10,8 +10,6 @@ namespace MyPAS.Models.DTO
 
         public string? Method { get; set; }
 
-        public string? Notes { get; set; }
-
         public DateOnly PaymentDate { get; set; }
 
         public int PatientId { get; set; }

@@ -10,10 +10,10 @@ namespace MyPAS.Services
     public class PaymentService : IPaymentService
     {
         private readonly MyPASContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<PaymentService> _logger;
 
 
-        public PaymentService(MyPASContext context, ILogger logger)
+        public PaymentService(MyPASContext context, ILogger<PaymentService> logger)
         {
             _context = context;
             _logger = logger;
@@ -38,7 +38,6 @@ namespace MyPAS.Services
                     PaymentDate = createPaymentDTO.PaymentDate,
                     Amount = createPaymentDTO.Amount,
                     Method = createPaymentDTO.Method,
-                    Notes = createPaymentDTO.Notes,
                 };
 
                 await _context.Payments.AddAsync(payment);
@@ -52,7 +51,6 @@ namespace MyPAS.Services
                     PaymentDate = payment.PaymentDate,
                     Amount = payment.Amount,
                     Method = payment.Method,
-                    Notes = payment.Notes,
                 };
             }
             return null;
@@ -72,7 +70,6 @@ namespace MyPAS.Services
                     PaymentDate = paymentToFind.PaymentDate,
                     Amount = paymentToFind.Amount,
                     Method = paymentToFind.Method,
-                    Notes = paymentToFind.Notes
                 };
             }
             return null;
@@ -89,33 +86,47 @@ namespace MyPAS.Services
                     PaymentDate = p.PaymentDate,
                     Amount = p.Amount,
                     Method = p.Method,
-                    Notes = p.Notes
 
                 }).ToListAsync();
         }
 
 
 
-        public Payment UpdatePayment(Payment payment)
+        public async Task<PaymentDTO?> UpdatePaymentByDTO(UpdatePaymentDTO updatePaymentDTO)
         {
-            if (payment == null) { throw new ArgumentNullException("Payment must be populated."); }
-            var paymentToUpdate = _context.Payments.FirstOrDefault(p => p.Id == payment.Id);
-            if (paymentToUpdate == null) { throw new InvalidOperationException("Payment does not exist."); }
+            var paymentToUpdate = await _context.Payments.FindAsync(updatePaymentDTO.Id);
+            if (paymentToUpdate != null)
+            {
+                paymentToUpdate.Method = updatePaymentDTO.Method;
+                paymentToUpdate.PaymentDate = updatePaymentDTO.PaymentDate;
+                paymentToUpdate.Amount = updatePaymentDTO.Amount;
+                //paymentToUpdate.ProcedureId = updatePaymentDTO.ProcedureId;
 
-            paymentToUpdate.PatientId = payment.PatientId;
-            paymentToUpdate.ProcedureId = payment.ProcedureId;
-            paymentToUpdate.Method = payment.Method;
-            paymentToUpdate.Notes = payment.Notes;
-            paymentToUpdate.PaymentDate = payment.PaymentDate;
+                await _context.SaveChangesAsync();
 
-            _context.SaveChanges();
-
-            return paymentToUpdate;    
+                return new PaymentDTO
+                {
+                    Id = paymentToUpdate.Id,
+                    PatientId = paymentToUpdate.PatientId,
+                    ProcedureId = paymentToUpdate.ProcedureId,
+                    PaymentDate = paymentToUpdate.PaymentDate,
+                    Amount = paymentToUpdate.Amount,
+                    Method = paymentToUpdate.Method,
+                };
+            }
+            return null;
         }
 
-        public void DeletePaymentById(int paymentId)
+        public async Task<bool> DeletePaymentById(int paymentId)
         {
-           
+            var paymentToDelete = await _context.Payments.FindAsync(paymentId);
+            if (paymentToDelete != null)
+            {
+                _context.Payments.Remove(paymentToDelete);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

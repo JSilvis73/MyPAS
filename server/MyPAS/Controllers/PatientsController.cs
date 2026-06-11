@@ -24,37 +24,36 @@ namespace MyPAS.Controllers
         {  
             var result = await _patientService.GetAllPatients();
 
-            if (result == null) return NotFound();
-
             return Ok(result); 
         }
 
         // Get specific patient by ID.
         [HttpGet("{id}")]
-        public async Task<ActionResult<Patient>> GetPatientById(int id)
+        public async Task<ActionResult<PatientDTO>> GetPatientById(int id)
         { 
 
             var patient =  await _patientService.GetPatientById(id);
-            if (patient == null) { return NotFound(); }
-            return Ok(patient);
+            if (patient != null) { return Ok(patient); }
+            return NotFound();
+           
         }
 
         // Create patient
         [HttpPost]
-        public async Task<ActionResult> AddPatient([FromBody] CreatePatientDTO createPatientDTO)
+        public async Task<ActionResult<PatientDTO>> AddPatient([FromBody] CreatePatientDTO createPatientDTO)
         {
             var result = await _patientService.CreatePatient(createPatientDTO);
-            if (result == null) return NotFound();
-            return Ok(result);
+            if (result != null) return CreatedAtAction(nameof(GetPatientById), new { id = result.Id}, result);
+            return BadRequest();
         }
 
         // Update patient
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdatePatient(int id, UpdatePatientDTO updatePatientDTO)
+        public async Task<ActionResult<PatientDTO>> UpdatePatient(int id, [FromBody] UpdatePatientDTO updatePatientDTO)
         {
             var result = await _patientService.UpdatePatient(id, updatePatientDTO);
-            if (result == null) return NotFound();
-            return Ok(result);
+            if (result != null) return Ok(result);
+            return NotFound();
         }
 
 

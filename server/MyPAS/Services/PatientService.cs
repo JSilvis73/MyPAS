@@ -10,10 +10,10 @@ namespace MyPAS.Services
     public class PatientService : IPatientService
     {
         private readonly MyPASContext _context;
-        private ILogger _logger;
+        private ILogger<PatientService> _logger;
 
         // Constructor
-        public PatientService(MyPASContext context, ILogger logger)
+        public PatientService(MyPASContext context, ILogger<PatientService> logger)
         {
             _context = context;
             _logger = logger;
@@ -93,6 +93,7 @@ namespace MyPAS.Services
 
             return new PatientDTO
             {
+                Id = patientToUpdate.Id,
                 FirstName = patientToUpdate.FirstName,
                 LastName = patientToUpdate.LastName,
             };
