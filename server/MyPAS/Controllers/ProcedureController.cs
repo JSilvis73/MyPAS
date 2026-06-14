@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyPAS.Data;
 using MyPAS.Models;
+using MyPAS.Models.DTO;
 
 namespace MyPAS.Controllers
 {
@@ -11,17 +12,12 @@ namespace MyPAS.Controllers
     {
         // Dependency Injection
         private readonly MyPASContext _context;
+        private readonly IProcedureService _procedureService;
 
-        public ProcedureController(MyPASContext context)
+        public ProcedureController(MyPASContext context, IProcedureService procedureService)
         {
             _context = context;
-        }
-
-        // Begin Http Methods
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Procedure>>> GetProceduress()
-        {
-            return await _context.Procedures.Include(p => p.Patient).ToListAsync();
+            _procedureService = procedureService;
         }
 
         [HttpGet]
@@ -36,40 +32,20 @@ namespace MyPAS.Controllers
 
 
         [HttpGet("patient/{patientId}")]
-        public async Task<ActionResult<IEnumerable<Procedure>>> GetServicesByPatient(int patientId)
+        public async Task<ActionResult<List<ProcedureDTO>>> GetAllProceduresForPatientByPatientId(int patientId)
         {
-            var services = await _context.Procedures
-                .Where(p => p.PatientId == patientId)
-                .Include(p => p.Patient)
-                .ToListAsync();
-
-            return services;
+            return Ok(await _procedureService.GetAllProceduresForPatientByPatientId(patientId));
+            
         }
+
 
         [HttpPost]
-        public async Task<IActionResult> CreateService([FromBody] Procedure procedure)
+        public async Task<ActionResult<ProcedureDTO?>> CreateProcedureForPatientByCreateProcedureDTO([FromBody] CreateProcedureDTO createProcedureDTO)
         {
-            // check if the patient exists
-            var patientExists = await _context.Patients.AnyAsync(p => p.Id == procedure.PatientId);
-            if (!patientExists)
-            {
-                return BadRequest("Patient not found.");
-            }
-
-            _context.Procedures.Add(procedure);
-            await _context.SaveChangesAsync();
-            return Ok(procedure);
+            var procedure = await _procedureService.CreateProcedureForPatientByCreateProcedureDTO(createProcedureDTO);
+            if (procedure != null) { return CreatedAtAction(nameof(CreateProcedureForPatientByCreateProcedureDTO), new { id = procedure.Id }, procedure); }
+            return BadRequest();
         }
-        //[HttpPost]
-        //public async Task<ActionResult<Service>> CreateService([FromBody] Service service)
-        //{
-        //    if (service == null) { return BadRequest(); }   // Sends 400 Bad Request.
-
-        //    _context.Services.Add(service);
-        //    await _context.SaveChangesAsync();
-
-        //    return CreatedAtAction(nameof(GetServiceById), new { id = service.Id }, service);
-        //}
 
 
 

@@ -32,9 +32,7 @@ namespace MyPAS.Services
                 Payment payment = new Payment
                 {
                     PatientId = patientToAddPayment.Id,
-                    Patient = createPaymentDTO.Patient,
                     ProcedureId = createPaymentDTO.ProcedureId,
-                    Procedure = createPaymentDTO.Procedure,
                     PaymentDate = createPaymentDTO.PaymentDate,
                     Amount = createPaymentDTO.Amount,
                     Method = createPaymentDTO.Method,
@@ -92,14 +90,14 @@ namespace MyPAS.Services
 
 
 
-        public async Task<PaymentDTO?> UpdatePaymentByDTO(UpdatePaymentDTO updatePaymentDTO)
+        public async Task<PaymentDTO?> UpdatePaymentByDTO(int paymentId,UpdatePaymentDTO updatePaymentDTO)
         {
-            var paymentToUpdate = await _context.Payments.FindAsync(updatePaymentDTO.Id);
+            var paymentToUpdate = await _context.Payments.FindAsync(paymentId);
             if (paymentToUpdate != null)
             {
                 paymentToUpdate.Method = updatePaymentDTO.Method;
-                paymentToUpdate.PaymentDate = updatePaymentDTO.PaymentDate;
-                paymentToUpdate.Amount = updatePaymentDTO.Amount;
+                paymentToUpdate.PaymentDate = (DateOnly) updatePaymentDTO.PaymentDate;
+                paymentToUpdate.Amount = (int) updatePaymentDTO.Amount;
                 //paymentToUpdate.ProcedureId = updatePaymentDTO.ProcedureId;
 
                 await _context.SaveChangesAsync();

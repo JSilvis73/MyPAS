@@ -6,10 +6,10 @@ public interface IProcedureService
 {
     // CRUD
     Task<ProcedureDTO> CreateProcedureForPatientByCreateProcedureDTO(CreateProcedureDTO createProcedureDTO);
-    Task<List<ProcedureDTO>> GetAllProceduresForPatientById(int patientId);
-    Task<ProcedureDTO> GetProcedureByProcedureId(int id);
+    Task<List<ProcedureDTO>> GetAllProceduresForPatientByPatientId(int patientId);
+    Task<ProcedureDTO?> GetProcedureByProcedureId(int id);
     //Service GetServicesByPatientName(string patientLastName, string patientFirstName);
-    Task<ProcedureDTO> UpdateProcedureByUpdateProcedureDTO(UpdateProcedureDTO updateProcedureDTO);
+    Task<ProcedureDTO> UpdateProcedureByUpdateProcedureDTO(int procedureId, UpdateProcedureDTO updateProcedureDTO);
     Task<bool> DeleteProcedureByProcedureId(int id);
     
 

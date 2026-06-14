@@ -1,12 +1,16 @@
-﻿namespace MyPAS.Models.DTO
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+
+namespace MyPAS.Models.DTO
 {
     public class UpdateProcedureDTO
     {
-        public int Id { get; set; }
-        public string ProcedureName { get; set; } = string.Empty;
-        public DateOnly ProcedureDate { get; set; }
-        public string CptCode { get; set; } = string.Empty;
-        public decimal CptAmount { get; set; }
-        public decimal PatientChargedAmount { get; set; } = 0;
+        public string? ProcedureName { get; set; }
+        public DateOnly? ProcedureDate { get; set; }
+        public string? CptCode { get; set; }
+        [Precision(18, 2)]
+        public decimal? CptAmount { get; set; }
+        [Precision(18, 2)]
+        public decimal? PatientChargedAmount { get; set; }
     }
 }

@@ -24,12 +24,12 @@ namespace MyPAS.Services
             var patient = await _context.Patients.FindAsync(createProedureDTO.PatientId);
             if (patient == null) return null;
 
-            var procedureToCreate = new Procedure
+            Procedure procedureToCreate = new Procedure
             {
                 PatientId = createProedureDTO.PatientId,
                 ProcedureName = createProedureDTO.ProcedureName,
                 ProcedureDate = createProedureDTO.ProcedureDate,
-                PatientChargedAmount = createProedureDTO.PatientChargedAmount,
+                PatientChargedAmount =(decimal) createProedureDTO.PatientChargedAmount,
                 CptAmount = createProedureDTO.CptAmount,
                 CptCode = createProedureDTO.CptCode,
             };
@@ -40,28 +40,28 @@ namespace MyPAS.Services
             return new ProcedureDTO
             {
                 Id = procedureToCreate.Id,
-                PatientId = procedureToCreate.PatientId,
+                PatientId = (int) procedureToCreate.PatientId,
                 ProcedureName = procedureToCreate.ProcedureName,
-                PatientChargedAmount = procedureToCreate.PatientChargedAmount,
-                CptAmount= procedureToCreate.CptAmount,
+                PatientChargedAmount = (decimal)procedureToCreate.PatientChargedAmount,
+                CptAmount= (decimal) procedureToCreate.CptAmount,
                 CptCode= procedureToCreate.CptCode,
                 ProcedureDate= procedureToCreate.ProcedureDate,
 
             };
         }
 
-        public async Task<List<ProcedureDTO>> GetAllProceduresForPatientById(int patientId)
+        public async Task<List<ProcedureDTO>> GetAllProceduresForPatientByPatientId(int patientId)
         {
             return await _context.Procedures.Where(
                 p => p.PatientId == patientId)
                 .Select(p => new ProcedureDTO
                 {
                     Id = p.Id,
-                    PatientId= p.PatientId,
+                    PatientId= (int) p.PatientId,
                     ProcedureName= p.ProcedureName,
                     ProcedureDate = p.ProcedureDate,
-                    PatientChargedAmount= p.PatientChargedAmount,
-                    CptAmount = p.CptAmount,
+                    PatientChargedAmount= (decimal) p.PatientChargedAmount,
+                    CptAmount = (decimal) p.CptAmount,
                     CptCode= p.CptCode,
 
                 })
@@ -77,25 +77,34 @@ namespace MyPAS.Services
                  Id = p.Id,
                  ProcedureName = p.ProcedureName,
                  ProcedureDate = p.ProcedureDate,
-                 PatientId = p.PatientId,
-                 PatientChargedAmount = p.PatientChargedAmount,
-                 CptAmount = p.CptAmount,
+                 PatientId = (int) p.PatientId,
+                 PatientChargedAmount = (decimal) p.PatientChargedAmount,
+                 CptAmount = (decimal) p.CptAmount,
                  CptCode = p.CptCode
              })
              .SingleOrDefaultAsync();
         }
 
-        public async Task<ProcedureDTO?> UpdateProcedureByUpdateProcedureDTO(UpdateProcedureDTO updateProcedureDTO)
+        public async Task<ProcedureDTO?> UpdateProcedureByUpdateProcedureDTO(int procedureId, UpdateProcedureDTO updateProcedureDTO)
         {
             // Locate procedure
-            var procedureToUpdate = await _context.Procedures.FindAsync(updateProcedureDTO.Id);
+            var procedureToUpdate = await _context.Procedures.FindAsync(procedureId);
             if (procedureToUpdate != null)
             { 
                 // Update fields if procedure is found.
+                if (updateProcedureDTO != null)
                 procedureToUpdate.ProcedureName = updateProcedureDTO.ProcedureName;
-                procedureToUpdate.ProcedureDate = updateProcedureDTO.ProcedureDate;
+
+                if (updateProcedureDTO.ProcedureDate.HasValue)
+                procedureToUpdate.ProcedureDate = updateProcedureDTO.ProcedureDate.Value;
+
+                if (procedureToUpdate.PatientChargedAmount != null)
                 procedureToUpdate.PatientChargedAmount = updateProcedureDTO.PatientChargedAmount;
+
+                if (procedureToUpdate.CptCode != null)
                 procedureToUpdate.CptCode = updateProcedureDTO.CptCode;
+
+                if (procedureToUpdate.CptAmount != null)
                 procedureToUpdate.CptAmount = updateProcedureDTO.CptAmount;
           
                 await _context.SaveChangesAsync();

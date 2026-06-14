@@ -24,7 +24,19 @@ namespace MyPAS.Services
         {
             _logger.LogInformation("Attempting to create patient: {LastName}, {FirstName}.",createPatientDTO.LastName, createPatientDTO.FirstName);
 
-            var patient = new Patient { FirstName = createPatientDTO.FirstName, LastName = createPatientDTO.LastName };
+            var patient = new Patient 
+            { 
+                FirstName = createPatientDTO.FirstName, 
+                LastName = createPatientDTO.LastName,
+                Address = createPatientDTO.Address,
+                City = createPatientDTO.City,
+                State = createPatientDTO.State,
+                Zip = createPatientDTO.Zip,
+                Age = createPatientDTO.Age,
+                Phone = createPatientDTO.Phone,
+                Email = createPatientDTO.Email
+
+            };
 
             _logger.LogInformation("Attempting to add patient: {LastName}, {FirstName} to database.", createPatientDTO.LastName, createPatientDTO.FirstName);
             try
@@ -77,16 +89,17 @@ namespace MyPAS.Services
             var patientToUpdate = await _context.Patients.FindAsync(id);
 
             if (patientToUpdate == null) return null;
+            
+            if (updatePatientDTO.FirstName!=null) patientToUpdate.FirstName = updatePatientDTO.FirstName;
 
-            patientToUpdate.FirstName = updatePatientDTO.FirstName;
-            patientToUpdate.LastName = updatePatientDTO.LastName;
-            patientToUpdate.Address = updatePatientDTO.Address;
-            patientToUpdate.City = updatePatientDTO.City;
-            patientToUpdate.State = updatePatientDTO.State;
-            patientToUpdate.Zip = updatePatientDTO.Zip;
-            patientToUpdate.Age = updatePatientDTO.Age;
-            patientToUpdate.Phone = updatePatientDTO.Phone;
-            patientToUpdate.Email = updatePatientDTO.Email;
+            if (updatePatientDTO.LastName!=null) patientToUpdate.LastName = updatePatientDTO.LastName;
+            if (updatePatientDTO.Address!=null) patientToUpdate.Address = updatePatientDTO.Address;
+            if (updatePatientDTO.City!=null) patientToUpdate.City = updatePatientDTO.City;
+            if (updatePatientDTO.State!=null) patientToUpdate.State = updatePatientDTO.State;
+            if (updatePatientDTO.Zip!=null) patientToUpdate.Zip = updatePatientDTO.Zip;
+            if (updatePatientDTO.Age>=1) patientToUpdate.Age = (int) updatePatientDTO.Age;
+            if (updatePatientDTO.Phone!=null) patientToUpdate.Phone = updatePatientDTO.Phone;
+            if (updatePatientDTO.Email!=null) patientToUpdate.Email = updatePatientDTO.Email;
 
         
             await _context.SaveChangesAsync();
@@ -96,6 +109,13 @@ namespace MyPAS.Services
                 Id = patientToUpdate.Id,
                 FirstName = patientToUpdate.FirstName,
                 LastName = patientToUpdate.LastName,
+                Address = patientToUpdate.Address,
+                City = patientToUpdate.City,
+                State = patientToUpdate.State,
+                Zip = patientToUpdate.Zip,
+                Age = patientToUpdate.Age,
+                Phone = patientToUpdate.Phone,
+                Email = patientToUpdate.Email,
             };
         }
 

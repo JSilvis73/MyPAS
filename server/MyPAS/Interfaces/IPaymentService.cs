@@ -7,8 +7,8 @@ namespace MyPAS.Interfaces
     {
         Task<PaymentDTO?> CreatePaymentWithCreatePaymentDTO(CreatePaymentDTO createPaymentDTO);
         Task<List<PaymentDTO>> GetAllPaymentsByProcedureId(int procedureId);
-        Task<PaymentDTO> GetPaymentByPaymentId(int paymentId);
-        Task<PaymentDTO?> UpdatePaymentByDTO(UpdatePaymentDTO updatePaymentDTO);
+        Task<PaymentDTO?> GetPaymentByPaymentId(int paymentId);
+        Task<PaymentDTO?> UpdatePaymentByDTO(int paymentId, UpdatePaymentDTO updatePaymentDTO);
         Task<bool> DeletePaymentById(int paymentId);
     }
 }
