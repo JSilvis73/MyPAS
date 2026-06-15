@@ -97,7 +97,7 @@ namespace MyPAS.Services
             if (updatePatientDTO.City!=null) patientToUpdate.City = updatePatientDTO.City;
             if (updatePatientDTO.State!=null) patientToUpdate.State = updatePatientDTO.State;
             if (updatePatientDTO.Zip!=null) patientToUpdate.Zip = updatePatientDTO.Zip;
-            if (updatePatientDTO.Age>=1) patientToUpdate.Age = (int) updatePatientDTO.Age;
+            if (updatePatientDTO.Age.HasValue) patientToUpdate.Age = updatePatientDTO.Age.Value;
             if (updatePatientDTO.Phone!=null) patientToUpdate.Phone = updatePatientDTO.Phone;
             if (updatePatientDTO.Email!=null) patientToUpdate.Email = updatePatientDTO.Email;
 
