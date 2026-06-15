@@ -89,23 +89,23 @@ namespace MyPAS.Services
         {
             // Locate procedure
             var procedureToUpdate = await _context.Procedures.FindAsync(procedureId);
-            if (procedureToUpdate != null)
-            { 
+            if (procedureToUpdate == null) return null;
+            
                 // Update fields if procedure is found.
-                if (updateProcedureDTO != null)
+                if (updateProcedureDTO.ProcedureName != null)
                 procedureToUpdate.ProcedureName = updateProcedureDTO.ProcedureName;
 
                 if (updateProcedureDTO.ProcedureDate.HasValue)
                 procedureToUpdate.ProcedureDate = updateProcedureDTO.ProcedureDate.Value;
 
-                if (procedureToUpdate.PatientChargedAmount != null)
-                procedureToUpdate.PatientChargedAmount = updateProcedureDTO.PatientChargedAmount;
+                if (updateProcedureDTO.PatientChargedAmount.HasValue)
+                procedureToUpdate.PatientChargedAmount = updateProcedureDTO.PatientChargedAmount.Value;
 
-                if (procedureToUpdate.CptCode != null)
+                if (updateProcedureDTO.CptCode != null)
                 procedureToUpdate.CptCode = updateProcedureDTO.CptCode;
 
-                if (procedureToUpdate.CptAmount != null)
-                procedureToUpdate.CptAmount = updateProcedureDTO.CptAmount;
+                if (updateProcedureDTO.CptAmount.HasValue)
+                procedureToUpdate.CptAmount = updateProcedureDTO.CptAmount.Value;
           
                 await _context.SaveChangesAsync();
 
@@ -119,9 +119,6 @@ namespace MyPAS.Services
                     CptCode = procedureToUpdate.CptCode,
                     CptAmount = procedureToUpdate.CptAmount,
                 };
-            }
-
-            return null;
         }
 
         public async Task<bool> DeleteProcedureByProcedureId(int id)

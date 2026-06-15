@@ -10,10 +10,8 @@ namespace MyPAS.Models.DTO
         public string? City { get; set; }
         public string? State { get; set; }
         public string? Zip { get; set; }
-        [Range(1,130)]
         public int? Age { get; set; } 
         public string? Phone { get; set; }
-        [EmailAddress]
         public string? Email { get; set; }
     }
 }
