@@ -25,6 +25,7 @@ namespace MyPAS.Models
 
         [JsonIgnore]
         public List<Procedure> Procedures { get; set; } = new ();
+
         [JsonIgnore]
         public List<Payment> Payments { get; set; } = new ();
 

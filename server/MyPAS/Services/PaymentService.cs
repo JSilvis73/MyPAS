@@ -93,12 +93,17 @@ namespace MyPAS.Services
         public async Task<PaymentDTO?> UpdatePaymentByDTO(int paymentId,UpdatePaymentDTO updatePaymentDTO)
         {
             var paymentToUpdate = await _context.Payments.FindAsync(paymentId);
-            if (paymentToUpdate != null)
-            {
-                paymentToUpdate.Method = updatePaymentDTO.Method;
-                paymentToUpdate.PaymentDate = (DateOnly) updatePaymentDTO.PaymentDate;
-                paymentToUpdate.Amount = (int) updatePaymentDTO.Amount;
-                //paymentToUpdate.ProcedureId = updatePaymentDTO.ProcedureId;
+            if (paymentToUpdate == null) return null;
+            
+            if (updatePaymentDTO.Amount.HasValue)
+                paymentToUpdate.Amount = updatePaymentDTO.Amount.Value;
+
+            if (updatePaymentDTO.Method!=null)
+            paymentToUpdate.Method = updatePaymentDTO.Method;
+
+            if (updatePaymentDTO.PaymentDate.HasValue)
+                paymentToUpdate.PaymentDate = updatePaymentDTO.PaymentDate.Value;
+      
 
                 await _context.SaveChangesAsync();
 
@@ -110,9 +115,7 @@ namespace MyPAS.Services
                     PaymentDate = paymentToUpdate.PaymentDate,
                     Amount = paymentToUpdate.Amount,
                     Method = paymentToUpdate.Method,
-                };
-            }
-            return null;
+               }; 
         }
 
         public async Task<bool> DeletePaymentById(int paymentId)
