@@ -50,7 +50,15 @@ namespace MyPAS.Services
                 { 
                     Id = patient.Id,
                     FirstName = patient.FirstName, 
-                    LastName = patient.LastName 
+                    LastName = patient.LastName,
+                    Address = patient.Address,
+                    City = patient.City,
+                    State = patient.State,
+                    Zip = patient.Zip,
+                    Age = patient.Age,
+                    Phone = patient.Phone,
+                    Email = patient.Email
+                    
                 };
                
             }

@@ -48,7 +48,7 @@ namespace MyPAS.Controllers
         }
 
         // Update patient
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<ActionResult<PatientDTO>> UpdatePatient(int id, [FromBody] UpdatePatientDTO updatePatientDTO)
         {
             var result = await _patientService.UpdatePatient(id, updatePatientDTO);
