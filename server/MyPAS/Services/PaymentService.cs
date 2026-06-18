@@ -55,6 +55,21 @@ namespace MyPAS.Services
 
         }
 
+        public async Task<List<PaymentDTO>> GetPaymentsByPatientId(int patientId)
+        {
+            return await _context.Payments.Where(p => p.PatientId == patientId)
+                .Select(p => new PaymentDTO
+                {
+                    Id = p.Id,
+                    PatientId = p.PatientId,
+                    ProcedureId= p.ProcedureId,
+                    PaymentDate = p.PaymentDate,
+                    Amount = p.Amount,
+                    Method = p.Method,
+                    
+                }).ToListAsync();
+        }
+
         public async Task<PaymentDTO?> GetPaymentByPaymentId(int paymentId)
         {
             var paymentToFind = await _context.Payments.FindAsync(paymentId);

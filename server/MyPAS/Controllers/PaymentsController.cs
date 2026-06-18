@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using MyPAS.Data;
+using MyPAS.Interfaces;
 using MyPAS.Models;
+using MyPAS.Models.DTO;
 
 namespace MyPAS.Controllers
 {
@@ -12,84 +14,40 @@ namespace MyPAS.Controllers
     public class PaymentsController : ControllerBase
     {
         private readonly MyPASContext _context;
-        public PaymentsController(MyPASContext context)
+        private readonly IPaymentService _paymentService;
+        public PaymentsController(MyPASContext context, IPaymentService paymentService)
         {
             _context = context;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Payment>>> GetPayments()
-        {
-
-            return await _context.Payments.Include(p => p.Procedure).ToListAsync();
+            _paymentService = paymentService;
         }
 
         [HttpGet("{paymentId}")]
-        public async Task<ActionResult<Payment>> GetPayment(int paymentId)
+        public async Task<ActionResult<PaymentDTO>> GetPaymentByPaymentId(int paymentId)
         {
-            var payment = await _context.Payments
-                .Include(p => p.Procedure)
-                .FirstOrDefaultAsync(p => p.Id == paymentId);
-
-            if (payment == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(payment);
+           var result = await _paymentService.GetPaymentByPaymentId(paymentId);
+            return Ok(result);
         }
 
         [HttpGet("patients/{patientId}/payments")]
-        public async Task<ActionResult<List<Payment>>> GetPaymentsByPatientId(int patientId)
+        public async Task<ActionResult<List<PaymentDTO>>> GetPaymentsByPatientId(int patientId)
         {
-            try
-            {
-                var payments = await _context.Payments
-                    .Where(p => p.PatientId == patientId)
-                    .Include(p => p.Patient)
-                    .ToListAsync();
-
-                if (payments == null || !payments.Any())
-                {
-                    return NotFound();
-                }
-
-                return Ok(payments);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var results = await _paymentService.GetPaymentsByPatientId(patientId);
+            return Ok(results);
         }
 
-
-        [HttpGet("services/{serviceId}")]
-        public async Task<ActionResult<IEnumerable<Payment>>> GetPaymentsByService(int serviceId)
+        [HttpGet("procedure/{procedureId}/payments")]
+        public async Task<ActionResult<List<PaymentDTO>>> GetPaymentsByProcedureId(int procedureId)
         {
-            
-            var payments = await _context.Payments
-                
-                .Where(p => p.ProcedureId == serviceId)
-                .Include(p => p.Procedure).ToListAsync();
-
-            if (payments == null || payments.Count == 0)
-            {
-                return NotFound($"No payments found for this service Id.");
-            }
-
-            return Ok(payments);
+            var result = await _paymentService.GetAllPaymentsByProcedureId(procedureId);
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPayment([FromBody] Payment payment)
+        public async Task<ActionResult<PaymentDTO>> AddPayment([FromBody] CreatePaymentDTO createPaymentDTO)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            _context.Payments.Add(payment);
-            await _context.SaveChangesAsync();
-
-            return Ok(payment);
+            var result = await _paymentService.CreatePaymentWithCreatePaymentDTO(createPaymentDTO);
+            if (result != null) { return CreatedAtAction(nameof(GetPaymentByPaymentId), new { paymentId = result.Id }, result); }
+            return BadRequest();
         }
 
     }
