@@ -44,7 +44,7 @@ namespace MyPAS.Data
             // Payment -> Service (many-to-one)
             modelBuilder.Entity<Payment>()
                 .HasOne(p => p.Procedure)
-                .WithMany()
+                .WithMany(p => p.Payments)
                 .HasForeignKey(p => p.ProcedureId)
                 .OnDelete(DeleteBehavior.Restrict);
 

@@ -30,7 +30,7 @@ namespace MyPAS.Models
         public int PatientId { get; set; }
 
         // Navigation 
-        public Patient Patient { get; set; } = null;
+        public Patient Patient { get; set; } = null!;
 
         [JsonIgnore]
         public List<Payment> Payments { get; set; } = new();
