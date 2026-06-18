@@ -16,7 +16,6 @@ namespace MyPAS.Models.DTO
         [Range(1,130)]
         public int Age { get; set; }
         public string? Phone { get; set; }
-        [EmailAddress]
         public string? Email { get; set; }
 
     }

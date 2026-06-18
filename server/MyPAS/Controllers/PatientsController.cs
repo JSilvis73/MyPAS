@@ -23,7 +23,6 @@ namespace MyPAS.Controllers
         public async Task<ActionResult<IEnumerable<PatientDTO>>> GetPatients()
         {  
             var result = await _patientService.GetAllPatients();
-
             return Ok(result); 
         }
 
@@ -31,11 +30,9 @@ namespace MyPAS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PatientDTO>> GetPatientById(int id)
         { 
-
             var patient =  await _patientService.GetPatientById(id);
             if (patient != null) { return Ok(patient); }
             return NotFound();
-           
         }
 
         // Create patient

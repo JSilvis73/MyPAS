@@ -21,15 +21,16 @@ namespace MyPAS.Services
         {
             _logger.LogInformation("Attempting to create procedure: {ProcedureName}", createProedureDTO.ProcedureName);
 
-            var patient = await _context.Patients.FindAsync(createProedureDTO.PatientId);
+            var patient =  _context.Patients.FirstOrDefault(p => p.Id == createProedureDTO.PatientId);
             if (patient == null) return null;
 
             Procedure procedureToCreate = new Procedure
             {
                 PatientId = createProedureDTO.PatientId,
+                Patient = patient,
                 ProcedureName = createProedureDTO.ProcedureName,
                 ProcedureDate = createProedureDTO.ProcedureDate,
-                PatientChargedAmount =(decimal) createProedureDTO.PatientChargedAmount,
+                PatientChargedAmount = createProedureDTO.PatientChargedAmount,
                 CptAmount = createProedureDTO.CptAmount,
                 CptCode = createProedureDTO.CptCode,
             };
@@ -40,13 +41,12 @@ namespace MyPAS.Services
             return new ProcedureDTO
             {
                 Id = procedureToCreate.Id,
-                PatientId = (int) procedureToCreate.PatientId,
+                PatientId = procedureToCreate.PatientId,
                 ProcedureName = procedureToCreate.ProcedureName,
-                PatientChargedAmount = (decimal)procedureToCreate.PatientChargedAmount,
-                CptAmount= (decimal) procedureToCreate.CptAmount,
+                PatientChargedAmount = procedureToCreate.PatientChargedAmount,
+                CptAmount= procedureToCreate.CptAmount,
                 CptCode= procedureToCreate.CptCode,
                 ProcedureDate= procedureToCreate.ProcedureDate,
-
             };
         }
 

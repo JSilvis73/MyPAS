@@ -50,7 +50,7 @@ namespace MyPAS.Controllers
 
 
         // PUT: api/service/5
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateService(int id, Procedure procedure)
         {
             if (id != procedure.Id)
