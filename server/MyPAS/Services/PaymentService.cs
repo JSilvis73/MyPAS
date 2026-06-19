@@ -20,7 +20,6 @@ namespace MyPAS.Services
 
         }
 
-
         public async Task<PaymentDTO?> CreatePaymentWithCreatePaymentDTO(CreatePaymentDTO createPaymentDTO)
         {
             var patientToAddPayment = await _context.Patients.FindAsync(createPaymentDTO.PatientId);
@@ -52,7 +51,6 @@ namespace MyPAS.Services
                 };
             }
             return null;
-
         }
 
         public async Task<List<PaymentDTO>> GetPaymentsByPatientId(int patientId)
@@ -66,7 +64,6 @@ namespace MyPAS.Services
                     PaymentDate = p.PaymentDate,
                     Amount = p.Amount,
                     Method = p.Method,
-                    
                 }).ToListAsync();
         }
 
@@ -99,13 +96,10 @@ namespace MyPAS.Services
                     PaymentDate = p.PaymentDate,
                     Amount = p.Amount,
                     Method = p.Method,
-
                 }).ToListAsync();
         }
 
-
-
-        public async Task<PaymentDTO?> UpdatePaymentByDTO(int paymentId,UpdatePaymentDTO updatePaymentDTO)
+        public async Task<PaymentDTO?> UpdatePaymentByDTO(int paymentId, UpdatePaymentDTO updatePaymentDTO)
         {
             var paymentToUpdate = await _context.Payments.FindAsync(paymentId);
             if (paymentToUpdate == null) return null;
@@ -114,12 +108,11 @@ namespace MyPAS.Services
                 paymentToUpdate.Amount = updatePaymentDTO.Amount.Value;
 
             if (updatePaymentDTO.Method!=null)
-            paymentToUpdate.Method = updatePaymentDTO.Method;
+                paymentToUpdate.Method = updatePaymentDTO.Method;
 
             if (updatePaymentDTO.PaymentDate.HasValue)
                 paymentToUpdate.PaymentDate = updatePaymentDTO.PaymentDate.Value;
       
-
                 await _context.SaveChangesAsync();
 
                 return new PaymentDTO
@@ -130,7 +123,7 @@ namespace MyPAS.Services
                     PaymentDate = paymentToUpdate.PaymentDate,
                     Amount = paymentToUpdate.Amount,
                     Method = paymentToUpdate.Method,
-               }; 
+                }; 
         }
 
         public async Task<bool> DeletePaymentById(int paymentId)

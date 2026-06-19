@@ -24,7 +24,7 @@ namespace MyPAS.Controllers
         [HttpGet("{paymentId}")]
         public async Task<ActionResult<PaymentDTO>> GetPaymentByPaymentId(int paymentId)
         {
-           var result = await _paymentService.GetPaymentByPaymentId(paymentId);
+            var result = await _paymentService.GetPaymentByPaymentId(paymentId);
             return Ok(result);
         }
 
@@ -49,6 +49,23 @@ namespace MyPAS.Controllers
             if (result != null) { return CreatedAtAction(nameof(GetPaymentByPaymentId), new { paymentId = result.Id }, result); }
             return BadRequest();
         }
+
+        [HttpPatch("/update/{paymentId}")]
+        public async Task<ActionResult<PaymentDTO?>> UpdatePaymentByPaymentId(int paymentId, [FromBody] UpdatePaymentDTO dto)
+        {
+            var result = await _paymentService.UpdatePaymentByDTO(paymentId, dto);
+            if (result != null) { return Ok(result); }
+            return BadRequest();
+        }
+
+        [HttpDelete("{paymentId}")]
+        public async Task<ActionResult<bool>> DeletePaymentByPAymentId(int paymentId)
+        {
+            var result = await _paymentService.DeletePaymentById(paymentId);
+            if (result == null) { return BadRequest(); }
+            return NoContent();  
+        }
+
 
     }
 }
