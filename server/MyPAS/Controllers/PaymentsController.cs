@@ -50,7 +50,7 @@ namespace MyPAS.Controllers
             return BadRequest();
         }
 
-        [HttpPatch("/update/{paymentId}")]
+        [HttpPatch("update/{paymentId}")]
         public async Task<ActionResult<PaymentDTO?>> UpdatePaymentByPaymentId(int paymentId, [FromBody] UpdatePaymentDTO dto)
         {
             var result = await _paymentService.UpdatePaymentByDTO(paymentId, dto);
@@ -62,7 +62,7 @@ namespace MyPAS.Controllers
         public async Task<ActionResult<bool>> DeletePaymentByPAymentId(int paymentId)
         {
             var result = await _paymentService.DeletePaymentById(paymentId);
-            if (result == null) { return BadRequest(); }
+            if (result == false) { return BadRequest(); }
             return NoContent();  
         }
 
