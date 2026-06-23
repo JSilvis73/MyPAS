@@ -57,11 +57,11 @@ namespace MyPAS.Services
                 .Select(p => new ProcedureDTO
                 {
                     Id = p.Id,
-                    PatientId= (int) p.PatientId,
+                    PatientId= p.PatientId,
                     ProcedureName= p.ProcedureName,
                     ProcedureDate = p.ProcedureDate,
-                    PatientChargedAmount= (decimal) p.PatientChargedAmount,
-                    CptAmount = (decimal) p.CptAmount,
+                    PatientChargedAmount= p.PatientChargedAmount,
+                    CptAmount = p.CptAmount,
                     CptCode= p.CptCode,
 
                 })
@@ -77,9 +77,9 @@ namespace MyPAS.Services
                  Id = p.Id,
                  ProcedureName = p.ProcedureName,
                  ProcedureDate = p.ProcedureDate,
-                 PatientId = (int) p.PatientId,
-                 PatientChargedAmount = (decimal) p.PatientChargedAmount,
-                 CptAmount = (decimal) p.CptAmount,
+                 PatientId = p.PatientId,
+                 PatientChargedAmount = p.PatientChargedAmount,
+                 CptAmount = p.CptAmount,
                  CptCode = p.CptCode
              })
              .SingleOrDefaultAsync();
