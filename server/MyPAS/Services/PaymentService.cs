@@ -27,6 +27,8 @@ namespace MyPAS.Services
 
             if (patientToAddPayment != null && procedureToAddPayment != null)
             {
+                if (string.IsNullOrWhiteSpace(createPaymentDTO.Method) || createPaymentDTO.Amount <= 0)  return null; 
+                if (createPaymentDTO.PaymentDate == DateOnly.MinValue) return null;
 
                 Payment payment = new Payment
                 {
