@@ -24,6 +24,8 @@ namespace MyPAS.Services
         {
             _logger.LogInformation("Attempting to create patient: {LastName}, {FirstName}.",createPatientDTO.LastName, createPatientDTO.FirstName);
 
+            if (string.IsNullOrWhiteSpace(createPatientDTO.LastName) || string.IsNullOrWhiteSpace(createPatientDTO.FirstName)) return null;
+            if (createPatientDTO.Age <= 0) return null;
             if (string.IsNullOrWhiteSpace(createPatientDTO.Email) && string.IsNullOrWhiteSpace(createPatientDTO.Phone)) return null;
 
             var patient = new Patient 

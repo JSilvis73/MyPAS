@@ -24,6 +24,8 @@ namespace MyPAS.Services
             var patient =  _context.Patients.FirstOrDefault(p => p.Id == createProedureDTO.PatientId);
             if (patient == null) return null;
 
+            if (string.IsNullOrWhiteSpace(createProedureDTO.ProcedureName) || createProedureDTO.PatientChargedAmount <= 0 || createProedureDTO.ProcedureDate == DateOnly.MinValue) return null;
+
             Procedure procedureToCreate = new Procedure
             {
                 PatientId = createProedureDTO.PatientId,
