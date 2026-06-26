@@ -147,11 +147,56 @@ namespace MyPAS.Services
 
         }
 
+        // Get user by Email
+        public async Task<UserDTO?> GetUserDTOByEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return null;
+
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+                return null;
+
+            return new UserDTO
+            {
+                Email = user.Email!,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
+        }
+        
+        // Change Password Endpoint.
+        public async Task<bool> ChangePassword(ChangePasswordDTO changePasswordDTO)
+        {
+            if (string.IsNullOrWhiteSpace(changePasswordDTO.Email) ||
+                string.IsNullOrWhiteSpace(changePasswordDTO.Password) || 
+                string.IsNullOrWhiteSpace(changePasswordDTO.NewPassword)) 
+            { return false; }
+
+            var user = await _userManager.FindByEmailAsync(changePasswordDTO.Email);
+            if (user == null) { return false; }
+
+            var result = await _userManager.ChangePasswordAsync(user, changePasswordDTO.Password, changePasswordDTO.NewPassword);
+
+            return result.Succeeded;
+        }
+
         // Refresh JWT Endpoint.
 
-        // Change Password Endpoint.
+
 
         // Assign Roles Endpoint.
+        public async Task<bool> AssignRolesToUser(UserDTO userDTO)
+        {
+            var user = await _userManager.FindByEmailAsync(userDTO.Email);
+            if (user == null) { return false; }
+
+            var result = await _userManager.AddToRoleAsync(user, "Admin");
+            if (result.Succeeded) { return true; }
+            return false;
+
+        }
 
     }
 }
