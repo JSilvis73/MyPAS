@@ -20,14 +20,16 @@ namespace MyPAS.Services
         private readonly SignInManager<MyPASUser> _signInManager;
         private readonly UserManager<MyPASUser> _userManager;
         private readonly IJwtService _jwtService;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         // Constructor.
-        public AuthService(ILogger<AuthService> logger, SignInManager<MyPASUser> signInManager, UserManager<MyPASUser> userManager, IJwtService jwtService)
+        public AuthService(ILogger<AuthService> logger, SignInManager<MyPASUser> signInManager, UserManager<MyPASUser> userManager, IJwtService jwtService, RoleManager<IdentityRole> roleManager)
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
             _jwtService = jwtService;
+            _roleManager = roleManager;
         }
 
         // Endpoints.
@@ -64,14 +66,11 @@ namespace MyPAS.Services
             };
 
             // Attempt to create.
-            _logger.LogInformation("Attempting to create user:{Email}.", userToCreate.Email);
             var result = await _userManager.CreateAsync(userToCreate, registerRequest.Password);
 
             // Check result and return response.
             if (result.Succeeded)
-            {
-                _logger.LogInformation("User: {Email} has been created.", userToCreate.Email);
-                
+            {   
                 return new AuthResult 
                 { 
                     Success = true
@@ -80,9 +79,6 @@ namespace MyPAS.Services
 
             // Catch errors.
             var errors = result.Errors.Select(e => e.Description).ToList();
-
-
-            _logger.LogWarning("Registration failed for user: {Email}. Errors: {Errors}.", userToCreate.Email, string.Join(",", errors));
 
             return new AuthResult { Success = false, Errors = errors };
 
@@ -97,15 +93,14 @@ namespace MyPAS.Services
             var userToSignIn = await _userManager.FindByEmailAsync(signInDTO.Email);
 
             // If the user does not exist, return error.
-            if (userToSignIn== null)
+            if (userToSignIn== null || string.IsNullOrWhiteSpace(userToSignIn.Email))
             {
-                _logger.LogWarning("Invalid email or passord.");
                 return new AuthResult ()
                 {
                     Success=false,
                     Errors = new List<string>()
                     {
-                       $"Invalid email or password."
+                       "Invalid email or password."
                     }
                 };
             }
@@ -116,7 +111,6 @@ namespace MyPAS.Services
             // If sign in fails return an error.
             if (!signInResult.Succeeded) 
             { 
-                _logger.LogWarning("{Email} has failed to sign in.", userToSignIn.Email);
                 return new AuthResult() 
                 { 
                     Success = false, 
@@ -131,8 +125,6 @@ namespace MyPAS.Services
             var token = _jwtService.GenerateToken(userToSignIn.Id, userToSignIn.Email);
 
             // Sign in.
-
-                _logger.LogInformation("{Email} was signed in.", userToSignIn.Email);
                 return new AuthResult() 
                 { 
                     Success = true,
@@ -144,14 +136,12 @@ namespace MyPAS.Services
                         LastName = userToSignIn.LastName,
                     }
                 };
-
         }
 
         // Get user by Email
         public async Task<UserDTO?> GetUserDTOByEmail(string email)
         {
-            if (string.IsNullOrWhiteSpace(email))
-                return null;
+            if (string.IsNullOrWhiteSpace(email)) return null;
 
             var user = await _userManager.FindByEmailAsync(email);
 
@@ -167,36 +157,147 @@ namespace MyPAS.Services
         }
         
         // Change Password Endpoint.
-        public async Task<bool> ChangePassword(ChangePasswordDTO changePasswordDTO)
+        public async Task<AuthIdentityResult> ChangePassword(ChangePasswordDTO changePasswordDTO)
         {
             if (string.IsNullOrWhiteSpace(changePasswordDTO.Email) ||
                 string.IsNullOrWhiteSpace(changePasswordDTO.Password) || 
                 string.IsNullOrWhiteSpace(changePasswordDTO.NewPassword)) 
-            { return false; }
+            { return new AuthIdentityResult { Result = false, Error = { "All fields are required." } }; }
 
             var user = await _userManager.FindByEmailAsync(changePasswordDTO.Email);
-            if (user == null) { return false; }
+            if (user == null) { return new AuthIdentityResult { Result = false, Error = { "User not found." } }; }
 
             var result = await _userManager.ChangePasswordAsync(user, changePasswordDTO.Password, changePasswordDTO.NewPassword);
-
-            return result.Succeeded;
+            if (!result.Succeeded) { return new AuthIdentityResult { Result = false , Error = { "Unable to change password." } }; }
+            return new AuthIdentityResult { Result = true,};
+            
         }
-
-        // Refresh JWT Endpoint.
-
-
 
         // Assign Roles Endpoint.
-        public async Task<bool> AssignRolesToUser(UserDTO userDTO)
+        public async Task<AuthIdentityResult> AddUserToRole(AssignRoleDTO assignRoleDTO)
         {
-            var user = await _userManager.FindByEmailAsync(userDTO.Email);
-            if (user == null) { return false; }
+            if (string.IsNullOrWhiteSpace(assignRoleDTO.Email) ||
+             string.IsNullOrWhiteSpace(assignRoleDTO.Role))
+            {
+                return new AuthIdentityResult
+                {
+                    Result = false,
+                    Error = new List<string>
+                     {
+                      "Email and role are required."
+                     }
+                };
+            }
 
-            var result = await _userManager.AddToRoleAsync(user, "Admin");
-            if (result.Succeeded) { return true; }
-            return false;
+            var user = await _userManager.FindByEmailAsync(assignRoleDTO.Email);
 
+            if (user == null)
+            {
+                return new AuthIdentityResult
+                {
+                    Result = false,
+                    Error = new List<string>
+                     {
+                        "User not found."
+                     }
+                };
+            }
+
+            if (!await _roleManager.RoleExistsAsync(assignRoleDTO.Role))
+            {
+                return new AuthIdentityResult
+                {
+                    Result = false,
+                    Error = new List<string>
+                     {
+                      $"Role '{assignRoleDTO.Role}' does not exist."
+                     }
+                };
+            }
+
+            if (await _userManager.IsInRoleAsync(user, assignRoleDTO.Role)) {
+                return new AuthIdentityResult
+                {
+                    Result = false,
+                    Error = new List<string>
+                     {
+                       $"User is already assigned to the '{assignRoleDTO.Role}' role."
+                     }
+                };
+            }
+
+            var identityResult = await _userManager.AddToRoleAsync(user, assignRoleDTO.Role);
+
+            if (!identityResult.Succeeded)
+            {
+                return new AuthIdentityResult
+                {
+                    Result = false,
+                    Error = identityResult.Errors
+                                          .Select(e => e.Description)
+                                          .ToList()
+                };
+            }
+
+            return new AuthIdentityResult
+            {
+                Result = true
+            };
         }
 
+        public async Task<AuthIdentityResult> RemoveUserFromRole(AssignRoleDTO assignRoleDTO)
+        {
+            // Check DTO Fields.
+            if (string.IsNullOrWhiteSpace(assignRoleDTO.Email) ||
+                string.IsNullOrWhiteSpace(assignRoleDTO.Role)) 
+            { 
+                return new AuthIdentityResult { Result = false, Error = { "Email and role must be populated." } }; 
+            }
+                
+            // Get user. Return false if not found.
+            var user = await _userManager.FindByEmailAsync(assignRoleDTO.Email);
+
+            if (user == null) { return new AuthIdentityResult { Result = false, Error = new List<string> { "User not found." } }; }
+
+            // Return false if role does not exist.
+            if (!await _roleManager.RoleExistsAsync(assignRoleDTO.Role)) 
+            { 
+                return new AuthIdentityResult 
+                { 
+                    Result = false, 
+                    Error = new List<string> 
+                    { "Role does not exist." } 
+                }; 
+            }
+
+            // Return false if the user is already in the role.
+            if (await _userManager.IsInRoleAsync(user, assignRoleDTO.Role)) 
+            { 
+                return new AuthIdentityResult 
+                { 
+                    Result = false, 
+                    Error = new List<string> 
+                    { $"User is already assigned to the '{assignRoleDTO.Role}' role." }
+                }; 
+            } 
+
+            var identityResult = await _userManager.RemoveFromRoleAsync(user, assignRoleDTO.Role);
+
+            if (!identityResult.Succeeded)
+            {
+                return new AuthIdentityResult
+                {
+                    Result = false,
+                    Error = identityResult.Errors
+                                           .Select(e => e.Description)
+                                           .ToList()
+                };
+            }
+
+            return new AuthIdentityResult
+            {
+                Result = true,
+            };
+        }
     }
 }
