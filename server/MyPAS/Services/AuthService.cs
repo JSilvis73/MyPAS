@@ -274,16 +274,7 @@ namespace MyPAS.Services
                 }; 
             }
 
-            // Return false if the user is already in the role.
-            if (await _userManager.IsInRoleAsync(user, assignRoleDTO.Role)) 
-            { 
-                return new AuthIdentityResult 
-                { 
-                    Result = false, 
-                    Error = new List<string> 
-                    { $"User is already assigned to the '{assignRoleDTO.Role}' role." }
-                }; 
-            } 
+     
 
             var identityResult = await _userManager.RemoveFromRoleAsync(user, assignRoleDTO.Role);
 

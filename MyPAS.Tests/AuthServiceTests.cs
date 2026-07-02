@@ -342,11 +342,15 @@ namespace MyPAS.Tests
                 Email = "TestEmail@Test.com"
             };
 
+            
+
             var assignRoleDTO = new AssignRoleDTO()
             {
                 Email = user.Email,
                 Role = "Admin"
             };
+
+
 
             _userManagerMock
                 .Setup(x => x.FindByEmailAsync(user.Email))
