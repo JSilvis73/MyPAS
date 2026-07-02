@@ -36,6 +36,9 @@ namespace MyPAS.Services
         // Register
         public async Task<AuthResult> Register(AuthRegisterRequest registerRequest)
         {
+            if (string.IsNullOrWhiteSpace(registerRequest.Email) || string.IsNullOrWhiteSpace(registerRequest.Password)) 
+                return new AuthResult { Success = false, Errors = new List<string> { "Email and password are required." } };
+
             // Start log.
             _logger.LogInformation("Attempting to register {Email}.", registerRequest.Email);
 
@@ -45,7 +48,6 @@ namespace MyPAS.Services
             // Check if user exists.
             if (existingUser != null)
             {
-                _logger.LogWarning("User with email: {Email} already exists.", registerRequest.Email);
                 return new AuthResult
                 {
                     Success = false,
@@ -131,6 +133,7 @@ namespace MyPAS.Services
                     Token = token,
                     User = new UserDTO
                     {
+                        Id = userToSignIn.Id,
                         Email = userToSignIn.Email,
                         FirstName = userToSignIn.FirstName,
                         LastName = userToSignIn.LastName,
@@ -150,6 +153,7 @@ namespace MyPAS.Services
 
             return new UserDTO
             {
+                Id = user.Id,
                 Email = user.Email!,
                 FirstName = user.FirstName,
                 LastName = user.LastName
