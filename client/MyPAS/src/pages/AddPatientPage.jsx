@@ -2,6 +2,8 @@ import React, { use, useState } from "react";
 import FormInput from "../components/FormInput";
 
 export default function AddPatientPage() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [msg, setMsg] = useState({});
   // Fields for New Patient
   const [newPatient, setNewPatient] = useState({
     firstName: "",
@@ -10,7 +12,7 @@ export default function AddPatientPage() {
     city: "",
     state: "",
     zip: "",
-    age: 0,
+    age: "",
     phone: "",
     email: "",
   });
@@ -24,11 +26,36 @@ export default function AddPatientPage() {
       ...prevOptions,
       [name]: value,
     }));
+    setMsg({});
   };
 
   // Handle submition of form.
   const handleSubmit = async (e) => {
     e.preventDefault(); // This prevents form from refreshing.
+
+  if (!newPatient.firstName ) 
+    { 
+      setMsg({ ...msg, firstName: "First name is required." });
+      return;
+    }
+
+    if (!newPatient.lastName) {
+      setMsg({ ...msg, lastName: "Last name is required." });
+      return;
+    }
+
+  if (newPatient.age < 1) {
+    setMsg({ ...msg, age: "Age must be at least 1." });
+    return;
+  }
+
+  if (newPatient.email === "" && newPatient.phone === "") {
+    setMsg({ ...msg, email: "Either email or phone is required." });
+    return;
+  }
+
+      if (isSubmitting) return;
+    setIsSubmitting(true);
 
     // Establish connection and create new patient
     try {
@@ -47,7 +74,7 @@ export default function AddPatientPage() {
       const result = await response.json();
       console.log("Patient added:", result);
 
-      alert("New patient added");
+      setMsg({ ...msg, success: "Patient added successfully." });
 
       // Clear form data
       setNewPatient({
@@ -61,7 +88,9 @@ export default function AddPatientPage() {
         phone: "",
         email: "",
       });
+      setIsSubmitting(false);
     } catch (error) {
+      setIsSubmitting(false);
       throw new Error("Failed to add patient");
     }
   };
@@ -166,11 +195,19 @@ export default function AddPatientPage() {
           </div>
           <button
             type="submit"
+            disabled={isSubmitting}
             className="mt-4 border rounded-lg p-2 bg-gray-600 hover:bg-black"
           >
-            Submit
+            {isSubmitting ? "Submitting..." : "Submit"}
           </button>
         </form>
+      </div>
+      <div className="text-center">
+        {msg.firstName && <p className="text-red-500">{msg.firstName}</p>}
+        {msg.lastName && <p className="text-red-500">{msg.lastName}</p>}
+        {msg.age && <p className="text-red-500">{msg.age}</p>}
+        {msg.email && <p className="text-red-500">{msg.email}</p>}
+        {msg.success && <p className="text-green-500">{msg.success}</p>}
       </div>
     </div>
   );
