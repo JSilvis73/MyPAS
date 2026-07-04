@@ -23,20 +23,20 @@ export default function DisplayList({ items, type }) {
                   <strong>Amount:</strong> ${item.amount}
                 </p>
               </div>
-            ) : type === "service" ? (
+            ) : type === "procedure" ? (
               <div className="flex justify-center items-center gap-4">
                 <p>
-                  <strong>Service:</strong> {item.serviceName}
+                  <strong>Service:</strong> {item.procedureName}
                 </p>
                 <p>
-                  <strong>Date:</strong> {item.serviceDate}
+                  <strong>Date:</strong> {item.procedureDate}
                 </p>
                 <p>
                   <strong>CPT Code:</strong> {item.cptCode}
                 </p>
                 <p>
-                  <strong>Cost: {item.patientChargedAmount}$</strong>
-                  {item.serviceCharge}
+                  <strong>Cost: </strong> ${item.patientChargedAmount}
+                 
                 </p>
                 <Link
                   to={`/services/${item.id}`}

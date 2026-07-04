@@ -12,15 +12,15 @@ export default function PatientDetailsPage() {
 
   // Object States
   const [patient, setPatient] = useState(null);
-  const [services, setServices] = useState([]);
+  const [procedures, setProcedures] = useState([]);
   const [payments, setPayments] = useState([]);
 
   // Form Displays
   const [toggleServiceForm, setToggleServiceForm] = useState(false);
   const [togglePaymentForm, setTogglePaymentForm] = useState(false);
   const [toggleUpdatePatientForm, setToggleUpdatePatientForm] = useState(false);
-  const [showServices, setShowServices] = useState(false);
-  const [showpayments, setShowPayments] = useState(false);
+  const [showProcedures, setShowProcedures] = useState(false);
+  const [showPayments, setShowPayments] = useState(false);
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   // On render load patient/services/payments.
@@ -43,22 +43,22 @@ export default function PatientDetailsPage() {
   useEffect(() => {
     if (!id) return;
 
-    fetch(`${baseUrl}/api/services/patient/${id}`)
+    fetch(`${baseUrl}/api/procedure/patient/${id}`)
       .then((res) => {
-        if (!res.ok) throw new Error("Services not found.");
+        if (!res.ok) throw new Error("Procedures not found.");
         return res.json();
       })
       .then((data) => {
-        // Optional: sort services by date (most recent first)
+        // Optional: sort procedures by date (most recent first)
         const sorted = [...data].sort(
-          (a, b) => new Date(b.serviceDate) - new Date(a.serviceDate)
+          (a, b) => new Date(b.procedureDate) - new Date(a.procedureDate)
         );
-        setServices(sorted);
+        setProcedures(sorted);
       })
       .catch((err) => {
         console.error(err);
       });
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     fetch(`${baseUrl}/api/payments/patients/${id}/payments`)
@@ -107,7 +107,7 @@ export default function PatientDetailsPage() {
     setToggleServiceForm((prev) => !prev);
   };
 
-  const handleTogglPaymentForm = () => {
+  const handleTogglePaymentForm = () => {
     setTogglePaymentForm((prev) => !prev);
   };
 
@@ -115,8 +115,8 @@ export default function PatientDetailsPage() {
     setToggleUpdatePatientForm((prev) => !prev);
   };
 
-  const handleToggleShowServices = () => {
-    setShowServices((prev) => !prev);
+  const handleToggleShowProcedures = () => {
+    setShowProcedures((prev) => !prev);
   };
 
   const handleToggleShowPayments = () => {
@@ -192,22 +192,24 @@ export default function PatientDetailsPage() {
         </div>
         {toggleUpdatePatientForm ? <UpdatePatientForm patient={patient} /> : ""}
       </div>
+
+       {/* Procedures and Payments Section */}
       <h2 className="mt-2 text-center p-2">
         <strong>Services</strong>
       </h2>
 
       <div className=" mt-2 flex flex-col gap-2 bg-gray-700 rounded-xl p-2">
-        {showServices ? (
-          <div className="text-center">Services Hidden</div>
+        {showProcedures ? (
+          <div className="text-center">Procedures Hidden</div>
         ) : (
-          <DisplayList items={services} type="service" patientId={patient.id} />
+          <DisplayList items={procedures} type="procedure" patientId={patient.id} />
         )}
 
         <div className="flex gap-4 justify-center">
           <button
             type="button"
             className="hover:bg-black hover:text-white p-2 border border-white rounded-xl"
-            onClick={handleToggleShowServices}
+            onClick={handleToggleShowProcedures}
           >
             Show/Hide Services
           </button>
@@ -226,7 +228,7 @@ export default function PatientDetailsPage() {
         <strong>Payments</strong>
       </h2>
       <div className=" mt-2 flex flex-col gap-2 bg-gray-700 rounded-xl p-2">
-        {showpayments ? (
+        {showPayments ? (
           <div className="text-center">Payments Hidden</div>
         ) : (
           <DisplayList items={payments} type="payment" />
@@ -242,7 +244,7 @@ export default function PatientDetailsPage() {
           <button
             type="button"
             className="hover:bg-black hover:text-white p-2 border border-white rounded-xl"
-            onClick={handleTogglPaymentForm}
+            onClick={handleTogglePaymentForm}
           >
             Add Payment
           </button>

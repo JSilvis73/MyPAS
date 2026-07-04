@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import FormInput from "./FormInput";
 
 export default function AddService({ patientId }) {
-  const [newService, setNewService] = useState({
-    serviceName: "",
-    serviceDate: "",
+  const [newProcedure, setNewProcedure] = useState({
+    procedureName: "",
+    procedureDate: "",
     cptCode: "",
     cptAmount: "",
     patientChargedAmount: "",
@@ -14,7 +14,7 @@ export default function AddService({ patientId }) {
 
   // 👇 this keeps patientId in sync if patientID changes
   useEffect(() => {
-    setNewService((prev) => ({
+    setNewProcedure((prev) => ({
       ...prev,
       patientId: patientId ?? 0,
     }));
@@ -23,7 +23,7 @@ export default function AddService({ patientId }) {
   const handleFormInputChange = (e) => {
     const { name, value } = e.target;
 
-    setNewService((prev) => ({
+    setNewProcedure((prev) => ({
       ...prev,
       [name]:
         name === "cptAmount" || name === "patientChargedAmount"
@@ -35,21 +35,21 @@ export default function AddService({ patientId }) {
   const handleSubmitForm = async (e) => {
     e.preventDefault();
 
-    const formattedService = {
-      ...newService,
-      cptAmount: parseFloat(newService.cptAmount) || 0,
-      patientChargedAmount: parseFloat(newService.patientChargedAmount) || 0,
-      patientId: Number(newService.patientId),
+    const formattedProcedure = {
+      ...newProcedure,
+      cptAmount: parseFloat(newProcedure.cptAmount) || 0,
+      patientChargedAmount: parseFloat(newProcedure.patientChargedAmount) || 0,
+      patientId: Number(newProcedure.patientId),
     };
 
     console.log("patientId prop:", patientId);
-    console.log("newService before POST:", formattedService);
+    console.log("newProcedure before POST:", formattedProcedure);
 
     try {
-      const response = await fetch("http://localhost:5044/api/services", {
+      const response = await fetch("http://localhost:5044/api/procedure", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formattedService),
+        body: JSON.stringify(formattedProcedure),
       });
 
       if (!response.ok) {
@@ -60,10 +60,10 @@ export default function AddService({ patientId }) {
       console.error("Submit failed:", err.message);
     }
 
-    alert("Service added!");
-    setNewService({
-      serviceName: "",
-      serviceDate: "",
+    alert("Procedure added!");
+    setNewProcedure({
+      procedureName: "",
+      procedureDate: "",
       cptCode: "",
       cptAmount: "",
       patientChargedAmount: "",
@@ -79,14 +79,14 @@ export default function AddService({ patientId }) {
             className="flex flex-col items-center"
             onSubmit={handleSubmitForm}
           >
-            <h1 className="text-2xl mb-4">Add New Service</h1>
+            <h1 className="text-2xl mb-4">Add New Procedure</h1>
             <div className="flex flex-wrap gap-2 items-center justify-center">
               <FormInput
                 props={{
                   inputName: "Name",
                   type: "text",
-                  name: "serviceName",
-                  value: newService.serviceName,
+                  name: "procedureName",
+                  value: newProcedure.procedureName,
                   placeholder: "Blood Work",
                   onChange: handleFormInputChange,
                 }}
@@ -96,8 +96,8 @@ export default function AddService({ patientId }) {
                 props={{
                   inputName: "Date of Service",
                   type: "date",
-                  name: "serviceDate",
-                  value: newService.serviceDate,
+                  name: "procedureDate",
+                  value: newProcedure.procedureDate,
                   onChange: handleFormInputChange,
                 }}
               />
@@ -107,7 +107,7 @@ export default function AddService({ patientId }) {
                   inputName: "CPT Code",
                   type: "text",
                   name: "cptCode",
-                  value: newService.cptCode,
+                  value: newProcedure.cptCode,
                   placeholder: "ABC-123",
                   onChange: handleFormInputChange,
                 }}
@@ -119,7 +119,7 @@ export default function AddService({ patientId }) {
                   type: "number",
                   step: "0.01",
                   name: "cptAmount",
-                  value: newService.cptAmount,
+                  value: newProcedure.cptAmount,
                   placeholder: "75.00",
                   onChange: handleFormInputChange,
                 }}
@@ -131,7 +131,7 @@ export default function AddService({ patientId }) {
                   type: "number",
                   step: "0.01",
                   name: "patientChargedAmount",
-                  value: newService.patientChargedAmount,
+                  value: newProcedure.patientChargedAmount,
                   placeholder: "50.00",
                   onChange: handleFormInputChange,
                 }}
