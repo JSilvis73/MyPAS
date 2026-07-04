@@ -39,7 +39,7 @@ export default function DisplayList({ items, type }) {
                  
                 </p>
                 <Link
-                  to={`/services/${item.id}`}
+                  to={`/procedures/${item.id}`}
                   className="border border-white rounded-lg p-1 hover:bg-black hover:text-white"
                 >
                   View Details
