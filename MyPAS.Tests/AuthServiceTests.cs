@@ -74,28 +74,69 @@ namespace MyPAS.Tests
         public async Task Register_ShouldRegisterUserUsingRegisterRequestDTO()
         {
             // Arrange
-            var testRegisterRequest = new AuthRegisterRequest() { Email="TestEmail2026@sample.com", Password="TestPassword1!" };
+            var request = new AuthRegisterRequest
+            {
+                Email = "TestEmail2026@sample.com",
+                Password = "TestPassword1!"
+            };
 
             _userManagerMock
-                .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
+                .Setup(x => x.FindByEmailAsync(request.Email))
                 .ReturnsAsync((MyPASUser)null);
 
             _userManagerMock
-                .Setup(x => x.CreateAsync(It.IsAny<MyPASUser>(), It.IsAny<string>()))
+                .Setup(x => x.CreateAsync(It.IsAny<MyPASUser>(), request.Password))
                 .ReturnsAsync(IdentityResult.Success);
 
+            MyPASUser capturedUser = null;
 
+            _userManagerMock
+                .Setup(x => x.CreateAsync(It.IsAny<MyPASUser>(), request.Password))
+                .Callback<MyPASUser, string>((u, p) => capturedUser = u)
+                .ReturnsAsync(IdentityResult.Success);
 
             // Act
-            var result = await _authService.Register(testRegisterRequest);
-            var user = await _userManagerMock.Object.FindByEmailAsync(testRegisterRequest.Email);
+            var result = await _authService.Register(request);
 
             // Assert
             Assert.True(result.Success);
 
+            Assert.NotNull(capturedUser);
+            Assert.Equal(request.Email, capturedUser.Email);
+
             _userManagerMock.Verify(x =>
-                x.CreateAsync(It.IsAny<MyPASUser>(), testRegisterRequest.Password),
+                x.CreateAsync(It.IsAny<MyPASUser>(), request.Password),
                 Times.Once);
+        }
+
+        [Fact]
+        public async Task Register_MissingEmail_ShouldReturnFailureResult()
+        {
+            // Arrange
+            var request = new AuthRegisterRequest
+            {
+                Email = "",
+                Password = "TestPassword1!"
+            };
+
+            // Act
+            var result = await _authService.Register(request);
+
+            // Assert
+            Assert.False(result.Success);
+        }
+
+        [Fact]
+        public async Task Register_MissingPassword_ShouldReturnFailureResult()
+        {
+            var testRegisterRequest = new AuthRegisterRequest()
+            {
+                Email = "TestEmail2026@sample.com",
+                Password = ""
+            };
+
+            var result = await _authService.Register(testRegisterRequest);
+            Assert.False(result.Success);
         }
 
         [Fact]
@@ -132,6 +173,204 @@ namespace MyPAS.Tests
             // Assert
             Assert.True(result.Success);
             Assert.NotNull(result.Token);
+        }
+
+        [Fact]
+        public async Task SignIn_Failure_ShouldReturnFailedResult()
+        {
+            var signInDTO = new SignInDTO()
+            {
+                Email = "TestEmail2026@sample.com",
+                Password = ""
+            };
+
+            var user = new MyPASUser()
+            {
+                Id = "123",
+                Email = signInDTO.Email,
+            };
+
+            _userManagerMock.
+                Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(user);
+
+            _signInManagerMock.Setup(x => x.PasswordSignInAsync(
+                    user,
+                    signInDTO.Password,
+                    false,
+                    false))
+                .ReturnsAsync(SignInResult.Failed);
+
+            // Act 
+            var result = await _authService.SignIn(signInDTO);
+
+            Assert.False(result.Success);
+            Assert.Null(result.Token);
+        }
+
+        [Fact]
+        public async Task GetUserDTOByEmail_Success_ShouldReturnUserDTO()
+        {
+            var registerRequest = new AuthRegisterRequest()
+            {
+                Email = "TestEmail@test.com",
+                Password = "TestPassword1!"
+            };
+
+            var user = new MyPASUser()
+            {
+                Id = "123",
+                Email = registerRequest.Email,
+            };
+
+            _userManagerMock.
+                Setup(x => x.FindByEmailAsync(registerRequest.Email))
+                .ReturnsAsync(user);
+
+            var result = await _authService.GetUserDTOByEmail(registerRequest.Email);
+
+            Assert.NotNull(result);
+            Assert.Equal(user.Email, result.Email);
+            Assert.Equal(user.Id, result.Id);
+        }
+
+        [Fact]
+        public async Task ChangePassword_Success_ShouldReturnTrue()
+        {
+            var changePasswordDTO = new ChangePasswordDTO()
+            {
+                Email = "TestEmail.com",
+                Password = "OldPassword1!",
+                NewPassword = "NewPassword1!",
+                ConfirmPassword = "NewPassword1!"
+            };
+
+            var user = new MyPASUser()
+            {
+                Id = "123",
+                Email = changePasswordDTO.Email,
+            };
+            
+            _userManagerMock
+                .Setup(x => x.FindByEmailAsync(changePasswordDTO.Email))
+                .ReturnsAsync(user);
+
+            _userManagerMock
+                .Setup(x => x.ChangePasswordAsync(user, changePasswordDTO.Password, changePasswordDTO.NewPassword))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var result = await _authService.ChangePassword(changePasswordDTO);
+
+            Assert.True(result.Result);
+        }
+
+        [Fact]
+        public async Task ChangePassword_Failure_ShouldReturnFalse()
+        {
+            var changePasswordDTO = new ChangePasswordDTO()
+            {
+                Email = "TestEmail@Test.com",
+                Password = "OldPassword1!",
+                NewPassword = "NewPassword1!",
+                ConfirmPassword = "NewPassword1!"
+            };
+
+            var user = new MyPASUser()
+            {
+                Id = "123",
+                Email = changePasswordDTO.Email,
+            };
+
+            _userManagerMock
+                .Setup(x => x.FindByEmailAsync(changePasswordDTO.Email))
+                .ReturnsAsync(user);
+
+            _userManagerMock
+                .Setup(x => x.ChangePasswordAsync(user, changePasswordDTO.Password, changePasswordDTO.NewPassword))
+                .ReturnsAsync(IdentityResult.Failed());
+
+            var result = await _authService.ChangePassword(changePasswordDTO);
+
+            Assert.False(result.Result);
+            Assert.NotEmpty(result.Error);
+        }
+
+        [Fact]
+        public async Task AddUserToRole_Success_ShouldAddRoleToUser()
+        {
+            var user = new MyPASUser()
+            {
+                Id = "123",
+                Email = "TestEmail@Test.com",
+            };
+
+            var assignRoleDTO = new AssignRoleDTO()
+            {
+                Email = user.Email,
+                Role = "Admin"
+            };
+
+            _userManagerMock
+                .Setup(x => x.FindByEmailAsync(user.Email))
+                .ReturnsAsync(user);
+
+            _roleManagerMock
+                .Setup(x => x.RoleExistsAsync(assignRoleDTO.Role))
+                .ReturnsAsync(true);
+
+            _userManagerMock
+                .Setup(x => x.IsInRoleAsync(user, assignRoleDTO.Role))
+                .ReturnsAsync(false);
+
+            _userManagerMock
+                .Setup(x => x.AddToRoleAsync(user, assignRoleDTO.Role))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var result = await _authService.AddUserToRole(assignRoleDTO);
+
+            Assert.NotNull(result);
+            Assert.True(result.Result);
+
+        }
+
+        [Fact]
+        public async Task RemoveUserFromRole()
+        {
+            var user = new MyPASUser()
+            {
+                Id = "123",
+                Email = "TestEmail@Test.com"
+            };
+
+            
+
+            var assignRoleDTO = new AssignRoleDTO()
+            {
+                Email = user.Email,
+                Role = "Admin"
+            };
+
+
+
+            _userManagerMock
+                .Setup(x => x.FindByEmailAsync(user.Email))
+                .ReturnsAsync(user);
+
+            _roleManagerMock
+                .Setup(x => x.RoleExistsAsync(assignRoleDTO.Role))
+                .ReturnsAsync(true);
+
+            _userManagerMock
+                .Setup(x => x.IsInRoleAsync(user, assignRoleDTO.Role))
+                .ReturnsAsync(true);
+
+            _userManagerMock
+                .Setup(x => x.RemoveFromRoleAsync(user, assignRoleDTO.Role))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var result = await _authService.RemoveUserFromRole(assignRoleDTO);
+
+            Assert.True(result.Result);
         }
     }
 }
