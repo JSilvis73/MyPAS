@@ -9,6 +9,7 @@ using Serilog;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using MyPAS.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyPAS.Controllers
 {
@@ -61,8 +62,36 @@ namespace MyPAS.Controllers
 
         }
 
+        [Authorize(Roles = "User, Admin")]
+        [HttpPost("changePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO changePasswordDTO)
+        {
+            var result = await _authService.ChangePassword(changePasswordDTO);
 
+            return (result.Result) ?
+                    Ok(result) :
+                    Unauthorized(result.Error);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("addUserToRole")]
+        public async Task<IActionResult> AddUserToRole([FromBody] AssignRoleDTO assignRoleDTO)
+        {
+            var result = await _authService.AddUserToRole(assignRoleDTO);
+            return (result.Result) ?
+                    Ok(result) :
+                    Unauthorized(result.Error);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("removeUserFromRole")]
+        public async Task<IActionResult> RemoveUserFromRole([FromBody] AssignRoleDTO assignRoleDTO)
+        {
+            var result = await _authService.RemoveUserFromRole(assignRoleDTO);
+            return (result.Result) ?
+                    Ok(result) :
+                    Unauthorized(result.Error);
+        }
     }
-
 }
 
