@@ -20,14 +20,16 @@ namespace MyPAS.Controllers
             _procedureService = procedureService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<Procedure>> GetProcedureById(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ProcedureDTO?>> GetProcedureById(int id)
         {
-            var procedure = await _context.Procedures.Include(s => s.Patient).FirstOrDefaultAsync(s => s.Id == id);
+            var procedure = await _procedureService.GetProcedureByProcedureId(id);
             if (procedure == null)
+            {
                 return NotFound();
+            };
 
-            return procedure;
+            return Ok(procedure);
         }
 
 
