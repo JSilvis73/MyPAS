@@ -26,7 +26,7 @@ export default function DisplayList({ items, type }) {
             ) : type === "procedure" ? (
               <div className="flex justify-center items-center gap-4">
                 <p>
-                  <strong>Service:</strong> {item.procedureName}
+                  <strong>Procedure:</strong> {item.procedureName}
                 </p>
                 <p>
                   <strong>Date:</strong> {item.procedureDate}
@@ -39,7 +39,7 @@ export default function DisplayList({ items, type }) {
                  
                 </p>
                 <Link
-                  to={`/procedures/${item.id}`}
+                  to={`/procedure/${item.id}`}
                   className="border border-white rounded-lg p-1 hover:bg-black hover:text-white"
                 >
                   View Details

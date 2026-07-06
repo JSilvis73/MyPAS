@@ -6,7 +6,7 @@ import AddPatientPage from "./pages/AddPatientPage";
 import SearchPage from "./pages/SearchPage";
 import PatientDetailsPage from "./pages/PatientDetailsPage";
 import AboutPage from "./pages/AboutPage";
-import AddService from "./components/AddService";
+import AddProcedure from "./components/AddProcedure";
 import OperationsPage from "./pages/OperationsPage";
 import DisplayListDetails from "./pages/DisplayListDetails";
 import ContactPage from "./pages/ContactPage";
@@ -32,11 +32,11 @@ if (!user) {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/add-patient" element={<AddPatientPage />} />
           <Route path="/patients/:id" element={<PatientDetailsPage />} />
-          <Route path="/add-service" element={<AddService />} />
+          <Route path="/add-procedure" element={<AddProcedure />} />
           <Route path="/operations" element={<OperationsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} /> 
-         <Route path="/services/:id" element={<DisplayListDetails />} />
+         <Route path="/procedure/:id" element={<DisplayListDetails />} />
          </Routes>
       </MainLayout>
     

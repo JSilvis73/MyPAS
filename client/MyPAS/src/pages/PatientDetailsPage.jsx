@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import DisplayList from "../components/DisplayList";
-import AddService from "../components/AddService";
+import AddProcedure from "../components/AddProcedure";
 import AddPayment from "../components/AddPayment";
 import UpdatePatientForm from "../components/UpdatePatientForm";
 
@@ -195,7 +195,7 @@ export default function PatientDetailsPage() {
 
        {/* Procedures and Payments Section */}
       <h2 className="mt-2 text-center p-2">
-        <strong>Services</strong>
+        <strong>Procedures</strong>
       </h2>
 
       <div className=" mt-2 flex flex-col gap-2 bg-gray-700 rounded-xl p-2">
@@ -211,7 +211,7 @@ export default function PatientDetailsPage() {
             className="hover:bg-black hover:text-white p-2 border border-white rounded-xl"
             onClick={handleToggleShowProcedures}
           >
-            Show/Hide Services
+            Show/Hide Procedures
           </button>
 
           <button
@@ -219,10 +219,10 @@ export default function PatientDetailsPage() {
             className="hover:bg-black hover:text-white p-2 border border-white rounded-xl"
             onClick={handleToggleServicesForm}
           >
-            Add Service
+            Add Procedure
           </button>
         </div>
-        {toggleServiceForm ? <AddService patientId={Number(id)} /> : ""}
+        {toggleServiceForm ? <AddProcedure patientId={Number(id)} /> : ""}
       </div>
       <h2 className="mt-2 text-center p-2">
         <strong>Payments</strong>
