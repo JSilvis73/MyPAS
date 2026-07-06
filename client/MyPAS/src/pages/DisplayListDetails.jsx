@@ -10,13 +10,13 @@ export default function DisplayListDetails() {
   useEffect(() => {
     const fetchService = async () => {
       try {
-        const response = await fetch(`${baseUrl}/api/services/${id}`);
-        if (!response.ok) throw new Error("Service not found");
+        const response = await fetch(`${baseUrl}/api/procedure/${id}`);
+        if (!response.ok) throw new Error("Procedure not found");
         const data = await response.json();
         setItem(data);
       } catch (error) {
         console.error(error);
-        alert("Failed to load service.");
+        alert("Failed to load procedure.");
       } finally {
         setLoading(false);
       }
@@ -29,7 +29,7 @@ export default function DisplayListDetails() {
     if (!window.confirm("Are you sure?")) return;
 
     try {
-      const res = await fetch(`${baseUrl}/api/services/${id}`, {
+      const res = await fetch(`${baseUrl}/api/procedure/${id}`, {
         method: 'DELETE'
       });
       if (res.ok) {
@@ -45,13 +45,13 @@ export default function DisplayListDetails() {
   };
 
   if (loading) return <p>Loading...</p>;
-  if (!item) return <p>Service not found</p>;
+  if (!item) return <p>Procedure not found</p>;
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-2">Service Details</h2>
-      <p><strong>Service:</strong> {item.serviceName}</p>
-      <p><strong>Date:</strong> {item.serviceDate}</p>
+      <h2 className="text-xl font-bold mb-2">Procedure Details</h2>
+      <p><strong>Procedure:</strong> {item.procedureName}</p>
+      <p><strong>Date:</strong> {item.procedureDate}</p>
       <p><strong>CPT Code:</strong> {item.cptCode}</p>
       <p><strong>Charge:</strong> ${item.patientChargedAmount}</p>
 
