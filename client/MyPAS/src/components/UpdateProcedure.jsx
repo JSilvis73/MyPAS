@@ -47,7 +47,7 @@ export default function UpdateProcedure({ patientId, id }) {
 
     try {
       const response = await fetch(`http://localhost:5044/api/procedure/${id}`, {
-        method: "PATCH",
+        method: "PUT",
         //headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formattedProcedure),
       });

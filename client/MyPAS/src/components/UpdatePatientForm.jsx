@@ -33,7 +33,7 @@ export default function UpdatePatientForm({ patient }) {
     // Establish connection and create new patient
     try {
       const response = await fetch(`${baseUrl}/api/patients/${patient.id}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -44,13 +44,13 @@ export default function UpdatePatientForm({ patient }) {
 
 
       if (!response.ok) {
-        throw new Error("Failed to update patient");
+        throw new Error("Failed to update patient.");
       }
 
       const result = await response.json();
       console.log("Patient updated:", result);
 
-      alert("Patient updated");
+      alert("Patient updated.");
 
       // Clear form data
       setPatientToUpdate({
@@ -65,7 +65,7 @@ export default function UpdatePatientForm({ patient }) {
         email: patient.email,
       });
     } catch (error) {
-      throw new Error("Failed to update patient");
+      throw new Error("Failed to update patient.");
     }
   };
 
