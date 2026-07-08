@@ -53,29 +53,14 @@ namespace MyPAS.Controllers
 
         // PUT: api/service/5
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateService(int id, Procedure procedure)
+        public async Task<IActionResult> UpdateService(int id,[FromBody] UpdateProcedureDTO updateProcedureDTO)
         {
-            if (id != procedure.Id)
+           var result = await _procedureService.UpdateProcedureByUpdateProcedureDTO(id, updateProcedureDTO);
+            if (result == null)
             {
-                return BadRequest();
+                return NotFound();
             }
-
-            _context.Entry(procedure).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Procedures.Any(e => e.Id == id))
-                {
-                    return NotFound();
-                }
-                throw;
-            }
-
-            return NoContent();
+            return Ok(result);
         }
 
         // DELETE: api/service/5
