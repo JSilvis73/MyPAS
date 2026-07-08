@@ -37,6 +37,7 @@ export default function UpdateProcedure({ patientId, id }) {
 
     const formattedProcedure = {
       ...newProcedure,
+      procedureDate: newProcedure.procedureDate || null,
       cptAmount: parseFloat(newProcedure.cptAmount) || 0,
       patientChargedAmount: parseFloat(newProcedure.patientChargedAmount) || 0,
       patientId: Number(newProcedure.patientId),
@@ -47,8 +48,8 @@ export default function UpdateProcedure({ patientId, id }) {
 
     try {
       const response = await fetch(`http://localhost:5044/api/procedure/${id}`, {
-        method: "PUT",
-        //headers: { "Content-Type": "application/json" },
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formattedProcedure),
       });
 
