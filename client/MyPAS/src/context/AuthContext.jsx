@@ -20,10 +20,11 @@ export default function AuthProvider({ children }) {
                     email: decodedToken.email,
                     firstName: decodedToken.firstName,
                     lastName: decodedToken.lastName,
-                    userName: decodedToken.userName,
+                    userName: decodedToken.username,
                 }
                 setUser(user);
                 console.log("User loaded from token:", user);
+                console.log("Decoded token:", decodedToken);
             } catch (error) {
                 console.error("Invalid token:", error);
                 localStorage.removeItem("token");
@@ -39,15 +40,13 @@ export default function AuthProvider({ children }) {
             localStorage.setItem("token", authResult.token);
             const decodedToken = jwtDecode(authResult.token);
 
-            const user =
-            {
-                id: decodedToken.sub,
-                email: decodedToken.email,
-                firstName: decodedToken.firstName,
-                lastName: decodedToken.lastName,
-                userName: decodedToken.userName,
-                
-            }
+                  const user = {
+                    id: decodedToken.sub,
+                    email: decodedToken.email,
+                    firstName: decodedToken.firstName,
+                    lastName: decodedToken.lastName,
+                    userName: decodedToken.username,
+                }
             
             setUser(user);
         }
