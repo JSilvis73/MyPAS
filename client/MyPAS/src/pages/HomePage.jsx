@@ -10,7 +10,7 @@ export default function HomePage() {
   return (
     <div className="w-3xl max-w-6xl mx-auto bg-gray-800 text-white text-center border border-gray-600 rounded-lg p-4 shadow-lg">
       <h2 className="text-2xl mb-4"><strong>Home</strong></h2>
-      <p>Welcome {useAuth()?.user?.username}</p>
+      <p>Welcome {useAuth()?.user?.userName}</p>
      
         <div className="flex justify-center flex-wrap space-x-4 gap-4 mt-4">
           <Card props={{route: "/search", name: "Search", img: <CiSearch className="h-20 w-20" />}} />

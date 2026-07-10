@@ -20,8 +20,10 @@ export default function AuthProvider({ children }) {
                     email: decodedToken.email,
                     firstName: decodedToken.firstName,
                     lastName: decodedToken.lastName,
+                    userName: decodedToken.userName,
                 }
                 setUser(user);
+                console.log("User loaded from token:", user);
             } catch (error) {
                 console.error("Invalid token:", error);
                 localStorage.removeItem("token");
@@ -43,6 +45,7 @@ export default function AuthProvider({ children }) {
                 email: decodedToken.email,
                 firstName: decodedToken.firstName,
                 lastName: decodedToken.lastName,
+                userName: decodedToken.userName,
                 
             }
             
