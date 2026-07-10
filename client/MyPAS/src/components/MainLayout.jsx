@@ -22,7 +22,7 @@ const MainLayout = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen mx-auto bg-gray-900 text-white">
       {/* Header */}
-      <header className="bg-gray-800 text-white p-4 mb-2">
+      <header className="bg-gray-800 text-white p-4">
         <div className="flex justify-between   items-center max-w-6xl mx-auto">
           {/* Left: Logo */}
           <div className="flex-start text-xl font-bold">
@@ -78,7 +78,7 @@ const MainLayout = ({ children }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow  mx-auto p-4">{children}</main>
+      <main className="flex-grow max-h-content w-full mt-4">{children}</main>
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white text-center p-4">

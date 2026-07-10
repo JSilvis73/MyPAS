@@ -57,7 +57,7 @@ export default function SearchPage() {
   // Display
   return (
     <div>
-      <div className="size-lg bg-gray-800 text-white text-center border-4 rounded-lg p-4">
+      <div className="max-w-6xl mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-6 shadow-lg text-center ">
         <div className="m-2">
           <h2 className="text-2xl mb-4">
             <strong>Search</strong>
@@ -109,14 +109,14 @@ export default function SearchPage() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center bg-gray-800 rounded-md text-white m-1 p-2">
-        <h1 className="mt-2 text-lg">Search Results:</h1>
-        <p className="text-sm">
+      <div className="max-w-6xl flex flex-col items-center mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-6 shadow-lg m-4">
+        <h1 className="m-2 text-lg">Search Results:</h1>
+        <p className="m-2 text-sm">
           Found {filteredPatients.length} match
           {filteredPatients.length === 1 ? "" : "es"}
         </p>
         <button
-          className="mt-1 border p-1 rounded-md hover:bg-white hover:text-black"
+          className="m-2 border p-1 rounded-md hover:bg-white hover:text-black"
           onClick={handleClear}
         >
           Clear
