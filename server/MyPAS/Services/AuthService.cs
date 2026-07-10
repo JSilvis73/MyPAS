@@ -124,7 +124,7 @@ namespace MyPAS.Services
             }
 
             // Sign in succeeded. Issue JWT.
-            var token = _jwtService.GenerateToken(userToSignIn.Id, userToSignIn.Email);
+            var token = _jwtService.GenerateToken(userToSignIn.Id, userToSignIn.Email, userToSignIn.UserName);
 
             // Sign in.
                 return new AuthResult() 
@@ -137,6 +137,7 @@ namespace MyPAS.Services
                         Email = userToSignIn.Email,
                         FirstName = userToSignIn.FirstName,
                         LastName = userToSignIn.LastName,
+                        UserName = userToSignIn.UserName
                     }
                 };
         }

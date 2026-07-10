@@ -26,12 +26,13 @@ public class JwtService : IJwtService
         _expiryMinutes = int.TryParse(config["JwtSettings:ExpirationMinutes"], out var expiryMinutes) ? expiryMinutes : throw new ArgumentNullException("JwtSettings:ExpirationMinutes", "ExpirationMinutes must be a valid integer.");
     }
 
-    public string GenerateToken(string userId, string email)
+    public string GenerateToken(string userId, string email, string userName)
     {
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, userId),
             new Claim(JwtRegisteredClaimNames.Email, email),
+            new Claim("username", userName),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
