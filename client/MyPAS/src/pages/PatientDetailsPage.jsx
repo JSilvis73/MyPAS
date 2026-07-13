@@ -140,27 +140,24 @@ export default function PatientDetailsPage() {
       <h1 className="text-center text-2xl font-semibold mb-4">
         Patient Details
       </h1>
-      <div className="flex flex-col items-center gap-4 bg-gray-700 rounded-xl  p-2">
+      <div className="flex flex-col flex-wrap items-center gap-4 bg-gray-700 rounded-xl  p-2">
         <p>
-          <strong>ID: </strong> {patient.id}
+          <strong>ID: </strong> 
+          {patient.id}
         </p>
-        <div className="flex gap-4">
           <p>
-            <strong>Name: </strong> {patient.lastName}, {patient.firstName}
+            <strong>Name: </strong> 
+            {patient.lastName}, {patient.firstName}
           </p>
-        </div>
-        <div>
           <p>
-            <strong>Age: </strong> {patient.age}
+            <strong>Age: </strong> 
+            {patient.age}
           </p>
-        </div>
-        <div className="flex gap-4">
+          <div id="address-section" className="flex flex-wrap gap-4">
           <p>
             <strong>Address: </strong>
             {patient.address}
           </p>
-        </div>
-        <div className="flex gap-4">
           <p>
             <strong>City: </strong>
             {patient.city}
@@ -173,7 +170,18 @@ export default function PatientDetailsPage() {
             <strong>Zip: </strong>
             {patient.zip}
           </p>
-        </div>
+          </div>
+          <div id="contact-section" className="flex flex-wrap gap-4">
+          <p>
+            <strong>Phone: </strong>
+            {patient.phone}
+          </p>
+          <p>
+            <strong>Email: </strong>
+            {patient.email}
+          </p>
+          </div>
+        
         <div className="flex gap-4">
           <button
             type="button"

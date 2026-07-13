@@ -8,6 +8,7 @@ import { useAuth } from "../context/AuthContext";
 
 const MainLayout = ({ children }) => {
   const { user, signOut } = useAuth();
+  
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const handleLogout = () => {
@@ -20,9 +21,9 @@ const MainLayout = ({ children }) => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen mx-auto bg-gray-900 text-white">
+    <div className="flex flex-col min-h-screen mx-auto bg-gray-900 text-white ">
       {/* Header */}
-      <header className="bg-gray-800 text-white p-4">
+      <header className="md:bg-gray-800 text-white p-4">
         <div className="flex justify-between   items-center max-w-6xl mx-auto">
           {/* Left: Logo */}
           <div className="flex-start text-xl font-bold">
