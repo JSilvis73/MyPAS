@@ -86,7 +86,7 @@ export default function DisplayListDetails() {
           <p><strong>Charge:</strong> ${item.amount}</p>
       </>}
     </div>
-          <div className="mt-4 flex gap-4 justify-center">
+      <div className="mt-4 flex gap-4 justify-center">
         <button onClick={toggleUpdate} className="bg-yellow-600 px-4 py-2 rounded">
           Edit
         </button>

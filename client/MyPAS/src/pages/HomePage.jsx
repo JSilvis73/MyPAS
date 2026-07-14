@@ -10,7 +10,7 @@ export default function HomePage() {
   const auth = useAuth();
   console.log("HomePage user:", auth.user);
   return (
-    <div className="w-3xl max-w-6xl mx-auto bg-gray-800 text-white text-center border border-gray-600 rounded-lg p-4 shadow-lg">
+    <div className="m-4 w-3xl max-w-6xl mx-auto bg-gray-800 text-white text-center border border-gray-600 rounded-lg p-4 shadow-lg">
       <h2 className="text-2xl mb-4"><strong>Home</strong></h2>
       <p>Welcome {auth.user?.userName}</p>
      

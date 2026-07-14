@@ -12,7 +12,7 @@ export default function UpdateProcedure({ patientId, id }) {
     patientId: patientId ?? 0,
   });
 
-  // 👇 this keeps patientId in sync if patientID changes
+  // This keeps patientId in sync if patientID changes
   useEffect(() => {
     setNewProcedure((prev) => ({
       ...prev,

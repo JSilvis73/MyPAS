@@ -63,8 +63,8 @@ export default function SearchPage() {
 
   // Display
   return (
-    <div className=" m-2  text-center">
-      <div className="max-w-6xl mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-6 shadow-lg  ">
+    <div className=" m-4  text-center">
+      <div className="max-w-5xl mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-6 shadow-lg  ">
         <div className="m-2">
           <h1 className="text-2xl font-bold mb-4">
             <strong>Search</strong>
@@ -122,7 +122,7 @@ export default function SearchPage() {
         </div>
       </div>
 
-      <div className="max-w-6xl flex flex-col items-center mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-6 shadow-lg m-4">
+      <div className="max-w-5xl flex flex-col items-center mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-6 shadow-lg m-4">
         <h1 className="text-2xl font-bold mb-4">Search Results:</h1>
         
         <div className="m-2 flex flex-col gap-2 items-center justify-center">

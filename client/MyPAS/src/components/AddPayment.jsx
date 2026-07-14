@@ -9,21 +9,21 @@ export default function AddPayment({ patientId }) {
     patientId: patientId,
   });
 
-  const [services, setServices] = useState([]);
-  const [selectedServiceId, setSelectedServiceId] = useState(null);
+  const [procedures, setProcedures] = useState([]);
+  const [selectedProcedureId, setSelectedProcedureId] = useState(null);
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchProcedures = async () => {
       try {
         const res = await fetch(`http://localhost:5044/api/procedure/patient/${patientId}`);
         const data = await res.json();
-        setServices(data);
-        if (data.length > 0) setSelectedServiceId(data[0].id);
+        setProcedures(data);
+        if (data.length > 0) setSelectedProcedureId(data[0].id);
       } catch (err) {
-        console.error("Failed to load services:", err);
+        console.error("Failed to load procedures:", err);
       }
     };
-    fetchServices();
+    fetchProcedures();
   }, [patientId]);
 
   const handleFormInputChange = (e) => {
@@ -39,7 +39,7 @@ export default function AddPayment({ patientId }) {
       paymentDate: newPayment.paymentDate,
       amount: parseFloat(newPayment.paymentAmount) || 0,
       patientId: Number(newPayment.patientId),
-      procedureId: selectedServiceId
+      procedureId: selectedProcedureId
     };
 
     try {
@@ -107,12 +107,12 @@ export default function AddPayment({ patientId }) {
           <label className="mr-2">Service:</label>
           <select
             className="border p-2 rounded bg-white text-black"
-            value={selectedServiceId || ""}
-            onChange={(e) => setSelectedServiceId(Number(e.target.value))}
+            value={selectedProcedureId || ""}
+            onChange={(e) => setSelectedProcedureId(Number(e.target.value))}
           >
-            {services.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.id}: {s.procedureName || `Service #${s.id}`}
+            {procedures.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.id}: {p.procedureName || `Procedure #${p.id}`}
               </option>
             ))}
           </select>
