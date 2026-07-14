@@ -69,7 +69,7 @@ export default function AuthLogIn() {
   };
 
   return (
-    <div className="border rounded-lg flex flex-col items-center p-2 m-4" >
+    <div className="flex flex-col items-center border rounded-lg p-4 bg-gray-700 w-96" >
       <h2 className="text-2xl mb-4">
         <strong>Sign In</strong>
       </h2>

@@ -21,13 +21,13 @@ export default function AuthorizationPage() {
 
   return (
     <div>
-      <div className="size-lg bg-gray-800 text-white text-center border-4 rounded-lg p-4">
-        <h2 className="text-2xl mb-4">
-          <strong>MyMed</strong>
-        </h2>
+      <div className="h-screen flex flex-col items-center justify-center bg-gray-800 text-white text-center rounded-lg">
+        <h1 className="text-5xl font-bold mb-8">
+          MyMed
+        </h1>
 
         <div className="flex flex-col items-center">{toggleRegisterComponent ? <AuthRegister /> : <AuthSignIn />}</div>
-        <button className=" border rounded-xl p-2" onClick={handleToggleRegister}>
+        <button className="border rounded-lg m-4 p-2 hover:bg-blue-700" onClick={handleToggleRegister}>
           {!toggleRegisterComponent ? "Register" : "Log in"}
         </button>
       </div>

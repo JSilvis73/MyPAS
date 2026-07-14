@@ -103,8 +103,8 @@ export default function AuthRegister() {
   };
 
   return (
-    <div className="flex flex-col items-center border border-blue-600 w-sm ">
-      <h2 className="text-2xl mb-4 flex flex-col items-center p-2">
+    <div className="flex flex-col items-center border rounded-lg p-4 bg-gray-700 w-96">
+      <h2 className="text-2xl mb-4">
         <strong>Register</strong>
       </h2>
       <form>
@@ -159,13 +159,12 @@ export default function AuthRegister() {
           }}
         />
               <button
-        className="bg-blue-600 text-white p-2 rounded mt-4"
+        className="border rounded-xl p-2 mt-4 bg-blue-500 text-white hover:bg-blue-700"
         onClick={handleSubmit}
       >
         Register
       </button>
       </form>
-
     </div>
   );
 }
