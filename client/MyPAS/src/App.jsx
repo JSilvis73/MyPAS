@@ -37,6 +37,7 @@ if (!user) {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} /> 
          <Route path="/procedure/:id" element={<DisplayListDetails />} />
+         <Route path="/payments/:id" element={<DisplayListDetails />} />
          </Routes>
       </MainLayout>
     

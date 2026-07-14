@@ -13,6 +13,9 @@ export default function DisplayList({ items, type }) {
           <div key={item.id} className="bg-gray-600  rounded-xl p-2 text-white">
             {type === "payment" ? (
               <div className="flex justify-center gap-4">
+                 <p>
+                  <strong>ID:</strong> {item.id}
+                </p>
                 <p>
                   <strong>Method:</strong> {item.method}
                 </p>
@@ -22,9 +25,18 @@ export default function DisplayList({ items, type }) {
                 <p>
                   <strong>Amount:</strong> ${item.amount}
                 </p>
+                <Link
+                  to={`/payments/${item.id}`}
+                  className="border border-white rounded-lg p-1 hover:bg-black hover:text-white"
+                >
+                  View Details
+                </Link>
               </div>
             ) : type === "procedure" ? (
               <div className="flex justify-center items-center gap-4">
+                 <p>
+                  <strong>ID:</strong> {item.id}
+                </p>
                 <p>
                   <strong>Procedure:</strong> {item.procedureName}
                 </p>

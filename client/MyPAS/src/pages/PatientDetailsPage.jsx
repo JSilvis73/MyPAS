@@ -5,7 +5,7 @@ import AddProcedure from "../components/AddProcedure";
 import AddPayment from "../components/AddPayment";
 import UpdatePatientForm from "../components/UpdatePatientForm";
 
-export default function PatientDetailsPage() {
+export default function PatientDetailsPage({type}) {
   // Page State
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
@@ -136,7 +136,7 @@ export default function PatientDetailsPage() {
   }
 
   return (
-    <div className="w-3xl max-w-6xl mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-4 shadow-lg">
+    <div className="w-3xl max-w-6xl mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg m-4 p-4 shadow-lg">
       <h1 className="text-center text-2xl font-semibold mb-4">
         Patient Details
       </h1>

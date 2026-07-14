@@ -79,7 +79,7 @@ const MainLayout = ({ children }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow max-h-content w-full mt-4">{children}</main>
+      <main className="flex-grow max-h-content w-full ">{children}</main>
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white text-center p-4">

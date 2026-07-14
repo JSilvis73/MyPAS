@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import UpdateProcedure from '../components/UpdateProcedure';
+import UpdatePayment from '../components/UpdatePayment';
 
 export default function DisplayListDetails() {
   const { id } = useParams();
   const [item, setItem] = useState(null);
+  const [itemType, setItemType] = useState(null); // 'procedure' or 'payment'
   const [loading, setLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
+  const location = useLocation();
+
   useEffect(() => {
     const fetchService = async () => {
       try {
-        const response = await fetch(`${baseUrl}/api/procedure/${id}`);
-        if (!response.ok) throw new Error("Procedure not found");
+        const itemType = location.pathname.includes('/payments/') ? 'payments' : 'procedure';
+        setItemType(itemType);
+
+        const response = await fetch(`${baseUrl}/api/${itemType}/${id}`);
+        if (!response.ok) throw new Error(`${itemType.charAt(0).toUpperCase() + itemType.slice(1)} not found`);
         const data = await response.json();
         setItem(data);
       } catch (error) {
         console.error(error);
-        alert("Failed to load procedure.");
+        alert(`Failed to load ${itemType}.`);
       } finally {
         setLoading(false);
       }
@@ -35,7 +42,7 @@ export default function DisplayListDetails() {
     if (!window.confirm("Are you sure?")) return;
 
     try {
-      const res = await fetch(`${baseUrl}/api/procedure/${id}`, {
+      const res = await fetch(`${baseUrl}/api/${itemType}/${id}`, {
         method: 'DELETE'
       });
       if (res.ok) {
@@ -51,19 +58,35 @@ export default function DisplayListDetails() {
   };
 
   if (loading) return <p>Loading...</p>;
-  if (!item) return <p>Procedure not found</p>;
+  if (!item) return <p>{itemType.charAt(0).toUpperCase() + itemType.slice(1)} not found</p>;
 
   return (
-    <div className="w-3xl max-w-6xl mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-4 shadow-lg">
-    
-    <div className="flex flex-col items-center gap-4 bg-gray-700 rounded-xl p-2 mt-4">
-      <h2 className="text-2xl font-bold mb-2">Procedure Details</h2>
-      <p><strong>Procedure:</strong> {item.procedureName}</p>
-      <p><strong>Date:</strong> {item.procedureDate}</p>
-      <p><strong>CPT Code:</strong> {item.cptCode}</p>
-      <p><strong>Charge:</strong> ${item.patientChargedAmount}</p>
-
-      <div className="mt-4 flex gap-4 justify-center">
+    <div className="m-2 flex flex-col gap-2 items-center  max-w-6xl mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-4 shadow-lg">
+    <h2 className="text-2xl font-bold mb-2">{itemType.charAt(0).toUpperCase() + itemType.slice(1)} Details</h2>
+    <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-2 bg-gray-700 rounded-xl p-2 w-full">
+      
+      <p><strong>{itemType.charAt(0).toUpperCase() + itemType.slice(1)}:</strong> {item[itemType === 'procedure' ? 'procedureName' : 'paymentName']}</p>
+      {itemType === 'procedure' ? (
+        <>
+          <p><strong>ID:</strong> {item.id}</p>
+          <p><strong>Patient ID:</strong> {item.patientId}</p>
+          <p><strong>Procedure Name:</strong> {item.procedureName}</p>
+          <p><strong>Date:</strong> {item.procedureDate}</p>
+          <p><strong>CPT Code:</strong> {item.cptCode}</p>
+          <p><strong>CPT Amount:</strong> ${item.cptAmount}</p>
+          <p><strong>Charge:</strong> ${item.patientChargedAmount}</p>
+        </>
+      ) : 
+      <>
+          <p><strong>ID:</strong> {item.id}</p>
+          <p><strong>Patient ID:</strong> {item.patientId}</p>
+          <p><strong>Procedure ID:</strong> {item.procedureId}</p>
+          <p><strong>Date:</strong> {item.paymentDate}</p>
+          <p><strong>Method:</strong> {item.method}</p>
+          <p><strong>Charge:</strong> ${item.amount}</p>
+      </>}
+    </div>
+          <div className="mt-4 flex gap-4 justify-center">
         <button onClick={toggleUpdate} className="bg-yellow-600 px-4 py-2 rounded">
           Edit
         </button>
@@ -71,11 +94,9 @@ export default function DisplayListDetails() {
           Delete
         </button>
       </div>
-   
-    </div>
     {isUpdating? 
         <div className="flex flex-col items-center gap-4 bg-gray-700 rounded-xl  p-2 mt-4">
-      <UpdateProcedure patientId={item.patientId} id={id} />
+          <UpdatePayment patientId={item.patientId} Id={item.id} />
     </div> : 
       null}
     </div>
