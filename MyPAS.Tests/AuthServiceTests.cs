@@ -77,7 +77,10 @@ namespace MyPAS.Tests
             var request = new AuthRegisterRequest
             {
                 Email = "TestEmail2026@sample.com",
-                Password = "TestPassword1!"
+                Password = "TestPassword1!",
+                UserName = "Test",
+                FirstName = "Test", 
+                LastName = "Test",
             };
 
             _userManagerMock
@@ -103,6 +106,9 @@ namespace MyPAS.Tests
 
             Assert.NotNull(capturedUser);
             Assert.Equal(request.Email, capturedUser.Email);
+            Assert.Equal(request.UserName, capturedUser.UserName);
+            Assert.Equal(request.FirstName, capturedUser.FirstName);
+            Assert.Equal(request.LastName, capturedUser.LastName);
 
             _userManagerMock.Verify(x =>
                 x.CreateAsync(It.IsAny<MyPASUser>(), request.Password),

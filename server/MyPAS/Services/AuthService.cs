@@ -61,7 +61,7 @@ namespace MyPAS.Services
             // Create user.
             var userToCreate = new MyPASUser
             {
-                UserName = registerRequest.Email,
+                UserName = registerRequest.UserName,
                 Email = registerRequest.Email,
                 FirstName = registerRequest.FirstName,
                 LastName = registerRequest.LastName
