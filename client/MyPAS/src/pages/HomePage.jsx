@@ -11,6 +11,7 @@ export default function HomePage() {
   console.log("HomePage user:", auth.user);
   return (
     <div className="m-4 w-3xl max-w-6xl mx-auto bg-gray-800 text-white text-center border border-gray-600 rounded-lg p-4 shadow-lg">
+    
       <h2 className="text-2xl mb-4"><strong>Home</strong></h2>
       <p>Welcome {auth.user?.userName}</p>
      
@@ -19,7 +20,7 @@ export default function HomePage() {
           <Card props={{route: "/add-patient", name: "Create", img: <IoCreateOutline className="h-20 w-20"/> }} />
           <Card props={{route: "/operations", name: "Operations", img: <FaTasks className="h-18 w-18"/> }} />        
         </div>
-        
+     
       
 
     </div>

@@ -5,10 +5,11 @@ import { IoCreateOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import { FaTasks } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
+import { CiSettings } from "react-icons/ci";
 
 const MainLayout = ({ children }) => {
   const { user, signOut } = useAuth();
-  
+
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const handleLogout = () => {
@@ -65,9 +66,18 @@ const MainLayout = ({ children }) => {
           </nav>
 
           {/* Right: User Icon */}
-          <div className="flex flex-col items-center text-2xl ">
-            <FaUserCircle className="hover:animate-spin" />
+          <div className="flex items-center gap-2">
+            <FaUserCircle className="hover:animate-spin " />
             <p className="text-sm text-center">{user?.email}</p>
+
+            <Link
+              to="/user-details"
+              className="flex flex-row items-center gap-1 hover:underline"
+            >
+              <CiSettings className="hover:animate-spin" title="Settings"  />
+              
+            </Link>
+
             <button
               className="text-sm text-red-500 hover:underline"
               onClick={handleLogout}

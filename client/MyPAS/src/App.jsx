@@ -11,6 +11,7 @@ import OperationsPage from "./pages/OperationsPage";
 import DisplayListDetails from "./pages/DisplayListDetails";
 import ContactPage from "./pages/ContactPage";
 import AuthorizationPage from "./pages/AuthorizationPage";
+import UserDetailsPage from "./pages/UserDetailsPage";
 import  AuthProvider  from "./context/AuthContext";
 import { useAuth } from "./context/AuthContext";
 
@@ -38,6 +39,7 @@ if (!user) {
           <Route path="/contact" element={<ContactPage />} /> 
          <Route path="/procedure/:id" element={<DisplayListDetails />} />
          <Route path="/payments/:id" element={<DisplayListDetails />} />
+         <Route path="/user-details" element={<UserDetailsPage />} />
          </Routes>
       </MainLayout>
     
