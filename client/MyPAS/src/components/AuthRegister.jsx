@@ -107,7 +107,7 @@ export default function AuthRegister() {
       <h2 className="text-2xl mb-4">
         <strong>Register</strong>
       </h2>
-      <form>
+      <form >
         <FormInput
           props={{
             name: "email",
@@ -118,12 +118,22 @@ export default function AuthRegister() {
             value: newUserFormData.email,
           }}
         />
+                <FormInput
+          props={{
+            name: "username",
+            type: "text",
+            inputName: "Username",
+            placeholder: "Example1",
+            onChange: handleFormChange,
+            value: newUserFormData.email,
+          }}
+        />
         <FormInput
           props={{
             name: "password",
             type: "password",
             inputName: "Password",
-            placeholder: "",
+            placeholder: "***********",
             onChange: handleFormChange,
             value: newUserFormData.password,
           }}
@@ -133,7 +143,7 @@ export default function AuthRegister() {
             name: "confirmPassword",
             type: "password",
             inputName: "Confirm Password",
-            placeholder: "",
+            placeholder: "***********",
             onChange: handleFormChange,
             value: newUserFormData.confirmPassword,
           }}

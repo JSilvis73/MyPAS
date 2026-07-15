@@ -19,6 +19,7 @@ export default function UserDetailsPage() {
   };
 
   const handlePasswordChange = (e) => {
+    
     alert("Submitting Change Password: Still needs implemented.");
   }
 
@@ -43,7 +44,7 @@ export default function UserDetailsPage() {
       <button type="button" className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => setEditingPassword(!editingPassword)}>
         {editingPassword ? "Cancel Change Password" : "Change Password"}
       </button>
-      <button type="button" className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => setEditing(!editing)}>
+      <button type="button"  className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => setEditing(!editing)}>
         {editing ? "Cancel Edit User" : "Edit User Details"}
       </button>
       {editing && (
