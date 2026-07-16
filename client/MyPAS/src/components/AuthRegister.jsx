@@ -5,6 +5,7 @@ export default function AuthRegister() {
   // State to hold the authentication options.
   const [newUserFormData, setNewUserFormData] = useState({
     email: "",
+    username:"",
     password: "",
     confirmPassword: "",
     firstName: "",
@@ -25,7 +26,13 @@ export default function AuthRegister() {
     // Form Validation
     if (!newUserFormData.email || !newUserFormData.password) {
       alert("Please fill in all fields");
-      throw new Error("All fields are required");
+      throw new Error("All fields are required.");
+    }
+
+    if (!newUserFormData.username)
+    {
+      alert("Please fill in username.")
+      throw new Error("Username must be populated.");
     }
 
     // Email validation
@@ -73,6 +80,7 @@ export default function AuthRegister() {
       },
       body: JSON.stringify({
         email: newUserFormData.email,
+        username: newUserFormData.username,
         password: newUserFormData.password,
         firstName: newUserFormData.firstName,
         lastName: newUserFormData.lastName,
@@ -90,6 +98,7 @@ export default function AuthRegister() {
         // Reset form
         setNewUserFormData({
           email: "",
+          username: "",
           password: "",
           confirmPassword: "",
           firstName: "",
@@ -125,7 +134,7 @@ export default function AuthRegister() {
             inputName: "Username",
             placeholder: "Example1",
             onChange: handleFormChange,
-            value: newUserFormData.email,
+            value: newUserFormData.username,
           }}
         />
         <FormInput
