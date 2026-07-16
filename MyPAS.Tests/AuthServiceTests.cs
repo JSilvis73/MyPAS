@@ -54,7 +54,7 @@ namespace MyPAS.Tests
                 null, null, null, null);
 
             _jwtServiceMock
-                .Setup(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Setup(x => x.GenerateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>()))
                 .Returns("fake-token");
 
             _roleManagerMock = new Mock<RoleManager<IdentityRole>>(

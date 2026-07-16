@@ -124,7 +124,9 @@ namespace MyPAS.Services
             }
 
             // Sign in succeeded. Issue JWT.
-            var token = _jwtService.GenerateToken(userToSignIn.Id, userToSignIn.Email, userToSignIn.UserName);
+            var roles = await _userManager.GetRolesAsync(userToSignIn);
+
+            var token = _jwtService.GenerateToken(userToSignIn.Id, userToSignIn.Email, userToSignIn.UserName, roles);
 
             // Sign in.
                 return new AuthResult() 
