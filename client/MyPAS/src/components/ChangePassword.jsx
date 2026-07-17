@@ -6,8 +6,11 @@ export default function ChangePassword() {
   const auth = useAuth();
   const user = auth?.user;
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const token = localStorage.getItem("token");
+
 
   const [newPasswordFields, setNewPasswordFields] = useState({
+    userEmail: user.email,
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
@@ -24,14 +27,25 @@ export default function ChangePassword() {
   const handlePasswordChange = async (e) => {
     e.preventDefault();
 
+    if (newPasswordFields.currentPassword == "")
+      {
+        alert("Current password must be populated.");
+        throw new Error("Current password must be populated.");
+      }
+    
+
     if (newPasswordFields.newPassword != newPasswordFields.confirmPassword)
-      throw new Error("New password and confirm password must match.");
+      {
+        alert("New password and confirm password must match.");
+        throw new Error("New password and confirm password must match.");
+      }
 
     try {
       const response = await fetch(`${baseUrl}/api/auth/changePassword`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(newPasswordFields),
       });

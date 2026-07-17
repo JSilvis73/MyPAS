@@ -59,6 +59,7 @@ export default function AuthLogIn() {
         alert("Sign-in successful.");
         // Handle successful sign-in (e.g., redirect or update state)
         signIn(data); // Update auth context with the authentication result
+        console.log("Data: ", data)
         console.log("User data:", data.user);
         //window.location.reload(); // Reload to reflect the logged-in state
 

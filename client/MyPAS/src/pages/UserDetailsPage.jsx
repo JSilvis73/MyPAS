@@ -4,7 +4,7 @@ import FormInput from "../components/FormInput";
 import ChangePassword from "../components/ChangePassword";
 
 export default function UserDetailsPage() {
-  const auth = useAuth();
+  const {user} = useAuth();
 
   // Page State
   const [loading, setLoading] = useState(true);
@@ -34,13 +34,13 @@ export default function UserDetailsPage() {
       <h1 className="text-2xl font-bold mb-4">User Details</h1>
       <h2 className="text-xl font-bold mb-2">Settings</h2>
       <div className="flex flex-col gap-2 text-left lg:grid lg:grid-cols-2">
-        <p><strong>Username:</strong> {auth?.user?.userName || "N/A"}</p>
-        <p><strong>Email:</strong> {auth?.user?.email || "N/A"}</p>
-        <p><strong>First Name:</strong> {auth?.user?.firstName || "N/A"}</p>
-        <p><strong>Last Name:</strong> {auth?.user?.lastName || "N/A"}</p>
-        <p><strong>Phone:</strong> {auth?.user?.phone || "N/A"}</p>
-        <p><strong>Address:</strong> {auth?.user?.address || "N/A"}</p>
-        <p><strong>Role:</strong> {auth?.user?.role || "N/A"}</p>
+        <p><strong>Username:</strong> {user.userName || "N/A"}</p>
+        <p><strong>Email:</strong> {user.email || "N/A"}</p>
+        <p><strong>First Name:</strong> {user.firstName || "N/A"}</p>
+        <p><strong>Last Name:</strong> {user.lastName || "N/A"}</p>
+        <p><strong>Phone:</strong> {user.phone || "N/A"}</p>
+        <p><strong>Address:</strong> {user.address || "N/A"}</p>
+        <p><strong>Role:</strong> {user?.role || "N/A"}</p>
       </div>
       <button type="button" className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => setEditingPassword(!editingPassword)}>
         {editingPassword ? "Cancel Change Password" : "Change Password"}

@@ -21,6 +21,7 @@ export default function AuthProvider({ children }) {
                     firstName: decodedToken.firstName,
                     lastName: decodedToken.lastName,
                     userName: decodedToken.username,
+                    roles: decodedToken.roles,
                 }
                 setUser(user);
                 console.log("User loaded from token:", user);
@@ -46,6 +47,7 @@ export default function AuthProvider({ children }) {
                     firstName: decodedToken.firstName,
                     lastName: decodedToken.lastName,
                     userName: decodedToken.username,
+                    roles: decodedToken.roles,
                 }
             
             setUser(user);
