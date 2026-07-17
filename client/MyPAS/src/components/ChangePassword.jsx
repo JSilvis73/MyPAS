@@ -3,8 +3,8 @@ import { useAuth } from "../context/AuthContext";
 import FormInput from "./FormInput";
 
 export default function ChangePassword() {
-  const auth = useAuth();
-  const user = auth?.user;
+  const {user} = useAuth();
+
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const token = localStorage.getItem("token");
 
@@ -13,7 +13,7 @@ export default function ChangePassword() {
     userEmail: user.email,
     currentPassword: "",
     newPassword: "",
-    confirmPassword: "",
+    confirmPassword:""
   });
 
   const handleFormInputChange = (e) => {
@@ -39,6 +39,13 @@ export default function ChangePassword() {
         alert("New password and confirm password must match.");
         throw new Error("New password and confirm password must match.");
       }
+    var changePasswordDTO = {
+        email: newPasswordFields.email,
+        currentPassword: newPasswordFields.currentPassword,
+        newPassword: newPasswordFields.newPassword
+      };
+  
+      
 
     try {
       const response = await fetch(`${baseUrl}/api/auth/changePassword`, {
@@ -47,7 +54,7 @@ export default function ChangePassword() {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify(newPasswordFields),
+        body: JSON.stringify(changePasswordDTO),
       });
 
       if (!response.ok) {
