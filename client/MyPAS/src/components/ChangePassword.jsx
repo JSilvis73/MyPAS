@@ -39,8 +39,9 @@ export default function ChangePassword() {
         alert("New password and confirm password must match.");
         throw new Error("New password and confirm password must match.");
       }
+
     var changePasswordDTO = {
-        email: newPasswordFields.email,
+        email: newPasswordFields.userEmail,
         currentPassword: newPasswordFields.currentPassword,
         newPassword: newPasswordFields.newPassword
       };
