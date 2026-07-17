@@ -246,9 +246,9 @@ namespace MyPAS.Tests
             var changePasswordDTO = new ChangePasswordDTO()
             {
                 Email = "TestEmail.com",
-                Password = "OldPassword1!",
+                CurrentPassword = "OldPassword1!",
                 NewPassword = "NewPassword1!",
-                ConfirmPassword = "NewPassword1!"
+               
             };
 
             var user = new MyPASUser()
@@ -262,7 +262,7 @@ namespace MyPAS.Tests
                 .ReturnsAsync(user);
 
             _userManagerMock
-                .Setup(x => x.ChangePasswordAsync(user, changePasswordDTO.Password, changePasswordDTO.NewPassword))
+                .Setup(x => x.ChangePasswordAsync(user, changePasswordDTO.CurrentPassword, changePasswordDTO.NewPassword))
                 .ReturnsAsync(IdentityResult.Success);
 
             var result = await _authService.ChangePassword(changePasswordDTO);
@@ -276,9 +276,9 @@ namespace MyPAS.Tests
             var changePasswordDTO = new ChangePasswordDTO()
             {
                 Email = "TestEmail@Test.com",
-                Password = "OldPassword1!",
+                CurrentPassword = "OldPassword1!",
                 NewPassword = "NewPassword1!",
-                ConfirmPassword = "NewPassword1!"
+           
             };
 
             var user = new MyPASUser()
@@ -292,7 +292,7 @@ namespace MyPAS.Tests
                 .ReturnsAsync(user);
 
             _userManagerMock
-                .Setup(x => x.ChangePasswordAsync(user, changePasswordDTO.Password, changePasswordDTO.NewPassword))
+                .Setup(x => x.ChangePasswordAsync(user, changePasswordDTO.CurrentPassword, changePasswordDTO.NewPassword))
                 .ReturnsAsync(IdentityResult.Failed());
 
             var result = await _authService.ChangePassword(changePasswordDTO);

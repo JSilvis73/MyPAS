@@ -113,15 +113,15 @@ if (app.Environment.IsDevelopment())
 // Start Logger
 Log.Information("MyPAS is starting up...");
 
-// Authentication and Authorization middleware.
-app.UseAuthentication();
-app.UseAuthorization();
-
 // Configure the HTTP request pipeline.
 //app.UseHttpsRedirection();
 
 // Allow Cross-Origin Resource Sharing.
 app.UseCors("AllowReactApp");
+
+// Authentication and Authorization middleware.
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Establishes endpoints for controllers.
 app.MapControllers();

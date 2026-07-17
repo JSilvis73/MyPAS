@@ -167,14 +167,14 @@ namespace MyPAS.Services
         public async Task<AuthIdentityResult> ChangePassword(ChangePasswordDTO changePasswordDTO)
         {
             if (string.IsNullOrWhiteSpace(changePasswordDTO.Email) ||
-                string.IsNullOrWhiteSpace(changePasswordDTO.Password) || 
+                string.IsNullOrWhiteSpace(changePasswordDTO.CurrentPassword) || 
                 string.IsNullOrWhiteSpace(changePasswordDTO.NewPassword)) 
             { return new AuthIdentityResult { Result = false, Error = { "All fields are required." } }; }
 
             var user = await _userManager.FindByEmailAsync(changePasswordDTO.Email);
             if (user == null) { return new AuthIdentityResult { Result = false, Error = { "User not found." } }; }
 
-            var result = await _userManager.ChangePasswordAsync(user, changePasswordDTO.Password, changePasswordDTO.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(user, changePasswordDTO.CurrentPassword, changePasswordDTO.NewPassword);
             if (!result.Succeeded) { return new AuthIdentityResult { Result = false , Error = { "Unable to change password." } }; }
             return new AuthIdentityResult { Result = true,};
             
