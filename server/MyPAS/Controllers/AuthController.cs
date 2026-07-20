@@ -66,7 +66,7 @@ namespace MyPAS.Controllers
         [HttpPost("changePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO changePasswordDTO)
         {
-            var result = await _authService.ChangePassword(changePasswordDTO);
+            var result = await _authService.ChangePassword(User, changePasswordDTO);
 
             return (result.Result) ?
                     Ok(result) :

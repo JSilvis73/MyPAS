@@ -9,6 +9,7 @@ using MyPAS.Data;
 using MyPAS.Interfaces;
 using MyPAS.Models;
 using MyPAS.Models.Auth;
+using System.Security.Claims;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyPAS.Services
@@ -164,14 +165,13 @@ namespace MyPAS.Services
         }
         
         // Change Password Endpoint.
-        public async Task<AuthIdentityResult> ChangePassword(ChangePasswordDTO changePasswordDTO)
+        public async Task<AuthIdentityResult> ChangePassword(ClaimsPrincipal User, ChangePasswordDTO changePasswordDTO)
         {
-            if (string.IsNullOrWhiteSpace(changePasswordDTO.Email) ||
-                string.IsNullOrWhiteSpace(changePasswordDTO.CurrentPassword) || 
+            if (string.IsNullOrWhiteSpace(changePasswordDTO.CurrentPassword) || 
                 string.IsNullOrWhiteSpace(changePasswordDTO.NewPassword)) 
             { return new AuthIdentityResult { Result = false, Error = { "All fields are required." } }; }
 
-            var user = await _userManager.FindByEmailAsync(changePasswordDTO.Email);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null) { return new AuthIdentityResult { Result = false, Error = { "User not found." } }; }
 
             var result = await _userManager.ChangePasswordAsync(user, changePasswordDTO.CurrentPassword, changePasswordDTO.NewPassword);
