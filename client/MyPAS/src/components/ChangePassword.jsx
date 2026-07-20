@@ -59,10 +59,11 @@ export default function ChangePassword() {
       });
 
       if (!response.ok) {
+        alert("Failed to change password. You may need to log back in.")
         throw new Error("Failed to change password.");
       }
 
-      const result = await response.json();
+      Alert("Password Changed.");
       console.log("Password changed.");
 
       // Clear Password Fields
