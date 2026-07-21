@@ -27,7 +27,7 @@ export default function UserDetailsPage() {
 
   return (
     <div className="w-3xl max-w-6xl flex flex-col  items-center gap-2 mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg m-4 p-4 shadow-lg">
-      <h1 className="text-2xl font-bold mb-4">User Details</h1>
+      <h1 className="text-2xl font-bold mb-4"> {user?.roles?.includes("Admin") ? "Admin" : "User"} Details</h1>
       <h2 className="text-xl font-bold mb-2">Settings</h2>
       <div className="flex flex-col gap-2 text-left lg:grid lg:grid-cols-2">
         <p><strong>Username:</strong> {user.userName || "N/A"}</p>
