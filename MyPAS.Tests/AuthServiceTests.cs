@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
+using System.Security.Claims;
 
 namespace MyPAS.Tests
 {
@@ -245,7 +246,6 @@ namespace MyPAS.Tests
         {
             var changePasswordDTO = new ChangePasswordDTO()
             {
-                Email = "TestEmail.com",
                 CurrentPassword = "OldPassword1!",
                 NewPassword = "NewPassword1!",
                
@@ -254,18 +254,28 @@ namespace MyPAS.Tests
             var user = new MyPASUser()
             {
                 Id = "123",
-                Email = changePasswordDTO.Email,
+                Email = "TestEmail@MyPAS.com",
             };
-            
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, "Test"));
+
+
+
             _userManagerMock
-                .Setup(x => x.FindByEmailAsync(changePasswordDTO.Email))
+                .Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
                 .ReturnsAsync(user);
 
             _userManagerMock
                 .Setup(x => x.ChangePasswordAsync(user, changePasswordDTO.CurrentPassword, changePasswordDTO.NewPassword))
                 .ReturnsAsync(IdentityResult.Success);
 
-            var result = await _authService.ChangePassword(changePasswordDTO);
+            var result = await _authService.ChangePassword(principal,changePasswordDTO);
 
             Assert.True(result.Result);
         }
@@ -275,7 +285,7 @@ namespace MyPAS.Tests
         {
             var changePasswordDTO = new ChangePasswordDTO()
             {
-                Email = "TestEmail@Test.com",
+             
                 CurrentPassword = "OldPassword1!",
                 NewPassword = "NewPassword1!",
            
@@ -284,18 +294,26 @@ namespace MyPAS.Tests
             var user = new MyPASUser()
             {
                 Id = "123",
-                Email = changePasswordDTO.Email,
+                Email = "TestEmail@MyPAS.com",
             };
 
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim (ClaimTypes.Email, user.Email)
+            };
+
+            var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, "Test"));
+
             _userManagerMock
-                .Setup(x => x.FindByEmailAsync(changePasswordDTO.Email))
+                .Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
                 .ReturnsAsync(user);
 
             _userManagerMock
                 .Setup(x => x.ChangePasswordAsync(user, changePasswordDTO.CurrentPassword, changePasswordDTO.NewPassword))
                 .ReturnsAsync(IdentityResult.Failed());
 
-            var result = await _authService.ChangePassword(changePasswordDTO);
+            var result = await _authService.ChangePassword(principal, changePasswordDTO);
 
             Assert.False(result.Result);
             Assert.NotEmpty(result.Error);

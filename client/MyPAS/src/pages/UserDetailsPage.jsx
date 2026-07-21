@@ -6,7 +6,6 @@ import UpdateUserDetails from "../components/UpdateUserDetails";
 
 export default function UserDetailsPage() {
   const {user} = useAuth();
-
   // Page State
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
@@ -36,7 +35,10 @@ export default function UserDetailsPage() {
         <p><strong>Last Name:</strong> {user.lastName || "N/A"}</p>
         <p><strong>Phone:</strong> {user.phone || "N/A"}</p>
         <p><strong>Address:</strong> {user.address || "N/A"}</p>
-        <p><strong>Role:</strong> {user?.role || "N/A"}</p>
+        <p><strong>Role:</strong> {user.roles || "N/A"}</p>
+        
+          
+      
       </div>
       <button type="button" className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => setEditingPassword(!editingPassword)}>
         {editingPassword ? "Cancel Change Password" : "Change Password"}
