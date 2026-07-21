@@ -140,7 +140,8 @@ namespace MyPAS.Services
                         Email = userToSignIn.Email,
                         FirstName = userToSignIn.FirstName,
                         LastName = userToSignIn.LastName,
-                        UserName = userToSignIn.UserName
+                        UserName = userToSignIn.UserName,
+                        Roles = roles
                     }
                 };
         }
