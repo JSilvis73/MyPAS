@@ -10,25 +10,19 @@ export default function AuthProvider({ children }) {
     // Load user on app start.
     useEffect(() => {
         const token = localStorage.getItem("token");
+        const userInStorage = localStorage.getItem("user");
         
-        if (token)
+        if (token && userInStorage)
         {
             try {
-                const decodedToken = jwtDecode(token);
-                const user = {
-                    id: decodedToken.sub,
-                    email: decodedToken.email,
-                    firstName: decodedToken.firstName,
-                    lastName: decodedToken.lastName,
-                    userName: decodedToken.username,
-                    roles: decodedToken.roles,
-                }
-                setUser(user);
-                console.log("User loaded from token:", user);
-                console.log("Decoded token:", decodedToken);
+                const storedUser = JSON.parse(userInStorage);
+ 
+                setUser(storedUser);
+                  console.log("User loaded from storage:", storedUser);
             } catch (error) {
                 console.error("Invalid token:", error);
                 localStorage.removeItem("token");
+                localStorage.removeItem("user");
                 setUser(null);
             }
         }
@@ -39,18 +33,9 @@ export default function AuthProvider({ children }) {
     const signIn = (authResult) => 
         {
             localStorage.setItem("token", authResult.token);
-            const decodedToken = jwtDecode(authResult.token);
-
-                  const user = {
-                    id: decodedToken.sub,
-                    email: decodedToken.email,
-                    firstName: decodedToken.firstName,
-                    lastName: decodedToken.lastName,
-                    userName: decodedToken.username,
-                    roles: decodedToken.roles,
-                }
+            localStorage.setItem("user", JSON.stringify(authResult.user));
             
-            setUser(user);
+            setUser(authResult.user);
         }
 
     // Sign out clears clients local storage and resets user state.
