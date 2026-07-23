@@ -141,6 +141,9 @@ namespace MyPAS.Services
                         FirstName = userToSignIn.FirstName,
                         LastName = userToSignIn.LastName,
                         UserName = userToSignIn.UserName,
+                        Phone = userToSignIn.PhoneNumber ?? string.Empty,
+                        CreatedAt = userToSignIn.CreatedAt,
+                        IsActive = userToSignIn.IsActive,
                         Roles = roles
                     }
                 };
@@ -156,12 +159,19 @@ namespace MyPAS.Services
             if (user == null)
                 return null;
 
+            var roles = await _userManager.GetRolesAsync(user);
+
             return new UserDTO
             {
                 Id = user.Id,
                 Email = user.Email!,
                 FirstName = user.FirstName,
-                LastName = user.LastName
+                LastName = user.LastName,
+                UserName = user.UserName ?? string.Empty,
+                Phone = user.PhoneNumber ?? string.Empty,
+                CreatedAt = user.CreatedAt,
+                IsActive = user.IsActive,
+                Roles = roles,
             };
         }
         
