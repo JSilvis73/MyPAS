@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using Microsoft.VisualBasic;
 using MyPAS.Data;
 using MyPAS.Interfaces;
@@ -300,6 +301,42 @@ namespace MyPAS.Services
                     Error = identityResult.Errors
                                            .Select(e => e.Description)
                                            .ToList()
+                };
+            }
+
+            return new AuthIdentityResult
+            {
+                Result = true,
+            };
+        }
+
+        public async Task<AuthIdentityResult> UpdateUser(ClaimsPrincipal User, UpdateUserDTO updateUserDTO)
+        {
+            // Validate
+            if (updateUserDTO == null) { return new AuthIdentityResult { Result = false, Error = { "DTO is null." } }; }
+
+            // Get user
+            var userToUpdate = await _userManager.GetUserAsync(User);
+            if (userToUpdate == null) { return new AuthIdentityResult { Result = false, Error = { "User not found." } }; }
+
+            if (!string.IsNullOrWhiteSpace(updateUserDTO.UserName)) 
+                { userToUpdate.UserName = updateUserDTO.UserName; }
+            if (!string.IsNullOrWhiteSpace(updateUserDTO.FirstName))
+                { userToUpdate.FirstName = updateUserDTO.FirstName; }
+            if (!string.IsNullOrWhiteSpace(updateUserDTO.LastName))
+                { userToUpdate.LastName = updateUserDTO.LastName; }
+            if (!string.IsNullOrWhiteSpace(updateUserDTO.Phone))
+                { userToUpdate.PhoneNumber = updateUserDTO.Phone; }
+
+
+            var result = await _userManager.UpdateAsync(userToUpdate);
+
+            if (!result.Succeeded)
+            {
+                return new AuthIdentityResult
+                {
+                    Result = false,
+                    Error = result.Errors.Select(e => e.Description).ToList()
                 };
             }
 
