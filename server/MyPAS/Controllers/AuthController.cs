@@ -62,7 +62,7 @@ namespace MyPAS.Controllers
 
         }
 
-        [Authorize(Roles = "User, Admin")]
+        [Authorize(Roles = "User")]
         [HttpPost("changePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO changePasswordDTO)
         {
@@ -91,6 +91,16 @@ namespace MyPAS.Controllers
             return (result.Result) ?
                     Ok(result) :
                     Unauthorized(result.Error);
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpPatch("update")]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDTO updateUserDTO)
+        {
+            var result = await _authService.UpdateUser(User, updateUserDTO);
+            return (result.Result) ?
+                Ok(result) :
+                Unauthorized(result.Error);
         }
     }
 }
