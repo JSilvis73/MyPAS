@@ -160,6 +160,12 @@ namespace MyPAS.Tests
             {
                 Id="123",
                 Email=signInDTO.Email,
+                UserName = "JaySil73",
+                FirstName = "Jason",
+                LastName = "Silvis",
+                PhoneNumber = "555-1234",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
             };
 
             _userManagerMock
@@ -174,12 +180,22 @@ namespace MyPAS.Tests
                     false))
                 .ReturnsAsync(SignInResult.Success);
 
+            _userManagerMock
+                .Setup(x => x.GetRolesAsync(It.IsAny<MyPASUser>()))
+                .ReturnsAsync(new List<string> { "Admin" });
+
             // Act
             var result = await _authService.SignIn(signInDTO);
 
             // Assert
             Assert.True(result.Success);
             Assert.NotNull(result.Token);
+            Assert.NotNull(result.User);
+            Assert.Equal("Jason", result.User.FirstName);
+            Assert.Equal("Silvis", result.User.LastName);
+            Assert.Equal("JaySil73", result.User.UserName);
+            Assert.True(result.User.IsActive);
+            Assert.Contains("Admin", result.User.Roles);
         }
 
         [Fact]
@@ -395,6 +411,53 @@ namespace MyPAS.Tests
             var result = await _authService.RemoveUserFromRole(assignRoleDTO);
 
             Assert.True(result.Result);
+        }
+
+        public async Task UpdateUser_Success_ShouldShowSuccess()
+        {
+
+            var user = new MyPASUser()
+            {
+                Id = "123",
+                UserName = "JaySil73",
+                FirstName = "Jason",
+                LastName = "Silvis",
+                PhoneNumber = "555-1234",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            };
+
+            _userManagerMock
+                .Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                .ReturnsAsync(user);
+
+            var updatedUser = new UpdateUserDTO
+            {
+                UserName = "Test",
+                FirstName = "Test",
+                LastName = "Test",
+                Phone = "3304445555"
+            };
+
+            _userManagerMock
+                .Setup(x => x.UpdateAsync(user))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var claimsPrincipal = new ClaimsPrincipal();
+
+            var result = await _authService.UpdateUser(claimsPrincipal, updatedUser);
+
+            Assert.True(result.Result);
+
+            Assert.Equal("Test", user.UserName);
+            Assert.Equal("Test", user.FirstName);
+            Assert.Equal("Test", user.LastName);
+            Assert.Equal("3304445555", user.PhoneNumber);
+
+            _userManagerMock.Verify(
+           x => x.UpdateAsync(user),
+             Times.Once);
+
         }
     }
 }
