@@ -17,7 +17,8 @@ export default function AssignRole({ mode }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Form for action ${mode} submitted.`);
+    
+    console.log(mode);
 
     // Email validation
     if (assignRoleForm.email === "") {
@@ -32,9 +33,45 @@ export default function AssignRole({ mode }) {
       throw new Error("Invalid email format.");
     }
 
-    try {
-        
-    } catch (error) {}
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
+    const token = localStorage.getItem("token");
+
+    console.log(`${baseURL}/api/Auth/${mode}`);
+
+    fetch(`${baseURL}/api/Auth/${mode}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        email: assignRoleForm.email,
+        role: assignRoleForm.role,
+      }),
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to change role.");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("User role changed successfully.");
+      alert("Role change successful.");
+
+      // Reset form
+      setAssignRoleForm(
+        {
+          email: "",
+          role: ""
+        }
+      );
+    })
+
+
+
+
+
   };
 
   return (
@@ -64,6 +101,7 @@ export default function AssignRole({ mode }) {
           onChange={handleFormInputChange}
           className="m-2 p-1 border rounded-lg"
         >
+          <option className="text-black" value="">Select Role</option>
           <option className="text-black" value="Admin">
             Admin
           </option>
