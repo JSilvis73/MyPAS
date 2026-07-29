@@ -102,6 +102,16 @@ namespace MyPAS.Controllers
                 Ok(result) :
                 Unauthorized(result.Error);
         }
+
+        [Authorize(Roles = "User")]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var result = await _authService.GetCurrentUser(User);
+            if (result == null) { return NotFound(); }
+            return Ok(result);
+
+        }
     }
 }
 

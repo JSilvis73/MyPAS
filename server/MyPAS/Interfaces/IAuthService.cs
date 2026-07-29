@@ -11,5 +11,6 @@ namespace MyPAS.Interfaces
         Task<AuthIdentityResult> AddUserToRole(AssignRoleDTO assignRoleDTO);
         Task<AuthIdentityResult> RemoveUserFromRole(AssignRoleDTO assignRoleDTO);
         Task<AuthIdentityResult> UpdateUser(ClaimsPrincipal User, UpdateUserDTO updateUserDTO);
+        Task<UserDTO?> GetCurrentUser(ClaimsPrincipal User);
     }
 }

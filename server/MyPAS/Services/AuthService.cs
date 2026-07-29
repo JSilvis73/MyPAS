@@ -175,6 +175,32 @@ namespace MyPAS.Services
                 Roles = roles,
             };
         }
+
+        // Get current user
+        public async Task<UserDTO?> GetCurrentUser(ClaimsPrincipal User)
+        {
+            // Locate user
+            var user = await _userManager.GetUserAsync(User);
+
+            // Validate 
+            if (user == null) return null;
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            // Return user dto
+            return new UserDTO
+            {
+                Id = user.Id,
+                Email = user.Email!,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                UserName = user.UserName ?? string.Empty,
+                Phone = user.PhoneNumber ?? string.Empty,
+                CreatedAt = user.CreatedAt,
+                IsActive = user.IsActive,
+                Roles = roles,
+            };
+        }
         
         // Change Password Endpoint.
         public async Task<AuthIdentityResult> ChangePassword(ClaimsPrincipal User, ChangePasswordDTO changePasswordDTO)

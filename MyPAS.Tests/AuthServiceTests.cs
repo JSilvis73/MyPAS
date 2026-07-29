@@ -459,5 +459,45 @@ namespace MyPAS.Tests
              Times.Once);
 
         }
+
+        [Fact]
+        public async Task GetCurrentUser_Success_ShouldReturnCurrentUserDTO()
+        {
+            var user = new MyPASUser()
+            {
+                Id = "123",
+                Email = "test@example.com",
+                UserName = "JaySil73",
+                FirstName = "Jason",
+                LastName = "Silvis",
+                PhoneNumber = "555-1234",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            };
+
+            _userManagerMock
+                .Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                .ReturnsAsync(user);
+
+            _userManagerMock
+                .Setup(x => x.GetRolesAsync(It.IsAny<MyPASUser>())).ReturnsAsync(new List<string> { "Admin", "User"});
+
+            var claimsPrincipal = new ClaimsPrincipal();
+
+            var result = await _authService.GetCurrentUser(claimsPrincipal);
+
+            Assert.NotNull(result);
+            Assert.Equal("123", result.Id);
+            Assert.Equal("test@example.com", result.Email);
+            Assert.Equal("Jason", result.FirstName);
+            Assert.Equal("Silvis", result.LastName);
+            Assert.Equal("JaySil73", result.UserName);
+            Assert.Equal("555-1234", result.Phone);
+            Assert.True(result.IsActive);
+            Assert.Contains("Admin", result.Roles);
+            Assert.Contains("User", result.Roles);
+
+
+        }
     }
 }
