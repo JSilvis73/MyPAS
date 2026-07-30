@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import FormInput from "./FormInput";
+import { useAuth } from "../context/AuthContext";
 
 export default function AssignRole({ mode }) {
   const [assignRoleForm, setAssignRoleForm] = useState({
@@ -17,7 +18,7 @@ export default function AssignRole({ mode }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     console.log(mode);
 
     // Email validation
@@ -42,36 +43,29 @@ export default function AssignRole({ mode }) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         email: assignRoleForm.email,
         role: assignRoleForm.role,
       }),
     })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Failed to change role.");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log("User role changed successfully.");
-      alert("Role change successful.");
-
-      // Reset form
-      setAssignRoleForm(
-        {
-          email: "",
-          role: ""
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to change role.");
         }
-      );
-    })
+        return response.json();
+      })
+      .then((data) => {
+        console.log("User role changed successfully.");
+        alert("Role change successful.");
 
-
-
-
-
+        // Reset form
+        setAssignRoleForm({
+          email: "",
+          role: "",
+        });
+      });
   };
 
   return (
@@ -101,7 +95,9 @@ export default function AssignRole({ mode }) {
           onChange={handleFormInputChange}
           className="m-2 p-1 border rounded-lg"
         >
-          <option className="text-black" value="">Select Role</option>
+          <option className="text-black" value="">
+            Select Role
+          </option>
           <option className="text-black" value="Admin">
             Admin
           </option>

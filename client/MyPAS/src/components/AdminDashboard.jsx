@@ -25,6 +25,7 @@ export default function AdminDashboard() {
 
     confirmation ? alert("User has been deleted.") : alert("User not deleted.");
   };
+  
   return (
     <div className="m-2 text-center">
       <h1 className="m-2 text-xl font-bold">Admin Actions</h1>
