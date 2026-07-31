@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import AssignRole from "./AssignRole";
+import DeleteUserForm from "./DeleteUserForm";
 
 export default function AdminDashboard() {
   // State for display
@@ -10,22 +11,10 @@ export default function AdminDashboard() {
   const handleAdminAction = (e) => {
     const action = e.target.name;
 
-    if (action === "deleteUser") {
-      handleDeleteUser();
-      return;
-    }
-
     setAdminAction((current) => (current === action ? null : action));
   };
 
-  const handleDeleteUser = (e) => {
-    var confirmation = confirm(
-      `Are you sure you want to delete user: ${user.userName}?`,
-    );
 
-    confirmation ? alert("User has been deleted.") : alert("User not deleted.");
-  };
-  
   return (
     <div className="m-2 text-center">
       <h1 className="m-2 text-xl font-bold">Admin Actions</h1>
@@ -59,6 +48,7 @@ export default function AdminDashboard() {
       <div className="m-2">
         {adminAction === "addUserToRole" ? <AssignRole mode={adminAction}/> : null}
       {adminAction =="removeUserFromRole" ? <AssignRole mode ={adminAction} /> : null}
+      {adminAction == "deleteUser" ? <DeleteUserForm  mode={adminAction} /> : null }
       </div>
     </div>
   );

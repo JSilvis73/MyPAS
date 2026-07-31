@@ -48,9 +48,6 @@ export default function UserDetailsPage() {
         <p>
           <strong>Phone:</strong> {user.phone || "N/A"}
         </p>
-        <p>
-          <strong>Address:</strong> {user.address || "N/A"}
-        </p>
       </div>
 
       <div>

@@ -30,7 +30,7 @@ export default function UpdateUserDetails() {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        "Authorization": `Bearer ${token}`,
       },
       body: JSON.stringify({
         firstName: userFieldsToUpdate.firstName,
@@ -44,7 +44,7 @@ export default function UpdateUserDetails() {
           throw new Error("Failed to update user.");
         }
 
-        return response.json;
+        return response.json();
       })
       .then(async () => {
         await refreshUser();
