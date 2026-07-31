@@ -3,21 +3,17 @@ import { useAuth } from "../context/AuthContext";
 import FormInput from "./FormInput";
 
 export default function UpdateUserDetails() {
-  const { user, refreshMe } = useAuth();
+  const { user, refreshUser } = useAuth();
   const baseURL = import.meta.env.VITE_API_BASE_URL;
   const [userFieldsToUpdate, setUserFieldsToUpdate] = useState({
     userName: user.userName,
     firstName: user.firstName,
     lastName: user.lastName,
     phone: user.phone,
-    address: user.address,
-    city: user.city,
-    state: user.state,
-    zip: user.zip,
   });
 
   const handleFormInputChange = (e) => {
-    const { name , value } = e.target;
+    const { name, value } = e.target;
     setUserFieldsToUpdate((prev) => ({
       ...prev,
       [name]: value,
@@ -25,13 +21,16 @@ export default function UpdateUserDetails() {
   };
 
   const handleUserDetailsUpdate = (e) => {
+    e.preventDefault();
     const token = localStorage.getItem("token");
+
+    // Validation
 
     fetch(`${baseURL}/api/Auth/update`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         firstName: userFieldsToUpdate.firstName,
@@ -44,11 +43,16 @@ export default function UpdateUserDetails() {
         if (!response.ok) {
           throw new Error("Failed to update user.");
         }
-        return response;
+
+        return response.json;
       })
-      .then((data) => {
-        console.log("User details updated.");
+      .then(async () => {
+        await refreshUser();
         alert("User updated.");
+      })
+      .catch((error) => {
+        console.error(error);
+        alert(error.message);
       });
   };
 
@@ -95,42 +99,6 @@ export default function UpdateUserDetails() {
               type: "text",
               name: "phone",
               value: userFieldsToUpdate.phone,
-              onChange: handleFormInputChange,
-            }}
-          />
-          <FormInput
-            props={{
-              inputName: "Address",
-              type: "text",
-              name: "address",
-              value: userFieldsToUpdate.address,
-              onChange: handleFormInputChange,
-            }}
-          />
-          <FormInput
-            props={{
-              inputName: "City",
-              type: "text",
-              name: "city",
-              value: userFieldsToUpdate.city,
-              onChange: handleFormInputChange,
-            }}
-          />
-          <FormInput
-            props={{
-              inputName: "State",
-              type: "text",
-              name: "state",
-              value: userFieldsToUpdate.state,
-              onChange: handleFormInputChange,
-            }}
-          />
-          <FormInput
-            props={{
-              inputName: "Zip",
-              type: "text",
-              name: "zip",
-              value: userFieldsToUpdate.zip,
               onChange: handleFormInputChange,
             }}
           />

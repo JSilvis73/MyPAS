@@ -54,13 +54,17 @@ export default function AuthProvider({ children }) {
             if (!response.ok){
                 throw new Error("Failed to retrieve user.");
             }
-            return response;
+            return response.json();
         })
-        .then((data) => {
-            console.log("User has been refreshed.");
-            setUser(data);
-        })
-    }
+        .then((user) => {
+        console.log("User has been refreshed.");
+
+        setUser(user);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        return user;
+    });
+    };
 
     // Sign out clears clients local storage and resets user state.
     const signOut = () => {
@@ -70,7 +74,7 @@ export default function AuthProvider({ children }) {
     };
 
     return (
-        <AuthContext.Provider value={{ user, signIn, signOut }}>
+        <AuthContext.Provider value={{ user, signIn, signOut, refreshUser }}>
             {children}
         </AuthContext.Provider>
     );
