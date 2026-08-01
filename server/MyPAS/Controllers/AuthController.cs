@@ -112,6 +112,16 @@ namespace MyPAS.Controllers
             return Ok(result);
 
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("deleteUserByEmail")]
+        public async Task<IActionResult> DeleteUserByEmailAdmin([FromQuery] string emailToDelete)
+        {
+            var result = await _authService.DeleteUserByEmailAdmin(emailToDelete);
+            return (result) ?
+                Ok(new { Message = $"User with email {emailToDelete} deleted successfully." }) :
+                NotFound(new { Message = $"User with email {emailToDelete} not found." });
+        }
     }
 }
 
