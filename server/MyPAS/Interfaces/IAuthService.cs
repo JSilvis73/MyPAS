@@ -12,5 +12,6 @@ namespace MyPAS.Interfaces
         Task<AuthIdentityResult> RemoveUserFromRole(AssignRoleDTO assignRoleDTO);
         Task<AuthIdentityResult> UpdateUser(ClaimsPrincipal User, UpdateUserDTO updateUserDTO);
         Task<UserDTO?> GetCurrentUser(ClaimsPrincipal User);
+        Task<bool> DeleteUserByEmailAdmin(string emailToDelete);
     }
 }

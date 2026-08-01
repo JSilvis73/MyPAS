@@ -353,6 +353,7 @@ namespace MyPAS.Services
                 { userToUpdate.LastName = updateUserDTO.LastName; }
             if (!string.IsNullOrWhiteSpace(updateUserDTO.Phone))
                 { userToUpdate.PhoneNumber = updateUserDTO.Phone; }
+           
 
 
             var result = await _userManager.UpdateAsync(userToUpdate);
@@ -370,6 +371,19 @@ namespace MyPAS.Services
             {
                 Result = true,
             };
+        }
+
+        public async Task<bool> DeleteUserByEmailAdmin(string emailToDelete)
+        {
+            var user = await _userManager.FindByEmailAsync(emailToDelete);
+            if (user == null)
+            {
+                return false;
+            }
+
+            await _userManager.DeleteAsync(user);
+
+            return true;
         }
     }
 }
