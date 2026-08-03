@@ -27,7 +27,7 @@ export default function DisplayList({ items, type }) {
                 </p>
                 <Link
                   to={`/payments/${item.id}`}
-                  className="border border-white rounded-lg p-1 hover:bg-black hover:text-white"
+                  className="border border-white rounded-lg p-1  hover:bg-green-500"
                 >
                   View Details
                 </Link>
@@ -52,7 +52,7 @@ export default function DisplayList({ items, type }) {
                 </p>
                 <Link
                   to={`/procedure/${item.id}`}
-                  className="border border-white rounded-lg p-1 hover:bg-black hover:text-white"
+                  className="border border-white rounded-lg p-1 hover:bg-green-500"
                 >
                   View Details
                 </Link>

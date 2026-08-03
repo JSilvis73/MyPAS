@@ -63,9 +63,10 @@ export default function DisplayListDetails() {
   return (
     <div className="m-2 flex flex-col gap-2 items-center  max-w-6xl mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-4 shadow-lg">
     <h2 className="text-2xl font-bold mb-2">{itemType.charAt(0).toUpperCase() + itemType.slice(1)} Details</h2>
+    
     <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-2 bg-gray-700 rounded-xl p-2 w-full">
       
-      <p><strong>{itemType.charAt(0).toUpperCase() + itemType.slice(1)}:</strong> {item[itemType === 'procedure' ? 'procedureName' : 'paymentName']}</p>
+      
       {itemType === 'procedure' ? (
         <>
           <p><strong>ID:</strong> {item.id}</p>
@@ -94,7 +95,12 @@ export default function DisplayListDetails() {
           Delete
         </button>
       </div>
-    {isUpdating? 
+         {isUpdating && itemType === 'procedure' ? 
+        <div className="flex flex-col items-center gap-4 bg-gray-700 rounded-xl  p-2 mt-4">
+          <UpdateProcedure patientId={item.patientId} Id={item.id} />
+    </div> : 
+      null}
+    {isUpdating && itemType === 'payments' ?
         <div className="flex flex-col items-center gap-4 bg-gray-700 rounded-xl  p-2 mt-4">
           <UpdatePayment patientId={item.patientId} Id={item.id} />
     </div> : 

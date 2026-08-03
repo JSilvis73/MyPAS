@@ -185,7 +185,7 @@ export default function PatientDetailsPage({type}) {
         <div className="flex gap-4">
           <button
             type="button"
-            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl"
+            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl hover:bg-green-500"
             onClick={handleToggleUpdatePatientForm}
           >
             Update Patient
@@ -216,7 +216,7 @@ export default function PatientDetailsPage({type}) {
         <div className="flex gap-4 justify-center">
           <button
             type="button"
-            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl"
+            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl hover:bg-green-500"
             onClick={handleToggleShowProcedures}
           >
             Show/Hide Procedures
@@ -224,7 +224,7 @@ export default function PatientDetailsPage({type}) {
 
           <button
             type="button"
-            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl"
+            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl hover:bg-blue-500"
             onClick={handleToggleServicesForm}
           >
             Add Procedure
@@ -244,14 +244,14 @@ export default function PatientDetailsPage({type}) {
         <div className="flex justify-center gap-4">
           <button
             type="button"
-            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl"
+            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl hover:bg-green-500"
             onClick={handleToggleShowPayments}
           >
             Show/Hide Payments
           </button>
           <button
             type="button"
-            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl"
+            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl hover:bg-blue-500"
             onClick={handleTogglePaymentForm}
           >
             Add Payment
