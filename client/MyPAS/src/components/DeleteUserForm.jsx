@@ -7,6 +7,10 @@ export default function DeleteUserForm() {
     confirmedDelete: "",
   });
 
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
+
+  const token = localStorage.getItem("token");
+
   const handleFormInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -26,10 +30,31 @@ export default function DeleteUserForm() {
     }
 
     if (deleteUserForm.confirmedDelete !== "Confirm") {
+      alert("Please confirm delete.");
       return;
     }
 
-    alert("Implementing delete user.");
+    alert("Attempting to delete user.");
+
+    
+    fetch(`${baseURL}/api/Auth/deleteUserByEmail?emailToDelete=${encodeURIComponent(deleteUserForm.email)}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          alert("User deleted successfully.");
+        } else {
+          alert("Failed to delete user.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting user:", error);
+        alert("An error occurred while deleting the user.");
+      });
   };
 
   return (
@@ -54,9 +79,10 @@ export default function DeleteUserForm() {
           name="confirmedDelete"
           value={deleteUserForm.confirmedDelete}
           onChange={handleFormInputChange}
+          
         >
-          <option value="">Unconfirmed</option>
-          <option value="Confirm">Confirmed</option>
+          <option className="text-red-500" value="">Unconfirmed</option>
+          <option className="text-green-500" value="Confirm">Confirmed</option>
         </select>
         <button
           className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
