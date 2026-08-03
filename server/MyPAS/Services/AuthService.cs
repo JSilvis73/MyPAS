@@ -72,6 +72,8 @@ namespace MyPAS.Services
             // Attempt to create.
             var result = await _userManager.CreateAsync(userToCreate, registerRequest.Password);
 
+            await _userManager.AddToRoleAsync(userToCreate, "User");
+
             // Check result and return response.
             if (result.Succeeded)
             {   

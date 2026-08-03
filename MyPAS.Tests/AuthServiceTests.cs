@@ -499,5 +499,31 @@ namespace MyPAS.Tests
 
 
         }
+
+        [Fact]
+        public async Task DeleteUserByEmailAdmin_Success_ShouldReturnTrue()
+        {
+            var user = new MyPASUser()
+            {
+                Id = "123",
+                Email = "TestUser@MyPAS.com",
+
+            };
+
+            _userManagerMock
+            .Setup(x => x.FindByEmailAsync(user.Email))
+             .ReturnsAsync(user);
+
+            _userManagerMock
+                .Setup(x => x.DeleteAsync(user))
+                .ReturnsAsync(IdentityResult.Success);
+
+            // Act
+            var result = await _authService.DeleteUserByEmailAdmin(user.Email);
+
+            // Assert
+            Assert.True(result);
+
+        }
     }
 }
