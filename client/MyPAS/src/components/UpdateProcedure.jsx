@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import FormInput from "./FormInput";
 
-export default function UpdateProcedure({ patientId, id }) {
+export default function UpdateProcedure({ patientId, }) {
+  const { id } = useParams();
+
   const [newProcedure, setNewProcedure] = useState({
     procedureName: "",
     procedureDate: "",
@@ -12,13 +15,13 @@ export default function UpdateProcedure({ patientId, id }) {
     patientId: patientId ?? 0,
   });
 
-  // This keeps patientId in sync if patientID changes
-  useEffect(() => {
-    setNewProcedure((prev) => ({
-      ...prev,
-      patientId: patientId ?? 0,
-    }));
-  }, [patientId]);
+  // // This keeps patientId in sync if patientID changes
+  // useEffect(() => {
+  //   setNewProcedure((prev) => ({
+  //     ...prev,
+  //     patientId: patientId ?? 0,
+  //   }));
+  // }, [patientId]);
 
   const handleFormInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,8 +41,8 @@ export default function UpdateProcedure({ patientId, id }) {
     const formattedProcedure = {
       ...newProcedure,
       procedureDate: newProcedure.procedureDate || null,
-      cptAmount: parseFloat(newProcedure.cptAmount) || 0,
-      patientChargedAmount: parseFloat(newProcedure.patientChargedAmount) || 0,
+      cptAmount: parseFloat(newProcedure.cptAmount),
+      patientChargedAmount: parseFloat(newProcedure.patientChargedAmount),
       patientId: Number(newProcedure.patientId),
     };
 

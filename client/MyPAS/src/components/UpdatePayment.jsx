@@ -1,22 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, } from "react";
+import { useParams } from "react-router-dom";
 import FormInput from "./FormInput";
 
-export default function AddPayment({ patientId, id }) {
+export default function UpdatePayment({ patientId, }) {
+const {id} = useParams();
 
-    // Fields for payment information 
+    // Fields for payment information.
   const [updatePayment, setupdatePayment] = useState({
     paymentMethod: "",
     paymentDate: "",
     paymentAmount: "",
-    patientId: patientId,
+   // patientId: patientId,
   });
-
-  useEffect(() => {
-    setupdatePayment((prev) => ({
-      ...prev,
-      patientId: patientId ?? 0,
-    }));
-  }, [patientId]);
 
   const handleFormInputChange = (e) => {
     const { name, value } = e.target;
@@ -31,30 +26,36 @@ export default function AddPayment({ patientId, id }) {
   const handleSubmitForm = async (e) => {
     e.preventDefault();
 
+    console.log(id);
+    // Validation: Ensure all required fields are filled
+    if (updatePayment.paymentMethod === "" && updatePayment.paymentDate === "" && updatePayment.paymentAmount === "") {
+      alert("Forms cannot be empty. Please fill out fields that require modification.");
+      return;
+    }
+
     const formattedPayment = {
         ...updatePayment,
       method: updatePayment.paymentMethod,
-      paymentDate: updatePayment.paymentDate,
-      amount: parseFloat(updatePayment.paymentAmount) || 0,
+      paymentDate: updatePayment.paymentDate || null,
+      amount: parseFloat(updatePayment.paymentAmount),
       patientId: Number(updatePayment.patientId),
-      procedureId: selectedProcedureId
     };
 
     try {
-      const response = await fetch(`http://localhost:5044/api/payments/${id}`, {
+      const response = await fetch(`http://localhost:5044/api/payments/update/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formattedPayment)
       });
 
-      if (!response.ok) throw new Error("Payment submission failed");
+      if (!response.ok) throw new Error("Payment submission failed.");
       alert("Payment updated");
 
       setupdatePayment({
         paymentMethod: "",
         paymentDate: "",
         paymentAmount: "",
-        patientId: patientId
+       // patientId: patientId
       });
     } catch (err) {
       console.error(err);
