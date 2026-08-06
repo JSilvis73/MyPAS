@@ -122,6 +122,17 @@ namespace MyPAS.Controllers
                 Ok(new { Message = $"User with email {emailToDelete} deleted successfully." }) :
                 NotFound(new { Message = $"User with email {emailToDelete} not found." });
         }
+
+        //[Authorize(Roles = "User")]
+        //[HttpDelete("deleteSelf")]
+        //public async Task<IActionResult> DeactivateSelf()
+        //{
+        //    //var result = await _authService.DeleteSelf(User);
+        //    //return (result) ?
+        //    //    Ok(new { Message = $"User deleted successfully." }) :
+        //    //    NotFound(new { Message = $"User not found." });
+        //}
+
     }
 }
 

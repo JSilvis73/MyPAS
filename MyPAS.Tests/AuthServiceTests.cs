@@ -525,5 +525,35 @@ namespace MyPAS.Tests
             Assert.True(result);
 
         }
+
+        [Fact]
+        public async Task DeactivateSelf_Success_ShouldReturnTrue()
+        {
+            var user = new MyPASUser()
+            {
+                Id = "123",
+                Email = "test@example.com",
+                UserName = "JaySil73",
+                FirstName = "Jason",
+                LastName = "Silvis",
+                PhoneNumber = "555-1234",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            };
+
+            _userManagerMock
+                .Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                .ReturnsAsync(user);
+
+            _userManagerMock
+                .Setup(x => x.UpdateAsync(user))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var result = await _authService.DeactivateSelf(new ClaimsPrincipal());
+
+            Assert.True(result);
+            Assert.False(user.IsActive);
+
+        }
     }
 }

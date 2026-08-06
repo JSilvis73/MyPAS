@@ -387,5 +387,22 @@ namespace MyPAS.Services
 
             return true;
         }
+
+        public async Task<bool> DeactivateSelf(ClaimsPrincipal user)
+        {
+            var userToDeactivate = await _userManager.GetUserAsync(user);
+            if (userToDeactivate == null)
+            {
+                return false;
+            }
+
+            if (!userToDeactivate.IsActive) return true; // User is already inactive
+
+            userToDeactivate.IsActive = false; // Mark the user as inactive instead of deleting
+
+            var result = await _userManager.UpdateAsync(userToDeactivate);
+
+            return result.Succeeded;
+        }
     }
 }
