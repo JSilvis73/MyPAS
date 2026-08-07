@@ -501,12 +501,13 @@ namespace MyPAS.Tests
         }
 
         [Fact]
-        public async Task DeleteUserByEmailAdmin_Success_ShouldReturnTrue()
+        public async Task DisableUserByEmailAdmin_Success_ShouldReturnTrue()
         {
             var user = new MyPASUser()
             {
                 Id = "123",
                 Email = "TestUser@MyPAS.com",
+                IsActive = true,
 
             };
 
@@ -515,14 +516,15 @@ namespace MyPAS.Tests
              .ReturnsAsync(user);
 
             _userManagerMock
-                .Setup(x => x.DeleteAsync(user))
+                .Setup(x => x.UpdateAsync(user))
                 .ReturnsAsync(IdentityResult.Success);
 
             // Act
-            var result = await _authService.DeleteUserByEmailAdmin(user.Email);
+            var result = await _authService.DisableUserByEmailAdmin(user.Email);
 
             // Assert
             Assert.True(result);
+            Assert.False(user.IsActive);
 
         }
 
@@ -554,6 +556,36 @@ namespace MyPAS.Tests
             Assert.True(result);
             Assert.False(user.IsActive);
 
+        }
+
+        [Fact]
+        public async Task ActivateUserAdmin()
+        {
+            var user = new MyPASUser()
+            {
+                Id = "123",
+                Email = "test@example.com",
+                UserName = "JaySil73",
+                FirstName = "Jason",
+                LastName = "Silvis",
+                PhoneNumber = "555-1234",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = false,
+            };
+
+            _userManagerMock
+                .Setup(x => x.FindByEmailAsync(user.Email))
+                .ReturnsAsync(user);
+
+            _userManagerMock
+                .Setup(x => x.UpdateAsync(user))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var result = await _authService.ActivateUserAdmin(user.Email);
+
+            Assert.True(result);
+            Assert.True(user.IsActive);
+            
         }
     }
 }
