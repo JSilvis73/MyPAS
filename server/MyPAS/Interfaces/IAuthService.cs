@@ -13,6 +13,7 @@ namespace MyPAS.Interfaces
         Task<AuthIdentityResult> UpdateUser(ClaimsPrincipal User, UpdateUserDTO updateUserDTO);
         Task<UserDTO?> GetCurrentUser(ClaimsPrincipal User);
         Task<bool> DisableUserByEmailAdmin(string emailToDelete);
+        Task<bool> ActivateUserAdmin(string emailToActivate);
         Task<bool> DeactivateSelf(ClaimsPrincipal User);
     }
 }

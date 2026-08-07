@@ -115,23 +115,33 @@ namespace MyPAS.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("deleteUserByEmail")]
-        public async Task<IActionResult> DeleteUserByEmailAdmin([FromQuery] string emailToDelete)
+        public async Task<IActionResult> DeactivateUserByEmailAdmin([FromQuery] string emailToDelete)
         {
-            var result = await _authService.DeleteUserByEmailAdmin(emailToDelete);
+            var result = await _authService.DisableUserByEmailAdmin(emailToDelete);
             return (result) ?
-                Ok(new { Message = $"User with email {emailToDelete} deleted successfully." }) :
+                Ok(new { Message = $"User with email {emailToDelete} deactivated successfully." }) :
                 NotFound(new { Message = $"User with email {emailToDelete} not found." });
         }
 
-        //[Authorize(Roles = "User")]
-        //[HttpDelete("deleteSelf")]
-        //public async Task<IActionResult> DeactivateSelf()
-        //{
-        //    //var result = await _authService.DeleteSelf(User);
-        //    //return (result) ?
-        //    //    Ok(new { Message = $"User deleted successfully." }) :
-        //    //    NotFound(new { Message = $"User not found." });
-        //}
+        [Authorize(Roles = "Admin")]
+        [HttpPost("activateUserByEmail")]
+        public async Task<IActionResult> ActivateUserByEmailAdmin([FromQuery] string emailToActivate)
+        {
+            var result = await _authService.ActivateUserAdmin(emailToActivate);
+            return (result) ?
+                Ok(new { Message = $"User with email {emailToActivate} activated successfully." }) :
+                NotFound(new { Message = $"User with email {emailToActivate} not found." });
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpDelete("deleteSelf")]
+        public async Task<IActionResult> DeactivateSelf()
+        {
+            var result = await _authService.DeactivateSelf(User);
+            return (result) ?
+                Ok(new { Message = $"User deleted successfully." }) :
+                NotFound(new { Message = $"User not found." });
+        }
 
     }
 }

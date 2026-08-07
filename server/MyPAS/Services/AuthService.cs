@@ -375,6 +375,19 @@ namespace MyPAS.Services
             };
         }
 
+        public async Task<bool> ActivateUserAdmin(string emailToActivate)
+        {
+            var user = await _userManager.FindByEmailAsync(emailToActivate);
+            if (user == null)
+            {
+                return false;
+            }
+            if (user.IsActive) return true; // User is already active
+            user.IsActive = true;
+            var result = await _userManager.UpdateAsync(user);
+            return result.Succeeded;
+        }
+
         public async Task<bool> DisableUserByEmailAdmin(string emailToDelete)
         {
             var user = await _userManager.FindByEmailAsync(emailToDelete);
