@@ -375,7 +375,7 @@ namespace MyPAS.Services
             };
         }
 
-        public async Task<bool> DeleteUserByEmailAdmin(string emailToDelete)
+        public async Task<bool> DisableUserByEmailAdmin(string emailToDelete)
         {
             var user = await _userManager.FindByEmailAsync(emailToDelete);
             if (user == null)
@@ -383,9 +383,13 @@ namespace MyPAS.Services
                 return false;
             }
 
-            await _userManager.DeleteAsync(user);
+            if (!user.IsActive) return true; // User is already inactive
 
-            return true;
+            user.IsActive = false;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            return result.Succeeded;
         }
 
         public async Task<bool> DeactivateSelf(ClaimsPrincipal user)
