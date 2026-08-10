@@ -134,7 +134,7 @@ namespace MyPAS.Controllers
         }
 
         [Authorize(Roles = "User")]
-        [HttpDelete("deleteSelf")]
+        [HttpPatch("deactivateSelf")]
         public async Task<IActionResult> DeactivateSelf()
         {
             var result = await _authService.DeactivateSelf(User);

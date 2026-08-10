@@ -111,6 +111,19 @@ namespace MyPAS.Services
                 };
             }
 
+            // Check if active.
+            if (!userToSignIn.IsActive)
+            {
+                return new AuthResult()
+                {
+                    Success = false,
+                    Errors = new List<string>()
+                    {
+                        "User account is inactive. Please contact support."
+                    }
+                };
+            }
+
             // Build user and sign in.
             var signInResult = await _signInManager.PasswordSignInAsync(userToSignIn ,signInDTO.Password,isPersistent:false,lockoutOnFailure:false);
 
