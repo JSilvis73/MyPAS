@@ -6,7 +6,7 @@ import UpdateUserDetails from "../components/UpdateUserDetails";
 import AdminDashboard from "../components/AdminDashboard";
 
 export default function UserDetailsPage() {
-  const { user , deactivateSelf , refreshUser, signOut } = useAuth();
+  const { user, deactivateSelf, refreshUser, signOut } = useAuth();
   console.log("User: ", user);
   // Page State
   const [loading, setLoading] = useState(true);
@@ -23,19 +23,21 @@ export default function UserDetailsPage() {
 
   const handleDeactivateUser = async () => {
     try {
-      if (!confirm("Are you sure you want to deactivate your account? This action cannot be undone.")) {
+      if (
+        !confirm(
+          "Are you sure you want to deactivate your account? This action cannot be undone.",
+        )
+      ) {
         return;
       }
       await deactivateSelf();
       alert("User deactivated successfully.");
       signOut();
-    }
-    catch (error) {
+    } catch (error) {
       console.error("Error deactivating user:", error);
       alert("Failed to deactivate user.");
     }
-  }
-
+  };
 
   return (
     <div className="w-3xl max-w-6xl flex flex-col  items-center gap-2 mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg m-4 p-4 shadow-lg">
@@ -86,12 +88,13 @@ export default function UserDetailsPage() {
       >
         {editing ? "Cancel Edit User" : "Edit User Details"}
       </button>
-          <button
-          type="button"
-          className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          onClick={handleDeactivateUser}>
-            Deactivate Account
-          </button>
+      <button
+        type="button"
+        className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        onClick={handleDeactivateUser}
+      >
+        Deactivate Account
+      </button>
 
       {editing && (
         <div className="mt-4 w-full">

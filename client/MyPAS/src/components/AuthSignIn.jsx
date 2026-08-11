@@ -3,7 +3,7 @@ import FormInput from "./FormInput";
 import { useAuth } from "../context/AuthContext";
 
 export default function AuthLogIn() {
-  const {signIn } = useAuth();
+  const { signIn } = useAuth();
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   // State to hold the authentication options.
@@ -51,28 +51,32 @@ export default function AuthLogIn() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(authOptions),
     })
-      .then((response) => {
-        if (!response.ok) throw new Error("Sign-in failed.");
-        return response.json();
+      .then(async (response) => {
+        const data = await response.json();
+
+        console.log("Response data:", data);
+
+        if (!response.ok) {
+          throw new Error(data.errors?.join(", ") || "Sign-in failed.");
+        }
+        return data;
       })
       .then((data) => {
         alert("Sign-in successful.");
-        // Handle successful sign-in (e.g., redirect or update state)
-        signIn(data); // Update auth context with the authentication result
-        console.log("Data: ", data)
-        console.log("User data:", data.user);
-        //window.location.reload(); // Reload to reflect the logged-in state
+   
+        signIn(data); 
 
+        console.log("Data: ", data);
+        console.log("User data:", data.user);
       })
       .catch((error) => {
         console.error("Error during sign-in:", error);
-        alert("Sign-in failed. Please try again.");
+        alert(error.message);
       });
-      
   };
 
   return (
-    <div className="flex flex-col items-center border rounded-lg p-4 bg-gray-700 w-96" >
+    <div className="flex flex-col items-center border rounded-lg p-4 bg-gray-700 w-96">
       <h2 className="text-2xl mb-4">
         <strong>Sign In</strong>
       </h2>
@@ -97,12 +101,9 @@ export default function AuthLogIn() {
             value: authOptions.password,
           }}
         />
-              <button
-        className="border rounded-xl p-2 mt-4 bg-blue-500 text-white hover:bg-blue-700"
-
-      >
-        Sign In
-      </button> 
+        <button className="border rounded-xl p-2 mt-4 bg-blue-500 text-white hover:bg-blue-700">
+          Sign In
+        </button>
       </form>
     </div>
   );
