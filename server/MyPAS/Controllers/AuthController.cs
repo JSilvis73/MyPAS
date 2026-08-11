@@ -46,7 +46,7 @@ namespace MyPAS.Controllers
 
             return (result.Success)?
                 Ok(result):
-                Unauthorized(result.Errors);
+                Unauthorized(result);
 
         }
 
