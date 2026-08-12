@@ -10,6 +10,7 @@ using MyPAS.Data;
 using MyPAS.Interfaces;
 using MyPAS.Models;
 using MyPAS.Models.Auth;
+using System.ComponentModel;
 using System.Security.Claims;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -433,6 +434,29 @@ namespace MyPAS.Services
             var result = await _userManager.UpdateAsync(userToDeactivate);
 
             return result.Succeeded;
+        }
+
+        public async Task<List<UserDTO>> GetAllUsers()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            var userDTOs = new List<UserDTO>();
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userDTOs.Add(new UserDTO
+                {
+                    Id = user.Id,
+                    Email = user.Email!,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    UserName = user.UserName ?? string.Empty,
+                    Phone = user.PhoneNumber ?? string.Empty,
+                    CreatedAt = user.CreatedAt,
+                    IsActive = user.IsActive,
+                    Roles = roles
+                });
+            }
+            return userDTOs;
         }
     }
 }

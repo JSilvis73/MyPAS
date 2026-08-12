@@ -1,24 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
+using Moq;
 using MyPAS.Data;
 using MyPAS.Interfaces;
+using MyPAS.Models;
 using MyPAS.Models.Auth;
 using MyPAS.Services;
-using MyPAS.Models;
+using MyPAS.Tests.Helpers;
 using Serilog.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Moq;
 using Xunit;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity.Data;
-using System.Security.Claims;
 
 namespace MyPAS.Tests
 {
@@ -586,6 +587,45 @@ namespace MyPAS.Tests
             Assert.True(result);
             Assert.True(user.IsActive);
             
+        }
+
+        [Fact]
+        public async Task GetAllUsers_ShouldReturnAListOfUsers()
+        {
+            var userA = new MyPASUser()
+            {
+                Id = "123",
+                Email = "test@example.com",
+                UserName = "JaySil73",
+                FirstName = "Jason",
+                LastName = "Silvis",
+                PhoneNumber = "555-1234",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = false,
+            };
+
+            var userB = new MyPASUser()
+            {
+                Id = "456",
+                Email = "test2@example.com",
+                UserName = "TestUser2",
+                FirstName = "Jane",
+                LastName = "Doe",
+                PhoneNumber = "555-5678",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            };
+
+            _userManagerMock
+                .Setup(x => x.Users)
+                .Returns(new List<MyPASUser> { userA, userB }.AsAsyncQueryable());
+
+            var result = await _authService.GetAllUsers();
+
+            Assert.Equal(2, result.Count);
+            Assert.Contains(result, u => u.Id == "123");
+            Assert.Contains(result, u => u.Id == "456");
+
         }
     }
 }

@@ -139,8 +139,16 @@ namespace MyPAS.Controllers
         {
             var result = await _authService.DeactivateSelf(User);
             return (result) ?
-                Ok(new { Message = $"User deleted successfully." }) :
+                Ok(new { Message = $"User deactivated successfully." }) :
                 NotFound(new { Message = $"User not found." });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("getAllUsers")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var result = await _authService.GetAllUsers();
+            return Ok(result);
         }
 
     }

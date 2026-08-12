@@ -15,5 +15,6 @@ namespace MyPAS.Interfaces
         Task<bool> DisableUserByEmailAdmin(string emailToDelete);
         Task<bool> ActivateUserAdmin(string emailToActivate);
         Task<bool> DeactivateSelf(ClaimsPrincipal User);
+        Task<List<UserDTO>> GetAllUsers();
     }
 }
