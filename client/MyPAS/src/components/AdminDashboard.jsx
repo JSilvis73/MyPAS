@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import AssignRole from "./AssignRole";
-import DeleteUserForm from "./DeleteUserForm";
+import DeactivateUserForm from "./DeactivateUserForm";
+import ActivateUserForm from "./ActivateUserForm";
 
 export default function AdminDashboard() {
   // State for display
@@ -38,17 +39,25 @@ export default function AdminDashboard() {
             : "Remove User Role"}
         </button>
         <button
-          name="deleteUser"
+          name="activateUser"
+          className="p-2 border rounded-md hover:bg-green-600"
+          onClick={handleAdminAction}
+        >
+          Activate User
+        </button>
+        <button
+          name="deactivateUser"
           className="p-2 border rounded-md hover:bg-red-600"
           onClick={handleAdminAction}
         >
-          Delete User
+          Deactivate User
         </button>
       </div>
       <div className="m-2">
         {adminAction === "addUserToRole" ? <AssignRole mode={adminAction}/> : null}
       {adminAction =="removeUserFromRole" ? <AssignRole mode ={adminAction} /> : null}
-      {adminAction == "deleteUser" ? <DeleteUserForm  mode={adminAction} /> : null }
+      {adminAction == "activateUser" ? <ActivateUserForm  mode={adminAction} /> : null }
+      {adminAction == "deactivateUser" ? <DeactivateUserForm  mode={adminAction} /> : null }
       </div>
     </div>
   );

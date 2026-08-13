@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import FormInput from "./FormInput";
 
-export default function DeleteUserForm() {
-  const [deleteUserForm, setDeleteUserForm] = useState({
+export default function DeactivateUserForm() {
+  const [deactivateUserForm, setDeactivateUserForm] = useState({
     email: "",
-    confirmedDelete: "",
+    confirmedDeactivate: "",
   });
 
   const baseURL = import.meta.env.VITE_API_BASE_URL;
@@ -14,7 +14,7 @@ export default function DeleteUserForm() {
   const handleFormInputChange = (e) => {
     const { name, value } = e.target;
 
-    setDeleteUserForm((prev) => ({
+    setDeactivateUserForm((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -23,21 +23,21 @@ export default function DeleteUserForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(deleteUserForm.confirmedDelete);
-    if (!deleteUserForm.email) {
+    console.log(deactivateUserForm.confirmedDeactivate);
+    if (!deactivateUserForm.email) {
       alert("Email is required.");
       return;
     }
 
-    if (deleteUserForm.confirmedDelete !== "Confirm") {
-      alert("Please confirm delete.");
+    if (deactivateUserForm.confirmedDeactivate !== "Confirm") {
+      alert("Please confirm deactivation.");
       return;
     }
 
-    alert("Attempting to delete user.");
+    alert("Attempting to deactivate user.");
 
     
-    fetch(`${baseURL}/api/Auth/deleteUserByEmail?emailToDelete=${encodeURIComponent(deleteUserForm.email)}`, {
+    fetch(`${baseURL}/api/Auth/deleteUserByEmail?emailToDelete=${encodeURIComponent(deactivateUserForm.email)}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -46,20 +46,20 @@ export default function DeleteUserForm() {
     })
       .then((response) => {
         if (response.ok) {
-          alert("User deleted successfully.");
+          alert("User deactivated successfully.");
         } else {
-          alert("Failed to delete user.");
+          alert("Failed to deactivate user.");
         }
       })
       .catch((error) => {
-        console.error("Error deleting user:", error);
-        alert("An error occurred while deleting the user.");
+        console.error("Error deactivating user:", error);
+        alert("An error occurred while deactivating the user.");
       });
   };
 
   return (
     <div className="mt-4 border-2 border-blue-500 rounded-lg">
-      <h1 className="m-2">Delete User</h1>
+      <h1 className="m-2">Deactivate User</h1>
       <form
         className="p-2 flex flex-col items-center text-center gap-1"
         onSubmit={handleSubmit}
@@ -71,13 +71,13 @@ export default function DeleteUserForm() {
             name: "email",
             placeholder: "Email",
             onChange: handleFormInputChange,
-            value: deleteUserForm.email,
+            value: deactivateUserForm.email,
           }}
         />
-        <label htmlFor="confirmedDelete">Confirm Delete</label>
+        <label htmlFor="confirmedDeactivate">Confirm Deactivation</label>
         <select
-          name="confirmedDelete"
-          value={deleteUserForm.confirmedDelete}
+          name="confirmedDeactivate"
+          value={deactivateUserForm.confirmedDeactivate}
           onChange={handleFormInputChange}
           
         >

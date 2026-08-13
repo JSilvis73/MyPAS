@@ -124,7 +124,7 @@ namespace MyPAS.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("activateUserAdmin")]
+        [HttpPatch("activateUserAdmin")]
         public async Task<IActionResult> ActivateUserAdmin([FromQuery] string emailToActivate)
         {
             var result = await _authService.ActivateUserAdmin(emailToActivate);
