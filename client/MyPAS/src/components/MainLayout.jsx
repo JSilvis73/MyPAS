@@ -77,10 +77,18 @@ const MainLayout = ({ children }) => {
               <CiSettings className="hover:animate-spin" title="Settings"  />
               
             </Link>
+            <Link
+            to="/admin-dashboard"
+            className="flex flex-row items-center gap-1 hover:underline"
+            title="Admin Dashboard"
+          >
+            Admin
+            </Link>
 
             <button
               className="text-sm text-red-500 hover:underline"
               onClick={handleLogout}
+              title="Logout"
             >
               Logout
             </button>

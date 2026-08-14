@@ -14,6 +14,7 @@ import AuthorizationPage from "./pages/AuthorizationPage";
 import UserDetailsPage from "./pages/UserDetailsPage";
 import  AuthProvider  from "./context/AuthContext";
 import { useAuth } from "./context/AuthContext";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 
 
 function AppRoutes() {
@@ -40,6 +41,7 @@ if (!user) {
          <Route path="/procedure/:id" element={<DisplayListDetails />} />
          <Route path="/payments/:id" element={<DisplayListDetails />} />
          <Route path="/user-details" element={<UserDetailsPage />} />
+         <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
          </Routes>
       </MainLayout>
     

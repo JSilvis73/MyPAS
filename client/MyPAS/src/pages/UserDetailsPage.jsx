@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import FormInput from "../components/FormInput";
 import ChangePassword from "../components/ChangePassword";
 import UpdateUserDetails from "../components/UpdateUserDetails";
-import AdminDashboard from "../components/AdminDashboard";
+
 
 export default function UserDetailsPage() {
   const { user, deactivateSelf, refreshUser, signOut } = useAuth();
@@ -104,7 +104,7 @@ export default function UserDetailsPage() {
 
       {editingPassword && <ChangePassword />}
 
-      {user?.roles?.includes("Admin") ? <AdminDashboard /> : ""}
+      
     </div>
   );
 }
