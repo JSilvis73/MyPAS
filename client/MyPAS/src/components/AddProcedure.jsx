@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import FormInput from "./FormInput";
 
 export default function AddService({ patientId }) {
+  // State for holding data
   const [newProcedure, setNewProcedure] = useState({
     procedureName: "",
     procedureDate: "",
@@ -12,7 +13,12 @@ export default function AddService({ patientId }) {
     patientId: patientId ?? 0,
   });
 
-  // 👇 this keeps patientId in sync if patientID changes
+  const [msg, setMsg] = useState({});
+
+  // Base URL for API requests
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+  // This keeps patientId in sync if patientID changes
   useEffect(() => {
     setNewProcedure((prev) => ({
       ...prev,
@@ -20,21 +26,43 @@ export default function AddService({ patientId }) {
     }));
   }, [patientId]);
 
+  // Handle input changes
   const handleFormInputChange = (e) => {
     const { name, value } = e.target;
 
     setNewProcedure((prev) => ({
       ...prev,
-      [name]:
-        name === "cptAmount" || name === "patientChargedAmount"
-          ? parseFloat(value) || 0
-          : value,
+      [name]: value,
     }));
   };
 
+  // Handle submission of form
   const handleSubmitForm = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // This prevents form from refreshing.
 
+    setMsg({}); // Clear previous messages
+
+    const errors = {}; // Object to hold validation errors
+
+    // Validation checks
+    if (!newProcedure.procedureName) {
+      errors.procedureName = "Procedure name is required.";
+    }
+
+    if (!newProcedure.procedureDate) {
+      errors.procedureDate = "Procedure date is required.";
+    }
+
+    if (newProcedure.patientChargedAmount === "" || isNaN(newProcedure.patientChargedAmount)) {
+      errors.patientChargedAmount = "Patient charged amount is required.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setMsg(errors);
+      return;
+    }
+
+    // Prepare the data for submission
     const formattedProcedure = {
       ...newProcedure,
       cptAmount: parseFloat(newProcedure.cptAmount) || 0,
@@ -42,11 +70,9 @@ export default function AddService({ patientId }) {
       patientId: Number(newProcedure.patientId),
     };
 
-    console.log("patientId prop:", patientId);
-    console.log("newProcedure before POST:", formattedProcedure);
-
+    // Submit the data to the server
     try {
-      const response = await fetch("http://localhost:5044/api/procedure", {
+      const response = await fetch(`${baseUrl}/api/procedure`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formattedProcedure),
@@ -56,19 +82,23 @@ export default function AddService({ patientId }) {
         const errorText = await response.text();
         throw new Error(`Server error ${response.status}: ${errorText}`);
       }
+
+      // Only happens if the POST succeeded
+      alert("Procedure added!");
+
+      setNewProcedure({
+        procedureName: "",
+        procedureDate: "",
+        cptCode: "",
+        cptAmount: "",
+        patientChargedAmount: "",
+        patientId: patientId ?? 0,
+      });
+
+      setMsg({});
     } catch (err) {
       console.error("Submit failed:", err.message);
     }
-
-    alert("Procedure added!");
-    setNewProcedure({
-      procedureName: "",
-      procedureDate: "",
-      cptCode: "",
-      cptAmount: "",
-      patientChargedAmount: "",
-      patientId: patientId ?? 0,
-    });
   };
 
   return (
@@ -145,6 +175,17 @@ export default function AddService({ patientId }) {
               Submit
             </button>
           </form>
+          <div className="mt-4 text-center">
+            {msg.procedureName && (
+              <p className="text-red-500">{msg.procedureName}</p>
+            )}
+            {msg.procedureDate && (
+              <p className="text-red-500">{msg.procedureDate}</p>
+            )}
+            {msg.patientChargedAmount && (
+              <p className="text-red-500">{msg.patientChargedAmount}</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
