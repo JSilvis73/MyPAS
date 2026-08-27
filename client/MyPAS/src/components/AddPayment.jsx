@@ -2,23 +2,27 @@ import React, { useState, useEffect } from "react";
 import FormInput from "./FormInput";
 
 export default function AddPayment({ patientId }) {
+  // State for holding data
   const [newPayment, setNewPayment] = useState({
     paymentMethod: "",
     paymentDate: "",
     paymentAmount: "",
     patientId: patientId,
   });
-
+  const [msg, setMsg] = useState({});
   const [procedures, setProcedures] = useState([]);
   const [selectedProcedureId, setSelectedProcedureId] = useState(null);
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const fetchProcedures = async () => {
       try {
-        const res = await fetch(`http://localhost:5044/api/procedure/patient/${patientId}`);
+        const res = await fetch(
+          `${baseUrl}/api/procedure/patient/${patientId}`,
+        );
         const data = await res.json();
         setProcedures(data);
-        if (data.length > 0) setSelectedProcedureId(data[0].id);
+        setSelectedProcedureId(null);
       } catch (err) {
         console.error("Failed to load procedures:", err);
       }
@@ -34,34 +38,70 @@ export default function AddPayment({ patientId }) {
   const handleSubmitForm = async (e) => {
     e.preventDefault();
 
+    // Validation checks
+    const errors = {};
+
+    console.log(
+      `Payment details\nMethod: ${newPayment.paymentMethod}\nDate: ${newPayment.paymentDate}\nAmountPaid: ${newPayment.paymentAmount}\nProcedure: ${selectedProcedureId}`,
+    );
+
+    if (!newPayment.paymentMethod) {
+      errors.paymentMethod = "Payment method is required.";
+    }
+
+    if (!newPayment.paymentDate) {
+      errors.paymentDate = "Payment date is required.";
+    }
+
+    if (newPayment.paymentAmount === "" || isNaN(newPayment.paymentAmount)) {
+      errors.paymentAmount = "Payment amount is required.";
+    }
+
+    if (selectedProcedureId === null) {
+      errors.selectedProcedureId = "A procedure must be selected.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setMsg(errors);
+      return;
+    }
+
+    // Construct payment for api request
     const formattedPayment = {
       method: newPayment.paymentMethod,
       paymentDate: newPayment.paymentDate,
       amount: parseFloat(newPayment.paymentAmount) || 0,
       patientId: Number(newPayment.patientId),
-      procedureId: selectedProcedureId
+      procedureId: selectedProcedureId,
     };
 
+    // Send Request
     try {
-      const response = await fetch("http://localhost:5044/api/payments", {
+      const response = await fetch(`${baseUrl}/api/payments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formattedPayment)
+        body: JSON.stringify(formattedPayment),
       });
 
       console.log(JSON.stringify(formattedPayment));
-      if (!response.ok) throw new Error("Payment submission failed");
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Server error ${response.status}: ${errorText}`);
+      }
+
       alert("Payment added");
 
       setNewPayment({
         paymentMethod: "",
         paymentDate: "",
         paymentAmount: "",
-        patientId: patientId
+        patientId: patientId,
       });
+
+      setSelectedProcedureId(null);
     } catch (err) {
-      console.error(err);
-      alert("Error submitting payment");
+      console.error("Submit failed:", err.message);
     }
   };
 
@@ -108,8 +148,13 @@ export default function AddPayment({ patientId }) {
           <select
             className="border p-2 rounded bg-white text-black"
             value={selectedProcedureId || ""}
-            onChange={(e) => setSelectedProcedureId(Number(e.target.value))}
+            onChange={(e) =>
+              setSelectedProcedureId(
+                e.target.value === "" ? null : Number(e.target.value),
+              )
+            }
           >
+            <option value="">Select Procedure</option>
             {procedures.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.id}: {p.procedureName || `Procedure #${p.id}`}
@@ -125,6 +170,18 @@ export default function AddPayment({ patientId }) {
           Submit
         </button>
       </form>
+      <div className="m-4 text-center">
+        {msg.paymentMethod && (
+          <p className="text-red-500">{msg.paymentMethod}</p>
+        )}
+        {msg.paymentDate && <p className="text-red-500">{msg.paymentDate}</p>}
+        {msg.paymentAmount && (
+          <p className="text-red-500">{msg.paymentAmount}</p>
+        )}
+        {msg.selectedProcedureId && (
+          <p className="text-red-500">{msg.selectedProcedureId}</p>
+        )}
+      </div>
     </div>
   );
 }
