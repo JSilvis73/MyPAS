@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import FormInput from "./FormInput";
@@ -7,7 +7,7 @@ export default function UpdateProcedure({ patientId }) {
   const { id } = useParams();
 
   // State for storing data
-  const [newProcedure, setNewProcedure] = useState({
+  const [procedure, setProcedure] = useState({
     procedureName: "",
     procedureDate: "",
     cptCode: "",
@@ -23,7 +23,7 @@ export default function UpdateProcedure({ patientId }) {
   const handleFormInputChange = (e) => {
     const { name, value } = e.target;
 
-    setNewProcedure((prev) => ({
+    setProcedure((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -36,11 +36,11 @@ export default function UpdateProcedure({ patientId }) {
 
     // Validation checks
     if (
-      !newProcedure.procedureName &&
-      !newProcedure.procedureDate &&
-      !newProcedure.cptCode &&
-      !newProcedure.cptAmount &&
-      !newProcedure.patientChargedAmount
+      !procedure.procedureName &&
+      !procedure.procedureDate &&
+      !procedure.cptCode &&
+      !procedure.cptAmount &&
+      !procedure.patientChargedAmount
     ) {
       errors.fields = "No fields were populated.";
       setMsg(errors);
@@ -48,19 +48,23 @@ export default function UpdateProcedure({ patientId }) {
     }
 
     console.log(
-      `Procedure before update:\nName: ${newProcedure.procedureName}\nDate: ${newProcedure.procedureDate}\nCPTCode: ${newProcedure.cptCode}\nCPTAmount ${newProcedure.cptAmount}\nPatientPay: ${newProcedure.patientChargedAmount}`,
+      `Procedure before update:\nName: ${procedure.procedureName}\nDate: ${procedure.procedureDate}\nCPTCode: ${procedure.cptCode}\nCPTAmount ${procedure.cptAmount}\nPatientPay: ${procedure.patientChargedAmount}`,
     );
 
     const formattedProcedure = {
-      ...newProcedure,
-      procedureDate: newProcedure.procedureDate || null,
-      cptAmount: parseFloat(newProcedure.cptAmount),
-      patientChargedAmount: parseFloat(newProcedure.patientChargedAmount),
-      patientId: Number(newProcedure.patientId),
+      ...procedure,
+      procedureDate: procedure.procedureDate || null,
+      cptAmount: procedure.cptAmount
+        ? parseFloat(procedure.cptAmount)
+        : null,
+      patientChargedAmount: procedure.patientChargedAmount
+        ? parseFloat(procedure.patientChargedAmount)
+        : null,
+      patientId: Number(procedure.patientId),
     };
 
     console.log("patientId prop:", patientId);
-    console.log("newProcedure before POST:", formattedProcedure);
+    console.log("procedure before POST:", formattedProcedure);
 
     try {
       const response = await fetch(`${baseUrl}/api/procedure/${id}`, {
@@ -75,7 +79,7 @@ export default function UpdateProcedure({ patientId }) {
       }
 
       alert("Procedure updated!");
-      setNewProcedure({
+      setProcedure({
         procedureName: "",
         procedureDate: "",
         cptCode: "",
@@ -105,7 +109,7 @@ export default function UpdateProcedure({ patientId }) {
                   inputName: "Name",
                   type: "text",
                   name: "procedureName",
-                  value: newProcedure.procedureName,
+                  value: procedure.procedureName,
                   placeholder: "Blood Work",
                   onChange: handleFormInputChange,
                 }}
@@ -116,7 +120,7 @@ export default function UpdateProcedure({ patientId }) {
                   inputName: "Date of Service",
                   type: "date",
                   name: "procedureDate",
-                  value: newProcedure.procedureDate,
+                  value: procedure.procedureDate,
                   onChange: handleFormInputChange,
                 }}
               />
@@ -126,7 +130,7 @@ export default function UpdateProcedure({ patientId }) {
                   inputName: "CPT Code",
                   type: "text",
                   name: "cptCode",
-                  value: newProcedure.cptCode,
+                  value: procedure.cptCode,
                   placeholder: "ABC-123",
                   onChange: handleFormInputChange,
                 }}
@@ -138,7 +142,7 @@ export default function UpdateProcedure({ patientId }) {
                   type: "number",
                   step: "0.01",
                   name: "cptAmount",
-                  value: newProcedure.cptAmount,
+                  value: procedure.cptAmount,
                   placeholder: "75.00",
                   onChange: handleFormInputChange,
                 }}
@@ -150,7 +154,7 @@ export default function UpdateProcedure({ patientId }) {
                   type: "number",
                   step: "0.01",
                   name: "patientChargedAmount",
-                  value: newProcedure.patientChargedAmount,
+                  value: procedure.patientChargedAmount,
                   placeholder: "50.00",
                   onChange: handleFormInputChange,
                 }}
