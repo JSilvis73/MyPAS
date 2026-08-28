@@ -3,9 +3,10 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import FormInput from "./FormInput";
 
-export default function UpdateProcedure({ patientId, }) {
+export default function UpdateProcedure({ patientId }) {
   const { id } = useParams();
 
+  // State for storing data
   const [newProcedure, setNewProcedure] = useState({
     procedureName: "",
     procedureDate: "",
@@ -15,28 +16,40 @@ export default function UpdateProcedure({ patientId, }) {
     patientId: patientId ?? 0,
   });
 
-  // // This keeps patientId in sync if patientID changes
-  // useEffect(() => {
-  //   setNewProcedure((prev) => ({
-  //     ...prev,
-  //     patientId: patientId ?? 0,
-  //   }));
-  // }, [patientId]);
+  const [msg, setMsg] = useState({});
+
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const handleFormInputChange = (e) => {
     const { name, value } = e.target;
 
     setNewProcedure((prev) => ({
       ...prev,
-      [name]:
-        name === "cptAmount" || name === "patientChargedAmount"
-          ? parseFloat(value) || 0
-          : value,
+      [name]: value,
     }));
   };
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
+
+    const errors = {};
+
+    // Validation checks
+    if (
+      !newProcedure.procedureName &&
+      !newProcedure.procedureDate &&
+      !newProcedure.cptCode &&
+      !newProcedure.cptAmount &&
+      !newProcedure.patientChargedAmount
+    ) {
+      errors.fields = "No fields were populated.";
+      setMsg(errors);
+      return;
+    }
+
+    console.log(
+      `Procedure before update:\nName: ${newProcedure.procedureName}\nDate: ${newProcedure.procedureDate}\nCPTCode: ${newProcedure.cptCode}\nCPTAmount ${newProcedure.cptAmount}\nPatientPay: ${newProcedure.patientChargedAmount}`,
+    );
 
     const formattedProcedure = {
       ...newProcedure,
@@ -50,7 +63,7 @@ export default function UpdateProcedure({ patientId, }) {
     console.log("newProcedure before POST:", formattedProcedure);
 
     try {
-      const response = await fetch(`http://localhost:5044/api/procedure/${id}`, {
+      const response = await fetch(`${baseUrl}/api/procedure/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formattedProcedure),
@@ -60,19 +73,21 @@ export default function UpdateProcedure({ patientId, }) {
         const errorText = await response.text();
         throw new Error(`Server error ${response.status}: ${errorText}`);
       }
+
+      alert("Procedure updated!");
+      setNewProcedure({
+        procedureName: "",
+        procedureDate: "",
+        cptCode: "",
+        cptAmount: "",
+        patientChargedAmount: "",
+        patientId: patientId ?? 0,
+      });
+
+      setMsg({});
     } catch (err) {
       console.error("Submit failed:", err.message);
     }
-
-    alert("Procedure updated!");
-    setNewProcedure({
-      procedureName: "",
-      procedureDate: "",
-      cptCode: "",
-      cptAmount: "",
-      patientChargedAmount: "",
-      patientId: patientId ?? 0,
-    });
   };
 
   return (
@@ -149,6 +164,9 @@ export default function UpdateProcedure({ patientId, }) {
               Submit
             </button>
           </form>
+          <div className="m-4 text-center">
+            {msg.fields && <p className="text-red-500">{msg.fields}</p>}
+          </div>
         </div>
       </div>
     </div>
