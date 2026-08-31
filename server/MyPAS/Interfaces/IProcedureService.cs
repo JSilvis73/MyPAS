@@ -1,5 +1,6 @@
 using MyPAS.Models;
 using MyPAS.Models.DTO;
+using MyPAS.Models.Enums;
 
 
 public interface IProcedureService
@@ -10,7 +11,7 @@ public interface IProcedureService
     Task<ProcedureDTO?> GetProcedureByProcedureId(int id);
     //Service GetServicesByPatientName(string patientLastName, string patientFirstName);
     Task<ProcedureDTO> UpdateProcedureByUpdateProcedureDTO(int procedureId, UpdateProcedureDTO updateProcedureDTO);
-    Task<bool> DeleteProcedureByProcedureId(int id);
+    Task<DeleteProcedureResult> DeleteProcedureByProcedureId(int id);
     
 
 }

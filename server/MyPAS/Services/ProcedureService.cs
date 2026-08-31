@@ -3,6 +3,7 @@ using MyPAS.Data;
 using MyPAS.Models.DTO;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using MyPAS.Models.Enums;
 
 namespace MyPAS.Services
 {
@@ -94,7 +95,7 @@ namespace MyPAS.Services
             if (procedureToUpdate == null) return null;
             
                 // Update fields if procedure is found.
-                if (updateProcedureDTO.ProcedureName != null)
+                if (!string.IsNullOrWhiteSpace(updateProcedureDTO.ProcedureName))
                 procedureToUpdate.ProcedureName = updateProcedureDTO.ProcedureName;
 
                 if (updateProcedureDTO.ProcedureDate.HasValue)
@@ -103,7 +104,7 @@ namespace MyPAS.Services
                 if (updateProcedureDTO.PatientChargedAmount.HasValue)
                 procedureToUpdate.PatientChargedAmount = updateProcedureDTO.PatientChargedAmount.Value;
 
-                if (updateProcedureDTO.CptCode != null)
+                if (!string.IsNullOrWhiteSpace(updateProcedureDTO.CptCode))
                 procedureToUpdate.CptCode = updateProcedureDTO.CptCode;
 
                 if (updateProcedureDTO.CptAmount.HasValue)
@@ -123,17 +124,23 @@ namespace MyPAS.Services
                 };
         }
 
-        public async Task<bool> DeleteProcedureByProcedureId(int id)
+
+        public async Task<DeleteProcedureResult> DeleteProcedureByProcedureId(int id)
         {
-            var procedure = await _context.Procedures.FindAsync(id);
+            var procedure = await _context.Procedures
+                .Include(p => p.Payments)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if (procedure is null)
-                return false;
+                return DeleteProcedureResult.NotFound;
+
+            if (procedure.Payments.Any())
+                return DeleteProcedureResult.HasPayments;
 
             _context.Procedures.Remove(procedure);
             await _context.SaveChangesAsync();
 
-            return true;
+            return DeleteProcedureResult.Deleted;
         }
     }
 }

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using MyPAS.Data;
 using MyPAS.Models;
 using MyPAS.Models.DTO;
+using MyPAS.Models.Enums;
+using static MyPAS.Services.ProcedureService;
 
 namespace MyPAS.Controllers
 {
@@ -67,16 +69,16 @@ namespace MyPAS.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteService(int id)
         {
-            var service = await _context.Procedures.FindAsync(id);
-            if (service == null)
+            var result = await _procedureService.DeleteProcedureByProcedureId(id);
+
+            return result switch
             {
-                return NotFound();
-            }
-
-            _context.Procedures.Remove(service);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+                DeleteProcedureResult.NotFound => NotFound(),
+                DeleteProcedureResult.HasPayments =>
+                    BadRequest("Cannot delete a procedure that has payments."),
+                DeleteProcedureResult.Deleted => NoContent(),
+                _ => StatusCode(500)
+            };
         }
 
 
