@@ -11,7 +11,7 @@ export default function DisplayListDetails() {
   const [isUpdating, setIsUpdating] = useState(false);
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -53,6 +53,7 @@ export default function DisplayListDetails() {
       if (res.ok) {
         alert("Deleted!");
         // navigate back or refresh parent
+        navigate(`/patients/${item.patientId}`);
       } else if (res.status === 400) {
         alert("Procedure can not be deleted with payments attached.");
         return;
