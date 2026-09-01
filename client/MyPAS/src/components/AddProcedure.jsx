@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import FormInput from "./FormInput";
 
-export default function AddService({ patientId }) {
+export default function AddService({ patientId, onProcedureAdded }) {
   // State for holding data
   const [newProcedure, setNewProcedure] = useState({
     procedureName: "",
@@ -96,6 +96,9 @@ export default function AddService({ patientId }) {
       });
 
       setMsg({});
+
+      // Call the callback to refresh the procedure list
+      onProcedureAdded();
     } catch (err) {
       console.error("Submit failed:", err.message);
     }

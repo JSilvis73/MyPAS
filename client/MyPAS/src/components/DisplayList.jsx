@@ -12,7 +12,7 @@ export default function DisplayList({ items, type }) {
         {items.map((item) => (
           <div key={item.id} className="bg-gray-600  rounded-xl p-2 text-white">
             {type === "payment" ? (
-              <div className="flex justify-center gap-4">
+              <div className="flex justify-center items-center gap-4">
                 <p>
                   <strong>ID:</strong> {item.id}
                 </p>

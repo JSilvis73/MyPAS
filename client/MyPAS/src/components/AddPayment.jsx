@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import FormInput from "./FormInput";
 
-export default function AddPayment({ patientId }) {
+export default function AddPayment({ patientId, onPaymentAdded }) {
   // State for holding data
   const [newPayment, setNewPayment] = useState({
     paymentMethod: "",
@@ -37,6 +37,8 @@ export default function AddPayment({ patientId }) {
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
+
+    setMsg({}); // Clear previous messages
 
     // Validation checks
     const errors = {};
@@ -100,6 +102,8 @@ export default function AddPayment({ patientId }) {
       });
 
       setSelectedProcedureId(null);
+      setMsg({});
+      onPaymentAdded(); // Call the callback to refresh the payment list
     } catch (err) {
       console.error("Submit failed:", err.message);
     }

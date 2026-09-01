@@ -5,7 +5,7 @@ import AddProcedure from "../components/AddProcedure";
 import AddPayment from "../components/AddPayment";
 import UpdatePatientForm from "../components/UpdatePatientForm";
 
-export default function PatientDetailsPage({type}) {
+export default function PatientDetailsPage({ type }) {
   // Page State
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
@@ -41,6 +41,11 @@ export default function PatientDetailsPage({type}) {
   }, [id]);
 
   useEffect(() => {
+    fetchProcedures();
+    fetchPayments();
+  }, [id]);
+
+  const fetchProcedures = async () => {
     if (!id) return;
 
     fetch(`${baseUrl}/api/procedure/patient/${id}`)
@@ -51,16 +56,17 @@ export default function PatientDetailsPage({type}) {
       .then((data) => {
         // Optional: sort procedures by date (most recent first)
         const sorted = [...data].sort(
-          (a, b) => new Date(b.procedureDate) - new Date(a.procedureDate)
+          (a, b) => new Date(b.procedureDate) - new Date(a.procedureDate),
         );
         setProcedures(sorted);
       })
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  };
 
-  useEffect(() => {
+  const fetchPayments = async () => {
+    if (!id) return;
     fetch(`${baseUrl}/api/payments/patients/${id}/payments`)
       .then((res) => {
         if (!res.ok) throw new Error("Payments not found.");
@@ -68,17 +74,17 @@ export default function PatientDetailsPage({type}) {
       })
       .then((data) => {
         const sortedPayments = [...data].sort(
-          (a, b) => new Date(b.paymentDate) - new Date(a.paymentDate)
+          (a, b) => new Date(b.paymentDate) - new Date(a.paymentDate),
         );
         setPayments(sortedPayments);
       })
       .catch((err) => console.error(err));
-  }, []);
+  };
 
   // Delete patient section.
   const deleteSelectedPatient = async (id) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this patient?"
+      "Are you sure you want to delete this patient?",
     );
     if (!confirmDelete) return;
 
@@ -142,18 +148,18 @@ export default function PatientDetailsPage({type}) {
       </h1>
       <div className="flex flex-col flex-wrap items-center gap-4 bg-gray-700 rounded-xl  p-2">
         <p>
-          <strong>ID: </strong> 
+          <strong>ID: </strong>
           {patient.id}
         </p>
-          <p>
-            <strong>Name: </strong> 
-            {patient.lastName}, {patient.firstName}
-          </p>
-          <p>
-            <strong>Age: </strong> 
-            {patient.age}
-          </p>
-          <div id="address-section" className="flex flex-wrap gap-4">
+        <p>
+          <strong>Name: </strong>
+          {patient.lastName}, {patient.firstName}
+        </p>
+        <p>
+          <strong>Age: </strong>
+          {patient.age}
+        </p>
+        <div id="address-section" className="flex flex-wrap gap-4">
           <p>
             <strong>Address: </strong>
             {patient.address}
@@ -170,8 +176,8 @@ export default function PatientDetailsPage({type}) {
             <strong>Zip: </strong>
             {patient.zip}
           </p>
-          </div>
-          <div id="contact-section" className="flex flex-wrap gap-4">
+        </div>
+        <div id="contact-section" className="flex flex-wrap gap-4">
           <p>
             <strong>Phone: </strong>
             {patient.phone}
@@ -180,8 +186,8 @@ export default function PatientDetailsPage({type}) {
             <strong>Email: </strong>
             {patient.email}
           </p>
-          </div>
-        
+        </div>
+
         <div className="flex gap-4">
           <button
             type="button"
@@ -201,7 +207,7 @@ export default function PatientDetailsPage({type}) {
         {toggleUpdatePatientForm ? <UpdatePatientForm patient={patient} /> : ""}
       </div>
 
-       {/* Procedures and Payments Section */}
+      {/* Procedures and Payments Section */}
       <h2 className="mt-2 text-center p-2">
         <strong>Procedures</strong>
       </h2>
@@ -210,7 +216,11 @@ export default function PatientDetailsPage({type}) {
         {showProcedures ? (
           <div className="text-center">Procedures Hidden</div>
         ) : (
-          <DisplayList items={procedures} type="procedure" patientId={patient.id} />
+          <DisplayList
+            items={procedures}
+            type="procedure"
+            patientId={patient.id}
+          />
         )}
 
         <div className="flex gap-4 justify-center">
@@ -230,7 +240,7 @@ export default function PatientDetailsPage({type}) {
             Add Procedure
           </button>
         </div>
-        {toggleServiceForm ? <AddProcedure patientId={Number(id)} /> : ""}
+        {toggleServiceForm ? <AddProcedure patientId={Number(id)} onProcedureAdded={fetchProcedures} /> : ""}
       </div>
       <h2 className="mt-2 text-center p-2">
         <strong>Payments</strong>
@@ -257,7 +267,7 @@ export default function PatientDetailsPage({type}) {
             Add Payment
           </button>
         </div>
-        {togglePaymentForm ? <AddPayment patientId={Number(id)} /> : ""}
+        {togglePaymentForm ? <AddPayment patientId={Number(id)} onPaymentAdded={fetchPayments} /> : ""}
       </div>
     </div>
   );
