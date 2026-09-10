@@ -17,6 +17,9 @@ export default function DisplayList({ items, type }) {
                   <strong>ID:</strong> {item.id}
                 </p>
                 <p>
+                  <strong>Procedure:</strong> {item.procedureId}
+                </p>
+                <p>
                   <strong>Method:</strong> {item.method}
                 </p>
                 <p>
