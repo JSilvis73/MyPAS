@@ -12,22 +12,27 @@ export default function DisplayList({ items, type }) {
         {items.map((item) => (
           <div key={item.id} className="bg-gray-600  rounded-xl p-2 text-white">
             {type === "payment" ? (
-              <div className="flex justify-center items-center gap-4">
-                <p>
-                  <strong>ID:</strong> {item.id}
-                </p>
-                <p>
-                  <strong>Procedure:</strong> {item.procedureId}
-                </p>
-                <p>
-                  <strong>Method:</strong> {item.method}
-                </p>
-                <p>
-                  <strong>Date:</strong> {item.paymentDate}
-                </p>
-                <p>
-                  <strong>Amount:</strong> ${item.amount}
-                </p>
+              <div className="grid grid-cols-[1fr_2fr_1fr_1fr_1fr_auto] gap-4 items-center">
+                <div>
+                  <strong className="block">ID:</strong>
+                  <span className="break-words">{item.id}</span>
+                </div>
+                <div>
+                  <strong className="block">Procedure Id:</strong>
+                  <span className="break-words">{item.procedureId}</span>
+                </div>
+                <div>
+                  <strong className="block">Method:</strong>
+                  <span className="break-words">{item.method}</span>
+                </div>
+                <div>
+                  <strong className="block">Date:</strong>
+                  <span className="break-words">{item.paymentDate}</span>
+                </div>
+                <div>
+                  <strong className="block">Amount:</strong>
+                  <span className="break-words">${item.amount}</span>
+                </div>
                 <Link
                   to={`/payments/${item.id}`}
                   className="border border-white rounded-lg p-1  hover:bg-green-500"
