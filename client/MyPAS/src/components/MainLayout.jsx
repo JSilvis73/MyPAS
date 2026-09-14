@@ -7,9 +7,16 @@ import { FaTasks } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import { CiSettings } from "react-icons/ci";
 import medkitLogo from "../assets/images/medKit.png";
+import UserProfileMenu from "./UserProfileMenu";
 
 const MainLayout = ({ children }) => {
   const { user, signOut } = useAuth();
+  const [isUserProfileMenuOpen, setIsUserProfileMenuOpen] =
+    React.useState(false);
+
+  const openUserProfileMenu = () => {
+    setIsUserProfileMenuOpen(!isUserProfileMenuOpen);
+  };
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -24,16 +31,21 @@ const MainLayout = ({ children }) => {
 
   return (
     <div className="flex flex-col min-h-screen mx-auto bg-gray-900 text-white ">
-
       {/* Header */}
       <header className="text-white p-4">
         <div className="flex justify-between   items-center max-w-6xl mx-auto">
           {/* Left: Logo */}
           <div className="text-xl font-bold">
             <Link to="/">
-            <img src={medkitLogo} alt="MyPAS Logo" className="h-10 w-10 hover:animate-pulse" />
+              <img
+                src={medkitLogo}
+                alt="MyPAS Logo"
+                className="h-10 w-10 hover:animate-pulse"
+              />
             </Link>
           </div>
+
+          |
 
           {/* Center: Navigation */}
           <nav className="flex space-x-4 gap-2">
@@ -70,11 +82,25 @@ const MainLayout = ({ children }) => {
           </nav>
 
           {/* Right: User Icon */}
-          <div className="flex items-center gap-2">
-            <FaUserCircle className="hover:animate-spin " />
-            <p className="text-sm text-center">{user?.email}</p>
+          <div className="relative flex items-center gap-2">
+            <button
+              onClick={openUserProfileMenu}
+              className="flex items-center gap-1"
+            >
+              <FaUserCircle className="hover:animate-spin " />
+              <span className="text-sm text-center">{user?.email}</span>
+            </button>
 
-            <Link
+            {isUserProfileMenuOpen && (
+              <div className="absolute right-4 top-8 bg-gray-800 border border-gray-600 rounded-lg p-2 shadow-lg z-50">
+                <UserProfileMenu />
+              </div>
+            ) }
+
+
+            {/* <UserProfileMenu /> */}
+
+            {/* <Link
               to="/user-details"
               className="flex flex-row items-center gap-1 hover:underline"
             >
@@ -95,7 +121,7 @@ const MainLayout = ({ children }) => {
               title="Logout"
             >
               Logout
-            </button>
+            </button> */}
           </div>
         </div>
       </header>

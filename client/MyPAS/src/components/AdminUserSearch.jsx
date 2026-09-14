@@ -106,7 +106,7 @@ export default function AdminUserSearch() {
             ))}
           </ul>
         ) : (
-          <p className="text-gray-400">No users found.</p>
+          <p className="text-gray-400">No users found. Sign in to refresh token.</p>
         )}
       </div>
     </div>
