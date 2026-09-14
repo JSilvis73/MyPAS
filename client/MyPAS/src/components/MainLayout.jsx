@@ -32,97 +32,114 @@ const MainLayout = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen mx-auto bg-gray-900 text-white ">
       {/* Header */}
-      <header className="text-white p-4">
-        <div className="flex justify-between   items-center max-w-6xl mx-auto">
-          {/* Left: Logo */}
-          <div className="text-xl font-bold">
-            <Link to="/">
+      <header className="bg-gray-800 text-white p-4 shadow-md">
+        <div className="max-w-6xl mx-auto">
+          {/* Top row */}
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link to="/" className="shrink-0">
               <img
                 src={medkitLogo}
                 alt="MyPAS Logo"
                 className="h-10 w-10 hover:animate-pulse"
               />
             </Link>
+
+            {/* Navigation */}
+            <nav className="hidden md:flex items-center gap-4">
+              <Link to="/" className="hover:text-gray-300">
+                Home
+              </Link>
+
+              <Link
+                to="/search"
+                className="flex items-center gap-1 hover:text-gray-300"
+              >
+                <CiSearch />
+                Search
+              </Link>
+
+              <Link
+                to="/add-patient"
+                className="flex items-center gap-1 hover:text-gray-300"
+              >
+                <IoCreateOutline />
+                Create Patient
+              </Link>
+
+              <Link
+                to="/operations"
+                className="flex items-center gap-1 hover:text-gray-300"
+              >
+                <FaTasks />
+                Operations
+              </Link>
+
+              <Link to="/about" className="hover:text-gray-300">
+                About
+              </Link>
+
+              <Link to="/contact" className="hover:text-gray-300">
+                Contact
+              </Link>
+            </nav>
+
+            {/* User */}
+            <div className="relative shrink-0">
+              <button
+                onClick={openUserProfileMenu}
+                className="flex items-center gap-2 hover:text-gray-300"
+              >
+                <FaUserCircle className="text-xl" />
+                <span className="hidden lg:inline text-sm">{user?.email}</span>
+              </button>
+
+              {isUserProfileMenuOpen && (
+                <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-600 rounded-lg p-2 shadow-lg z-50">
+                  <UserProfileMenu />
+                </div>
+              )}
+            </div>
           </div>
 
-          |
-
-          {/* Center: Navigation */}
-          <nav className="flex space-x-4 gap-2">
-            <Link to="/" className="hover:underline">
+          {/* Mobile navigation */}
+          <nav className="flex md:hidden justify-center flex-wrap gap-x-5 gap-y-2 mt-4 pt-3 border-t border-gray-700">
+            <Link to="/" className="hover:text-gray-300">
               Home
             </Link>
+
             <Link
               to="/search"
-              className="flex flex-row items-center gap-1 hover:underline"
+              className="flex items-center gap-1 hover:text-gray-300"
             >
               <CiSearch />
               Search
             </Link>
+
             <Link
               to="/add-patient"
-              className="flex flex-row items-center gap-1 hover:underline"
+              className="flex items-center gap-1 hover:text-gray-300"
             >
               <IoCreateOutline />
               Create Patient
             </Link>
+
             <Link
               to="/operations"
-              className="flex flex-row items-center gap-1 hover:underline"
+              className="flex items-center gap-1 hover:text-gray-300"
             >
               <FaTasks />
               Operations
             </Link>
-            <Link to="/about" className="hover:underline">
+
+            <Link to="/about" className="hover:text-gray-300">
               About
             </Link>
-            <Link to="/contact" className="hover:underline">
+
+            <Link to="/contact" className="hover:text-gray-300">
               Contact
             </Link>
           </nav>
-
-          {/* Right: User Icon */}
-          <div className="relative flex items-center gap-2">
-            <button
-              onClick={openUserProfileMenu}
-              className="flex items-center gap-1"
-            >
-              <FaUserCircle className="hover:animate-spin " />
-              <span className="text-sm text-center">{user?.email}</span>
-            </button>
-
-            {isUserProfileMenuOpen && (
-              <div className="absolute right-4 top-8 bg-gray-800 border border-gray-600 rounded-lg p-2 shadow-lg z-50">
-                <UserProfileMenu />
-              </div>
-            ) }
-
-
-            {/* <UserProfileMenu /> */}
-
-            {/* <Link
-              to="/user-details"
-              className="flex flex-row items-center gap-1 hover:underline"
-            >
-              <CiSettings className="hover:animate-spin" title="Settings"  />
-              
-            </Link>
-            <Link
-            to="/admin-dashboard"
-            className="flex flex-row items-center gap-1 hover:underline"
-            title="Admin Dashboard"
-          >
-            Admin
-            </Link>
-
-            <button
-              className="text-sm text-red-500 hover:underline"
-              onClick={handleLogout}
-              title="Logout"
-            >
-              Logout
-            </button> */}
-          </div>
         </div>
       </header>
 
