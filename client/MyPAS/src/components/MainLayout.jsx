@@ -6,6 +6,7 @@ import { CiSearch } from "react-icons/ci";
 import { FaTasks } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import { CiSettings } from "react-icons/ci";
+import medkitLogo from "../assets/images/medKit.png";
 
 const MainLayout = ({ children }) => {
   const { user, signOut } = useAuth();
@@ -23,12 +24,15 @@ const MainLayout = ({ children }) => {
 
   return (
     <div className="flex flex-col min-h-screen mx-auto bg-gray-900 text-white ">
+
       {/* Header */}
-      <header className="md:bg-gray-800 text-white p-4">
+      <header className="text-white p-4">
         <div className="flex justify-between   items-center max-w-6xl mx-auto">
           {/* Left: Logo */}
-          <div className="flex-start text-xl font-bold">
-            <Link to="/">MyPAS</Link>
+          <div className="text-xl font-bold">
+            <Link to="/">
+            <img src={medkitLogo} alt="MyPAS Logo" className="h-10 w-10 hover:animate-pulse" />
+            </Link>
           </div>
 
           {/* Center: Navigation */}
