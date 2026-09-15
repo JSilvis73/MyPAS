@@ -9,34 +9,51 @@ export default function HomePage() {
   const { user } = useAuth();
 
   return (
-    <div className="flex flex-col text-white items-center justify-content p-4">
-      <h2 className="text-2xl mb-4">
+    <div className="flex flex-col text-white items-center justify-content gap-4 p-4">
+      <h1 className="text-2xl mb-4">
         <strong>Home</strong>
-      </h2>
+      </h1>
       <p>Welcome {user?.userName}</p>
 
-      <div className="flex justify-center text-center flex-wrap space-x-4 gap-4 mt-4">
-        <Card
-          props={{
-            route: "/search",
-            name: "Search",
-            img: <CiSearch className="h-20 w-20" />,
-          }}
-        />
-        <Card
-          props={{
-            route: "/add-patient",
-            name: "Create",
-            img: <IoCreateOutline className="h-20 w-20" />,
-          }}
-        />
-        <Card
-          props={{
-            route: "/operations",
-            name: "Operations",
-            img: <FaTasks className="h-18 w-18" />,
-          }}
-        />
+      <div className="text-center m-4 bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-600">
+        <h2>
+          <strong>News:</strong>
+        </h2>
+        <p>
+          MyPAS is a new patient management system designed to streamline
+          healthcare operations.
+        </p>
+      </div>
+
+      <div className="text-center m-4 bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-600">
+        <h2>
+          <strong>Quick Actions:</strong>
+        </h2>
+        <p>Select an action below to get started.</p>
+
+        <div className="flex justify-center text-center flex-wrap space-x-4 gap-4 m-4">
+          <Card
+            props={{
+              route: "/search",
+              name: "Search",
+              img: <CiSearch className="h-20 w-20" />,
+            }}
+          />
+          <Card
+            props={{
+              route: "/add-patient",
+              name: "Create",
+              img: <IoCreateOutline className="h-20 w-20" />,
+            }}
+          />
+          <Card
+            props={{
+              route: "/operations",
+              name: "Operations",
+              img: <FaTasks className="h-18 w-18" />,
+            }}
+          />
+        </div>
       </div>
     </div>
   );

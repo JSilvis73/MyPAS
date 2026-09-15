@@ -48,8 +48,8 @@ const MainLayout = ({ children }) => {
     <div className="flex flex-col min-h-screen mx-auto bg-gray-900 text-white ">
       {/* Header */}
       <header
-        className={`sticky top-0 z-40 text-white p-4 transition-colors duration-300 ${
-          isScrolled ? "bg-gray-950/95 shadow-lg border-gray-700" : "bg-gray-900 border-transparent"
+        className={` sticky top-0 z-40 text-white p-4 transition-colors duration-300 ${
+          isScrolled ? "bg-gray-950/95 shadow-lg border-gray-700" : "bg-gray-900 border-transparent hover:bg-gray-800"
         }`}
       >
         <div className="max-w-6xl mx-auto">
