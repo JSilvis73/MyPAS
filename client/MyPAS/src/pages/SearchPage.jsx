@@ -11,7 +11,6 @@ export default function SearchPage() {
     lastName: "",
     firstName: "",
   });
- 
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -58,12 +57,11 @@ export default function SearchPage() {
 
   const handleClear = () => {
     setFilteredPatients([]);
-  }
-
+  };
 
   // Display
   return (
-    <div className=" m-4  text-center">
+    <div className="text-center">
       <div className="max-w-5xl mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-6 shadow-lg  ">
         <div className="m-2">
           <h1 className="text-2xl font-bold mb-4">
@@ -112,43 +110,44 @@ export default function SearchPage() {
               <FaSearch className="inline mr-1" />
               Search
             </button>
-                    <button
-          className="p-1 mt-4 border rounded-lg hover:bg-red-500 hover:text-black"
-          onClick={handleClearSearchOptions}
-        >
-          Clear
-        </button>
+            <button
+              className="p-1 mt-4 border rounded-lg hover:bg-red-500 hover:text-black"
+              onClick={handleClearSearchOptions}
+            >
+              Clear
+            </button>
           </form>
         </div>
       </div>
 
       <div className="max-w-5xl flex flex-col items-center mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-6 shadow-lg m-4">
         <h1 className="text-2xl font-bold mb-4">Search Results:</h1>
-        
+
         <div className="m-2 flex flex-col gap-2 items-center justify-center">
-        <p className="m-2 font-bold ">
-          Found {filteredPatients.length} match
-          {filteredPatients.length === 1 ? "" : "es"}
-        </p>
-        <button type="button" className="p-1 border rounded-lg hover:text-black hover:bg-red-500"
-          onClick={handleClear}>
-              Clear Results
-        </button>
-       </div>
+          <p className="m-2 font-bold ">
+            Found {filteredPatients.length} match
+            {filteredPatients.length === 1 ? "" : "es"}
+          </p>
+          <button
+            type="button"
+            className="p-1 border rounded-lg hover:text-black hover:bg-red-500"
+            onClick={handleClear}
+          >
+            Clear Results
+          </button>
+        </div>
 
-       {/* Display the filtered patients in a grid layout with links to their individual pages.*/}
+        {/* Display the filtered patients in a grid layout with links to their individual pages.*/}
         <div className="m-2 grid md:grid-cols-2 lg:grid-cols-3 gap-2">
-        {filteredPatients.map((patient) => (
-          <Link key={patient.id} to={`/patients/${patient.id}`}>
-            <div className="p-2 rounded-xl  bg-white/10 border border-white/30 backdrop-blur-lg text-white font-semibold shadow-[0_8px_32px_0_rgba(31,38,135,0.37)] hover:bg-white/20 hover:scale-105 transition-all duration-300 ease-in-out">
-              Id: {patient.id}: {patient.lastName}, {patient.firstName}
-            </div>
-          </Link>
-        ))}
-         </div>
+          {filteredPatients.map((patient) => (
+            <Link key={patient.id} to={`/patients/${patient.id}`}>
+              <div className="p-2 rounded-xl  bg-white/10 border border-white/30 backdrop-blur-lg text-white font-semibold shadow-[0_8px_32px_0_rgba(31,38,135,0.37)] hover:bg-white/20 hover:scale-105 transition-all duration-300 ease-in-out">
+                Id: {patient.id}: {patient.lastName}, {patient.firstName}
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
-
     </div>
-
   );
 }

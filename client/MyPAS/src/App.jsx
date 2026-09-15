@@ -15,6 +15,7 @@ import UserDetailsPage from "./pages/UserDetailsPage";
 import  AuthProvider  from "./context/AuthContext";
 import { useAuth } from "./context/AuthContext";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 
 function AppRoutes() {
@@ -42,6 +43,7 @@ if (!user) {
          <Route path="/payments/:id" element={<DisplayListDetails />} />
          <Route path="/user-details" element={<UserDetailsPage />} />
          <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
+         <Route path="*" element={<NotFoundPage />} />
          </Routes>
       </MainLayout>
     

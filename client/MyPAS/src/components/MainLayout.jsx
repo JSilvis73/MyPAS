@@ -164,7 +164,7 @@ const MainLayout = ({ children }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex flex-col items-center flex-grow max-h-content w-full ">
+      <main className="flex flex-col items-center flex-grow max-h-content w-full mt-4 p-4">
         {children}
       </main>
 
