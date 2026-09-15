@@ -6,13 +6,28 @@ import { CiSearch } from "react-icons/ci";
 import { FaTasks } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import { CiSettings } from "react-icons/ci";
-import medkitLogo from "../assets/images/medKit.png";
+//import medkitLogo from "../assets/images/medKit.png";
 import UserProfileMenu from "./UserProfileMenu";
+//import logo from "../assets/images/MyPASLogo.png";
 
 const MainLayout = ({ children }) => {
   const { user, signOut } = useAuth();
   const [isUserProfileMenuOpen, setIsUserProfileMenuOpen] =
     React.useState(false);
+
+  const [isScrolled, setIsScrolled] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const openUserProfileMenu = () => {
     setIsUserProfileMenuOpen(!isUserProfileMenuOpen);
@@ -32,17 +47,22 @@ const MainLayout = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen mx-auto bg-gray-900 text-white ">
       {/* Header */}
-      <header className="bg-gray-800 text-white p-2 shadow-md">
+      <header
+        className={`sticky top-0 z-40 text-white p-4 transition-colors duration-300 ${
+          isScrolled ? "bg-gray-950/95 shadow-lg border-gray-700" : "bg-gray-900 border-transparent"
+        }`}
+      >
         <div className="max-w-6xl mx-auto">
           {/* Top row */}
           <div className="relative flex items-center justify-between">
             {/* Logo */}
             <Link to="/" className="shrink-0">
-              <img
-                src={medkitLogo}
+            <strong>MyPAS</strong>
+              {/* <img
+                src={logo}
                 alt="MyPAS Logo"
                 className="h-10 w-10 hover:animate-pulse"
-              />
+              /> */}
             </Link>
 
             {/* Navigation */}
