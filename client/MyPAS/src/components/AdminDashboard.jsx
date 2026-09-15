@@ -18,7 +18,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="m-2 text-center">
-      <h1 className="m-2 text-xl font-bold">Admin Actions</h1>
+      <h2 className="m-2 text-xl font-bold">Admin Actions</h2>
       <div className="flex flex-wrap gap-2">
         <button
           name="addUserToRole"

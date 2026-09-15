@@ -99,7 +99,7 @@ export default function AddPatientPage() {
     <div className="max-w-xl mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-6 shadow-lg">
       
         <form className="flex  flex-col items-center" onSubmit={handleSubmit}>
-          <h2 className="text-2xl mb-4"><strong>Create New Patient</strong></h2>
+          <h2 className="text-2xl mb-4 text-blue-500"><strong>Create New Patient</strong></h2>
           <div className="flex flex-wrap gap-2 items-center justify-center">
             <FormInput
               props={{

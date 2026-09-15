@@ -9,6 +9,7 @@ import { CiSettings } from "react-icons/ci";
 //import medkitLogo from "../assets/images/medKit.png";
 import UserProfileMenu from "./UserProfileMenu";
 //import logo from "../assets/images/MyPASLogo.png";
+import { FaInfoCircle, FaEnvelope } from "react-icons/fa";
 
 const MainLayout = ({ children }) => {
   const { user, signOut } = useAuth();
@@ -49,7 +50,9 @@ const MainLayout = ({ children }) => {
       {/* Header */}
       <header
         className={` sticky top-0 z-40 text-white p-4 transition-colors duration-300 ${
-          isScrolled ? "bg-gray-950/95 shadow-lg border-gray-700" : "bg-gray-900 border-transparent hover:bg-gray-800"
+          isScrolled
+            ? "bg-gray-950/95 shadow-lg border-gray-700"
+            : "bg-gray-900 border-transparent hover:bg-gray-800"
         }`}
       >
         <div className="max-w-6xl mx-auto">
@@ -57,23 +60,21 @@ const MainLayout = ({ children }) => {
           <div className="relative flex items-center justify-between">
             {/* Logo */}
             <Link to="/" className="shrink-0">
-            <strong>MyPAS</strong>
-              {/* <img
-                src={logo}
-                alt="MyPAS Logo"
-                className="h-10 w-10 hover:animate-pulse"
-              /> */}
+              <strong className="hover:animate-ping">
+                <span className="text-blue-500">My</span>
+                <span className="text-white">PAS</span>
+              </strong>
             </Link>
 
             {/* Navigation */}
             <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-4">
-              <Link to="/" className="hover:text-gray-300">
+              <Link to="/" className="hover:text-blue-300">
                 Home
               </Link>
 
               <Link
                 to="/search"
-                className="flex items-center gap-1 hover:text-gray-300"
+                className="flex items-center gap-1 hover:text-blue-300"
               >
                 <CiSearch />
                 Search
@@ -81,25 +82,30 @@ const MainLayout = ({ children }) => {
 
               <Link
                 to="/add-patient"
-                className="flex items-center gap-1 hover:text-gray-300"
+                className="flex items-center gap-1 hover:text-blue-300"
               >
                 <IoCreateOutline />
                 Create Patient
               </Link>
 
-              <Link
-                to="/operations"
-                className="flex items-center gap-1 hover:text-gray-300"
-              >
+              <Link to="/operations" className="flex items-center gap-1 hover:text-blue-300">
                 <FaTasks />
                 Operations
               </Link>
 
-              <Link to="/about" className="hover:text-gray-300">
+              <Link
+                to="/about"
+                className="flex items-center gap-1 hover:text-blue-300"
+              >
+                <FaInfoCircle />
                 About
               </Link>
 
-              <Link to="/contact" className="hover:text-gray-300">
+              <Link
+                to="/contact"
+                className="flex items-center gap-1 hover:text-blue-300"
+              >
+                <FaEnvelope />
                 Contact
               </Link>
             </nav>
@@ -108,7 +114,7 @@ const MainLayout = ({ children }) => {
             <div className="relative shrink-0">
               <button
                 onClick={openUserProfileMenu}
-                className="flex items-center gap-2 hover:text-gray-300"
+                className="flex items-center gap-2 hover:text-blue-300"
               >
                 <FaUserCircle className="text-xl" />
                 <span className="hidden lg:inline text-sm">{user?.email}</span>

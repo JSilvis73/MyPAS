@@ -9,14 +9,14 @@ export default function HomePage() {
   const { user } = useAuth();
 
   return (
-    <div className="flex flex-col text-white items-center justify-content gap-4 p-4">
-      <h1 className="text-2xl mb-4">
+    <div className="flex flex-col items-center gap-2">
+      <h1 className="text-2xl mb-4 text-blue-500">
         <strong>Home</strong>
       </h1>
-      <p>Welcome {user?.userName}</p>
+      <p>Welcome, {user?.userName}!</p>
 
       <div className="text-center m-4 bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-600">
-        <h2>
+        <h2 className="text-blue-500">
           <strong>News:</strong>
         </h2>
         <p>
@@ -26,7 +26,7 @@ export default function HomePage() {
       </div>
 
       <div className="text-center m-4 bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-600">
-        <h2>
+        <h2 className="text-blue-500">
           <strong>Quick Actions:</strong>
         </h2>
         <p>Select an action below to get started.</p>

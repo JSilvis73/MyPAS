@@ -57,7 +57,7 @@ export default function AdminUserSearch() {
 
   return (
     <div className="text-center m-2">
-      <h1 className="text-xl font-bold mb-4">Admin User Search</h1>
+      <h2 className="text-xl font-bold mb-4">Admin User Search</h2>
       <form className="flex flex-col gap-2 " onSubmit={handleSubmit}>
         <label htmlFor="email">Email</label>
         <input
