@@ -32,10 +32,10 @@ const MainLayout = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen mx-auto bg-gray-900 text-white ">
       {/* Header */}
-      <header className="bg-gray-800 text-white p-4 shadow-md">
+      <header className="bg-gray-800 text-white p-2 shadow-md">
         <div className="max-w-6xl mx-auto">
           {/* Top row */}
-          <div className="flex items-center justify-between">
+          <div className="relative flex items-center justify-between">
             {/* Logo */}
             <Link to="/" className="shrink-0">
               <img
@@ -46,7 +46,7 @@ const MainLayout = ({ children }) => {
             </Link>
 
             {/* Navigation */}
-            <nav className="hidden md:flex items-center gap-4">
+            <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-4">
               <Link to="/" className="hover:text-gray-300">
                 Home
               </Link>
@@ -144,7 +144,9 @@ const MainLayout = ({ children }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow max-h-content w-full ">{children}</main>
+      <main className="flex flex-col items-center flex-grow max-h-content w-full ">
+        {children}
+      </main>
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white text-center p-4">
