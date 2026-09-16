@@ -33,8 +33,7 @@ export default function AddPatientPage() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // This prevents form from refreshing.
 
-  if (!newPatient.firstName ) 
-    { 
+    if (!newPatient.firstName) {
       setMsg({ ...msg, firstName: "First name is required." });
       return;
     }
@@ -44,17 +43,17 @@ export default function AddPatientPage() {
       return;
     }
 
-  if (newPatient.age < 1) {
-    setMsg({ ...msg, age: "Age must be at least 1." });
-    return;
-  }
+    if (newPatient.age < 1) {
+      setMsg({ ...msg, age: "Age must be at least 1." });
+      return;
+    }
 
-  if (newPatient.email === "" && newPatient.phone === "") {
-    setMsg({ ...msg, email: "Either email or phone is required." });
-    return;
-  }
+    if (newPatient.email === "" && newPatient.phone === "") {
+      setMsg({ ...msg, email: "Either email or phone is required." });
+      return;
+    }
 
-      if (isSubmitting) return;
+    if (isSubmitting) return;
     setIsSubmitting(true);
 
     // Establish connection and create new patient
@@ -97,111 +96,112 @@ export default function AddPatientPage() {
 
   return (
     <div className="max-w-xl mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-6 shadow-lg">
-      
-        <form className="flex  flex-col items-center" onSubmit={handleSubmit}>
-          <h2 className="text-2xl mb-4 text-blue-500"><strong>Create New Patient</strong></h2>
-          <div className="flex flex-wrap gap-2 items-center justify-center">
-            <FormInput
-              props={{
-                inputName: "Last Name:",
-                type: "text",
-                name: "lastName",
-                value: newPatient.lastName,
-                placeholder: "Doe",
-                onChange: handleFormInputChange,
-              }}
-            />
-            <FormInput
-              props={{
-                inputName: "First Name:",
-                type: "text",
-                name: "firstName",
-                value: newPatient.firstName,
-                placeholder: "John",
-                onChange: handleFormInputChange,
-              }}
-            />
-            <FormInput
-              props={{
-                inputName: "Age:",
-                type: "number",
-                name: "age",
-                value: newPatient.age,
-                placeholder: "18",
-                onChange: handleFormInputChange,
-              }}
-            />
+      <h2 className=" text-center text-2xl mb-4 text-blue-500">
+        <strong>Create New Patient</strong>
+      </h2>
+      <form className="flex  flex-col items-center" onSubmit={handleSubmit}>
+        <div className="flex flex-wrap gap-2 items-center justify-center">
+          <FormInput
+            props={{
+              inputName: "Last Name:",
+              type: "text",
+              name: "lastName",
+              value: newPatient.lastName,
+              placeholder: "Doe",
+              onChange: handleFormInputChange,
+            }}
+          />
+          <FormInput
+            props={{
+              inputName: "First Name:",
+              type: "text",
+              name: "firstName",
+              value: newPatient.firstName,
+              placeholder: "John",
+              onChange: handleFormInputChange,
+            }}
+          />
+          <FormInput
+            props={{
+              inputName: "Age:",
+              type: "number",
+              name: "age",
+              value: newPatient.age,
+              placeholder: "18",
+              onChange: handleFormInputChange,
+            }}
+          />
 
-            <FormInput
-              props={{
-                inputName: "Address:",
-                type: "text",
-                name: "address",
-                value: newPatient.address,
-                placeholder: "1234 Cherry St.",
-                onChange: handleFormInputChange,
-              }}
-            />
-            <FormInput
-              props={{
-                inputName: "City:",
-                type: "text",
-                name: "city",
-                value: newPatient.city,
-                placeholder: "Kent",
-                onChange: handleFormInputChange,
-              }}
-            />
-            <FormInput
-              props={{
-                inputName: "State:",
-                type: "text",
-                name: "state",
-                value: newPatient.state,
-                placeholder: "OH",
-                onChange: handleFormInputChange,
-              }}
-            />
-            <FormInput
-              props={{
-                inputName: "Zip:",
-                type: "text",
-                name: "zip",
-                value: newPatient.zip,
-                placeholder: "44230",
-                onChange: handleFormInputChange,
-              }}
-            />
-            <FormInput
-              props={{
-                inputName: "Phone:",
-                type: "text",
-                name: "phone",
-                value: newPatient.phone,
-                placeholder: "330-987-1234",
-                onChange: handleFormInputChange,
-              }}
-            />
-            <FormInput
-              props={{
-                inputName: "Email:",
-                type: "text",
-                name: "email",
-                value: newPatient.email,
-                placeholder: "JDoe10@Gmail.com",
-                onChange: handleFormInputChange,
-              }}
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="mt-4 border rounded-lg p-2 bg-gray-600 hover:bg-black"
-          >
-            {isSubmitting ? "Submitting..." : "Submit"}
-          </button>
-        </form>
-    
+          <FormInput
+            props={{
+              inputName: "Address:",
+              type: "text",
+              name: "address",
+              value: newPatient.address,
+              placeholder: "1234 Cherry St.",
+              onChange: handleFormInputChange,
+            }}
+          />
+          <FormInput
+            props={{
+              inputName: "City:",
+              type: "text",
+              name: "city",
+              value: newPatient.city,
+              placeholder: "Kent",
+              onChange: handleFormInputChange,
+            }}
+          />
+          <FormInput
+            props={{
+              inputName: "State:",
+              type: "text",
+              name: "state",
+              value: newPatient.state,
+              placeholder: "OH",
+              onChange: handleFormInputChange,
+            }}
+          />
+          <FormInput
+            props={{
+              inputName: "Zip:",
+              type: "text",
+              name: "zip",
+              value: newPatient.zip,
+              placeholder: "44230",
+              onChange: handleFormInputChange,
+            }}
+          />
+          <FormInput
+            props={{
+              inputName: "Phone:",
+              type: "text",
+              name: "phone",
+              value: newPatient.phone,
+              placeholder: "330-987-1234",
+              onChange: handleFormInputChange,
+            }}
+          />
+          <FormInput
+            props={{
+              inputName: "Email:",
+              type: "text",
+              name: "email",
+              value: newPatient.email,
+              placeholder: "JDoe10@Gmail.com",
+              onChange: handleFormInputChange,
+            }}
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="mt-4 border rounded-lg p-2 bg-gray-600 hover:bg-black"
+        >
+          {isSubmitting ? "Submitting..." : "Submit"}
+        </button>
+      </form>
+
       <div className="text-center">
         {msg.firstName && <p className="text-red-500">{msg.firstName}</p>}
         {msg.lastName && <p className="text-red-500">{msg.lastName}</p>}

@@ -1,45 +1,57 @@
 import { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import DisplayList from "../components/DisplayList";
 import AddProcedure from "../components/AddProcedure";
 import AddPayment from "../components/AddPayment";
 import UpdatePatientForm from "../components/UpdatePatientForm";
 
-export default function PatientDetailsPage({ type }) {
-  // Page State
+export default function PatientDetailsPage() {
   const { id } = useParams();
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+  // Page state
   const [loading, setLoading] = useState(true);
 
-  // Object States
+  // Data state
   const [patient, setPatient] = useState(null);
   const [procedures, setProcedures] = useState([]);
   const [payments, setPayments] = useState([]);
 
-  // Form Displays
+  // Form/display state
   const [toggleServiceForm, setToggleServiceForm] = useState(false);
   const [togglePaymentForm, setTogglePaymentForm] = useState(false);
-  const [toggleUpdatePatientForm, setToggleUpdatePatientForm] = useState(false);
+  const [toggleUpdatePatientForm, setToggleUpdatePatientForm] =
+    useState(false);
   const [showProcedures, setShowProcedures] = useState(false);
   const [showPayments, setShowPayments] = useState(false);
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-  // On render load patient/services/payments.
+  // -----------------------------
+  // Fetch patient
+  // -----------------------------
   useEffect(() => {
-    fetch(`${baseUrl}/api/patients/${id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Patient not found");
-        return res.json();
-      })
-      .then((data) => {
-        setPatient(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, [id]);
+    const fetchPatient = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/api/patients/${id}`);
 
+        if (!res.ok) {
+          throw new Error("Patient not found.");
+        }
+
+        const data = await res.json();
+        setPatient(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPatient();
+  }, [id, baseUrl]);
+
+  // -----------------------------
+  // Fetch procedures/payments
+  // -----------------------------
   useEffect(() => {
     fetchProcedures();
     fetchPayments();
@@ -48,67 +60,83 @@ export default function PatientDetailsPage({ type }) {
   const fetchProcedures = async () => {
     if (!id) return;
 
-    fetch(`${baseUrl}/api/procedure/patient/${id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Procedures not found.");
-        return res.json();
-      })
-      .then((data) => {
-        // Optional: sort procedures by date (most recent first)
-        const sorted = [...data].sort(
-          (a, b) => new Date(b.procedureDate) - new Date(a.procedureDate),
-        );
-        setProcedures(sorted);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    try {
+      const res = await fetch(`${baseUrl}/api/procedure/patient/${id}`);
+
+      if (!res.ok) {
+        throw new Error("Procedures not found.");
+      }
+
+      const data = await res.json();
+
+      const sorted = [...data].sort(
+        (a, b) =>
+          new Date(b.procedureDate) - new Date(a.procedureDate),
+      );
+
+      setProcedures(sorted);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const fetchPayments = async () => {
     if (!id) return;
-    fetch(`${baseUrl}/api/payments/patients/${id}/payments`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Payments not found.");
-        return res.json();
-      })
-      .then((data) => {
-        const sortedPayments = [...data].sort(
-          (a, b) => new Date(b.paymentDate) - new Date(a.paymentDate),
-        );
-        setPayments(sortedPayments);
-      })
-      .catch((err) => console.error(err));
+
+    try {
+      const res = await fetch(
+        `${baseUrl}/api/payments/patients/${id}/payments`,
+      );
+
+      if (!res.ok) {
+        throw new Error("Payments not found.");
+      }
+
+      const data = await res.json();
+
+      const sorted = [...data].sort(
+        (a, b) =>
+          new Date(b.paymentDate) - new Date(a.paymentDate),
+      );
+
+      setPayments(sorted);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  // Delete patient section.
-  const deleteSelectedPatient = async (id) => {
+  // -----------------------------
+  // Delete patient
+  // -----------------------------
+  const deleteSelectedPatient = async (patientId) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this patient?",
     );
+
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`${baseUrl}/api/patients/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${baseUrl}/api/patients/${patientId}`,
+        {
+          method: "DELETE",
         },
-      });
+      );
 
       if (!response.ok) {
-        throw new Error("Failed to delete patient");
+        throw new Error("Failed to delete patient.");
       }
 
       alert("Patient deleted successfully.");
-      // Optionally refresh list or navigate away here
     } catch (error) {
-      console.error("Error deleting patient:", error.message);
+      console.error("Error deleting patient:", error);
       alert("There was a problem deleting the patient.");
     }
   };
 
-  // Handle Input Form Changes.
+  // -----------------------------
+  // Toggle handlers
+  // -----------------------------
   const handleToggleServicesForm = () => {
     setToggleServiceForm((prev) => !prev);
   };
@@ -129,145 +157,225 @@ export default function PatientDetailsPage({ type }) {
     setShowPayments((prev) => !prev);
   };
 
+  // -----------------------------
+  // Loading
+  // -----------------------------
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen ">
-        <div className="animate-spin h-10 w-10 border-4 border-white border-b-transparent rounded-full"></div>
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-white border-b-transparent" />
       </div>
     );
   }
 
   if (!patient) {
-    return <div className="p-4 text-red-500">Patient not found.</div>;
+    return (
+      <div className="p-4 text-center text-red-500">
+        Patient not found.
+      </div>
+    );
   }
 
   return (
-    <div className="w-3xl max-w-6xl mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg m-4 p-4 shadow-lg">
-      <h1 className="text-center text-2xl font-semibold mb-4">
+    <div className="flex flex-col items-center gap-2 text-center">
+      <h1 className="m-2 text-2xl font-semibold text-blue-500">
         Patient Details
       </h1>
-      <div className="flex flex-col flex-wrap items-center gap-4 bg-gray-700 rounded-xl  p-2">
-        <p>
-          <strong>ID: </strong>
-          {patient.id}
-        </p>
-        <p>
-          <strong>Name: </strong>
-          {patient.lastName}, {patient.firstName}
-        </p>
-        <p>
-          <strong>Age: </strong>
-          {patient.age}
-        </p>
-        <div id="address-section" className="flex flex-wrap gap-4">
-          <p>
-            <strong>Address: </strong>
-            {patient.address}
-          </p>
-          <p>
-            <strong>City: </strong>
-            {patient.city}
-          </p>
-          <p>
-            <strong>State: </strong>
-            {patient.state}
-          </p>
-          <p>
-            <strong>Zip: </strong>
-            {patient.zip}
-          </p>
-        </div>
-        <div id="contact-section" className="flex flex-wrap gap-4">
-          <p>
-            <strong>Phone: </strong>
-            {patient.phone}
-          </p>
-          <p>
-            <strong>Email: </strong>
-            {patient.email}
-          </p>
+
+      {/* Patient Card */}
+      <div className="mx-auto w-full max-w-5xl rounded-lg border border-gray-600 bg-gray-800 p-4 text-white shadow-lg">
+        
+        {/* Patient Information */}
+        <div className="overflow-hidden rounded-xl border border-gray-600 bg-gray-700">
+          
+          <h3 className="border-b border-gray-600 p-3 text-lg font-semibold text-blue-500">
+            Patient Information
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+            <div className="border-b border-gray-600 p-3 lg:border-r">
+              <strong className="block text-blue-300">ID:</strong>
+              <span>{patient.id}</span>
+            </div>
+
+            <div className="border-b border-gray-600 p-3 lg:border-r">
+              <strong className="block text-blue-300">Last Name:</strong>
+              <span>{patient.lastName}</span>
+            </div>
+
+            <div className="border-b border-gray-600 p-3 lg:border-r">
+              <strong className="block text-blue-300">First Name:</strong>
+              <span>{patient.firstName}</span>
+            </div>
+
+            <div className="border-b border-gray-600 p-3">
+              <strong className="block text-blue-300">Age:</strong>
+              <span>{patient.age}</span>
+            </div>
+          </div>
+
+          {/* Address */}
+          <h3 className="border-b border-t border-gray-600 p-3 text-lg font-semibold text-blue-500">
+            Address Information
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+            <div className="border-b border-gray-600 p-3 lg:border-r">
+              <strong className="block text-blue-300">Address:</strong>
+              <span className="break-words">
+                {patient.address || "N/A"}
+              </span>
+            </div>
+
+            <div className="border-b border-gray-600 p-3 lg:border-r">
+              <strong className="block text-blue-300">City:</strong>
+              <span>{patient.city || "N/A"}</span>
+            </div>
+
+            <div className="border-b border-gray-600 p-3 lg:border-r">
+              <strong className="block text-blue-300">State:</strong>
+              <span>{patient.state || "N/A"}</span>
+            </div>
+
+            <div className="border-b border-gray-600 p-3">
+              <strong className="block text-blue-300">Zip:</strong>
+              <span>{patient.zip || "N/A"}</span>
+            </div>
+          </div>
+
+          {/* Contact */}
+          <h3 className="border-b border-t border-gray-600 p-3 text-lg font-semibold text-blue-500">
+            Contact Information
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2">
+            <div className="border-b border-gray-600 p-3 md:border-r">
+              <strong className="block text-blue-300">Phone:</strong>
+              <span>{patient.phone || "N/A"}</span>
+            </div>
+
+            <div className="border-b border-gray-600 p-3">
+              <strong className="block text-blue-300">Email:</strong>
+              <span className="break-words">
+                {patient.email || "N/A"}
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div className="flex gap-4">
+        {/* Patient Actions */}
+        <div className="my-4 flex flex-wrap justify-center gap-4">
           <button
             type="button"
-            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl hover:bg-green-500"
+            className="rounded-xl border border-white p-2 transition-colors hover:bg-green-500 hover:text-white"
             onClick={handleToggleUpdatePatientForm}
           >
             Update Patient
           </button>
+
           <button
             type="button"
-            className="hover:bg-red-500 hover:text-white p-2 border border-white rounded-xl"
+            className="rounded-xl border border-white p-2 transition-colors hover:bg-red-500 hover:text-white"
             onClick={() => deleteSelectedPatient(patient.id)}
           >
             Delete Patient
           </button>
         </div>
-        {toggleUpdatePatientForm ? <UpdatePatientForm patient={patient} /> : ""}
-      </div>
 
-      {/* Procedures and Payments Section */}
-      <h2 className="mt-2 text-center p-2">
-        <strong>Procedures</strong>
-      </h2>
-
-      <div className=" mt-2 flex flex-col gap-2 bg-gray-700 rounded-xl p-2">
-        {showProcedures ? (
-          <div className="text-center">Procedures Hidden</div>
-        ) : (
-          <DisplayList
-            items={procedures}
-            type="procedure"
-            patientId={patient.id}
-          />
+        {toggleUpdatePatientForm && (
+          <UpdatePatientForm patient={patient} />
         )}
 
-        <div className="flex gap-4 justify-center">
-          <button
-            type="button"
-            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl hover:bg-green-500"
-            onClick={handleToggleShowProcedures}
-          >
-            Show/Hide Procedures
-          </button>
+        {/* Procedures */}
+        <section className="mt-4">
+          <h2 className="p-2 text-center text-xl font-semibold">
+            Procedures
+          </h2>
 
-          <button
-            type="button"
-            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl hover:bg-blue-500"
-            onClick={handleToggleServicesForm}
-          >
-            Add Procedure
-          </button>
-        </div>
-        {toggleServiceForm ? <AddProcedure patientId={Number(id)} onProcedureAdded={fetchProcedures} /> : ""}
-      </div>
-      <h2 className="mt-2 text-center p-2">
-        <strong>Payments</strong>
-      </h2>
-      <div className=" mt-2 flex flex-col gap-2 bg-gray-700 rounded-xl p-2">
-        {showPayments ? (
-          <div className="text-center">Payments Hidden</div>
-        ) : (
-          <DisplayList items={payments} type="payment" />
-        )}
-        <div className="flex justify-center gap-4">
-          <button
-            type="button"
-            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl hover:bg-green-500"
-            onClick={handleToggleShowPayments}
-          >
-            Show/Hide Payments
-          </button>
-          <button
-            type="button"
-            className="hover:bg-black hover:text-white p-2 border border-white rounded-xl hover:bg-blue-500"
-            onClick={handleTogglePaymentForm}
-          >
-            Add Payment
-          </button>
-        </div>
-        {togglePaymentForm ? <AddPayment patientId={Number(id)} onPaymentAdded={fetchPayments} /> : ""}
+          <div className="flex flex-col gap-2 rounded-xl bg-gray-700 p-2">
+            {showProcedures ? (
+              <div className="p-2 text-center text-gray-300">
+                Procedures Hidden
+              </div>
+            ) : (
+              <DisplayList
+                items={procedures}
+                type="procedure"
+                patientId={patient.id}
+              />
+            )}
+
+            <div className="flex flex-wrap justify-center gap-4">
+              <button
+                type="button"
+                className="rounded-xl border border-white p-2 transition-colors hover:bg-green-500"
+                onClick={handleToggleShowProcedures}
+              >
+                Show/Hide Procedures
+              </button>
+
+              <button
+                type="button"
+                className="rounded-xl border border-white p-2 transition-colors hover:bg-blue-500"
+                onClick={handleToggleServicesForm}
+              >
+                Add Procedure
+              </button>
+            </div>
+
+            {toggleServiceForm && (
+              <AddProcedure
+                patientId={Number(id)}
+                onProcedureAdded={fetchProcedures}
+              />
+            )}
+          </div>
+        </section>
+
+        {/* Payments */}
+        <section className="mt-4">
+          <h2 className="p-2 text-center text-xl font-semibold">
+            Payments
+          </h2>
+
+          <div className="flex flex-col gap-2 rounded-xl bg-gray-700 p-2">
+            {showPayments ? (
+              <div className="p-2 text-center text-gray-300">
+                Payments Hidden
+              </div>
+            ) : (
+              <DisplayList
+                items={payments}
+                type="payment"
+              />
+            )}
+
+            <div className="flex flex-wrap justify-center gap-4">
+              <button
+                type="button"
+                className="rounded-xl border border-white p-2 transition-colors hover:bg-green-500"
+                onClick={handleToggleShowPayments}
+              >
+                Show/Hide Payments
+              </button>
+
+              <button
+                type="button"
+                className="rounded-xl border border-white p-2 transition-colors hover:bg-blue-500"
+                onClick={handleTogglePaymentForm}
+              >
+                Add Payment
+              </button>
+            </div>
+
+            {togglePaymentForm && (
+              <AddPayment
+                patientId={Number(id)}
+                onPaymentAdded={fetchPayments}
+              />
+            )}
+          </div>
+        </section>
       </div>
     </div>
   );
