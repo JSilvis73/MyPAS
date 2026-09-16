@@ -62,7 +62,7 @@ export default function SearchPage() {
   // Display
   return (
     <div className="flex flex-col items-center text-center gap-2">
-      <h1 className="text-2xl font-bold mb-4 text-blue-500">
+      <h1 className="text-2xl mb-4 text-blue-500">
         <strong>Search</strong>
       </h1>
       <div className="max-w-5xl mx-auto bg-gray-800 text-white border border-gray-600 rounded-lg p-6 shadow-lg  ">
@@ -139,7 +139,7 @@ export default function SearchPage() {
               <Link key={patient.id} to={`/patients/${patient.id}`}>
                 <div className="p-2 rounded-xl  bg-white/10 border border-white/30 backdrop-blur-lg text-white font-semibold shadow-[0_8px_32px_0_rgba(31,38,135,0.37)] hover:bg-white/20 hover:scale-105 transition-all duration-300 ease-in-out">
                   <p>
-                    <strong className="text-blue-500">{index + 1}.</strong> Id:{" "}
+                    <strong className="text-blue-300">{index + 1}.</strong> Id:{" "}
                     {patient.id}: {patient.lastName}, {patient.firstName}
                   </p>
                 </div>

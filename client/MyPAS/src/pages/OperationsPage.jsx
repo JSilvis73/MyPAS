@@ -3,7 +3,7 @@ import React from "react";
 export default function OperationsPage() {
   return (
     <div className="flex flex-col items-center gap-2">
-      <h2 className="text-2xl  mb-4 text-blue-500">
+      <h2 className="text-2xl mb-4 text-blue-500">
         <strong>Operations</strong>
       </h2>
 
