@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import FormInput from "../components/FormInput";
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import PrintListComponent from "../components/PrintListComponent";
 
 export default function SearchPage() {
   const [patients, setPatients] = useState([]);
@@ -131,6 +132,7 @@ export default function SearchPage() {
             >
               Clear Results
             </button>
+            <PrintListComponent patients={filteredPatients} />
           </div>
 
           {/* Display the filtered patients in a grid layout with links to their individual pages.*/}
